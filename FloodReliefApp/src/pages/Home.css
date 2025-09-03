@@ -1,0 +1,91 @@
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.home-header ion-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.emergency-section {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.emergency-section h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.emergency-subtitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+}
+
+.emergency-card {
+  margin-bottom: 0.75rem;
+  border: 2px solid var(--ion-color-danger);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+}
+
+.emergency-contact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.emergency-contact ion-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.contact-info {
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.contact-info h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.contact-number {
+  margin: 0.25rem 0;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.call-button {
+  --border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.call-button ion-icon {
+  margin-right: 0.25rem;
+}
+
+.safety-tips {
+  padding: 1rem;
+}
+
+.safety-tips ul {
+  padding-left: 1.5rem;
+}
+
+.safety-tips li {
+  margin-bottom: 0.5rem;
+}

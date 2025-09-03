@@ -1,0 +1,384 @@
+/* Reports / Relief Requests page styles */
+.requests-header {
+  padding: 1rem;
+}
+
+.request-button {
+  margin-bottom: 1rem;
+}
+
+.request-form {
+  margin: 1rem;
+}
+
+.submit-button {
+  margin-top: 1rem;
+}
+
+.requests-list {
+  padding: 1rem;
+}
+
+.no-requests {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-requests ion-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.map-container {
+  padding: 0 1rem 1rem 1rem;
+}
+
+.map-embed {
+  border: 0;
+  width: 100%;
+  height: 70vh!important; /* occupy 50% of viewport height */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-action-btn { margin-left: 8px; }
+
+.map-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.map-meta small + small { margin-left: 8px; }
+
+.radius-control {
+  padding: 0.5rem 1rem;
+  background: var(--ion-color-light-shade);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.radius-control ion-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.radius-slider {
+  --bar-background: var(--ion-color-light);
+  --bar-background-active: var(--ion-color-primary);
+  --knob-background: var(--ion-color-primary);
+}
+
+/* Enhanced request item styling */
+.requests-list ion-item {
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+}
+
+.requests-list ion-item ion-icon[slot="start"] {
+  font-size: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.requests-list ion-label h2 {
+  margin-bottom: 4px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.requests-list ion-label h2 ion-badge {
+  font-size: 0.8em;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+.requests-list ion-label p {
+  margin: 2px 0;
+  line-height: 1.4;
+}
+
+.requests-list ion-label p strong {
+  color: var(--ion-color-primary);
+  font-weight: 500;
+}
+
+.requests-list ion-label p ion-icon {
+  font-size: 16px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+/* Availability status styling */
+.availability-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.availability-status.available {
+  background-color: rgba(16, 220, 96, 0.1);
+  color: #10dc60;
+}
+
+.availability-status.limited {
+  background-color: rgba(255, 206, 0, 0.1);
+  color: #ffce00;
+}
+
+.availability-status.unavailable {
+  background-color: rgba(240, 65, 65, 0.1);
+  color: #f04141;
+}
+
+.requests-list ion-label small {
+  display: block;
+  margin-top: 8px;
+  color: var(--ion-color-medium);
+  font-size: 0.875rem;
+}
+
+/* Filter Controls Styling */
+.filter-controls {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--ion-color-light-shade);
+  border-radius: 8px;
+}
+
+.filter-controls h4 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.filter-row ion-label {
+  flex: 0 0 80px;
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.filter-select {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+}
+
+/* Search input styling */
+.search-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 4px;
+  background: white;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+/* Checkbox styling */
+.filter-checkbox {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--ion-color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+}
+
+/* Layer selector styling */
+.layer-select {
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--ion-color-light-shade);
+  background: white;
+  font-size: 12px;
+  min-width: 120px;
+}
+
+/* Modal styling */
+.request-modal-content {
+  padding: 20px;
+}
+
+.request-modal-header ion-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.request-modal-content p ion-icon {
+  font-size: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.request-modal-chips {
+  margin-bottom: 16px;
+}
+
+.request-modal-chips ion-chip {
+  font-weight: 600;
+  font-size: 1em;
+  padding: 8px 12px;
+}
+
+.request-modal-chips ion-chip ion-icon {
+  margin-right: 6px;
+}
+
+.request-modal-photos {
+  margin-top: 20px;
+}
+
+.request-modal-photos h3 {
+  margin-bottom: 10px;
+}
+
+.photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.photo-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.request-modal-videos {
+  margin-top: 20px;
+}
+
+.request-modal-videos h3 {
+  margin-bottom: 10px;
+}
+
+.videos-container {
+  margin-top: 10px;
+}
+
+.video-item {
+  margin-bottom: 10px;
+}
+
+.video-item video {
+  width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+}
+
+.request-modal-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Comments styling */
+.request-modal-comments {
+  margin-top: 20px;
+}
+
+.request-modal-comments h3 {
+  margin-bottom: 15px;
+  color: var(--ion-color-primary);
+}
+
+.comments-list {
+  margin-bottom: 20px;
+}
+
+.comment-item {
+  background: var(--ion-color-light-shade);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-header strong {
+  color: var(--ion-color-primary);
+}
+
+.comment-header small {
+  color: var(--ion-color-medium);
+  font-size: 0.8rem;
+}
+
+.comment-item p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.add-comment-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--ion-color-light-shade);
+}
+
+.add-comment-section h4 {
+  margin-bottom: 10px;
+}
+
+.comment-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--ion-color-light-shade);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 10px;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.login-prompt {
+  margin-top: 15px;
+  text-align: center;
+  padding: 15px;
+  background: var(--ion-color-light-shade);
+  border-radius: 8px;
+}
+
+/* Filter summary styling */
+.filter-summary {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: var(--ion-color-light-shade);
+  border-radius: 8px;
+}

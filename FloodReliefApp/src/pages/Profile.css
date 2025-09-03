@@ -1,0 +1,33 @@
+.profile-header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.profile-header ion-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.profile-not-auth {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+}
+
+.profile-not-auth ion-icon {
+  margin-bottom: 1rem;
+}
+
+.save-button {
+  margin-top: 1rem;
+}
+
+.logout-section {
+  padding: 1rem;
+}

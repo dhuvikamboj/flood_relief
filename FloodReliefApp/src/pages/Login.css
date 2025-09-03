@@ -1,0 +1,50 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.login-button {
+  margin-top: 1rem;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.error-text {
+  display: block;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.error-text.general-error {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.error-text p {
+  margin: 0;
+}
+
+.custom-toast {
+  --background: rgba(0, 0, 0, 0.9);
+  --color: white;
+  font-size: 16px;
+  font-weight: 500;
+}

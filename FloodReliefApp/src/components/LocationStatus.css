@@ -1,0 +1,17 @@
+.location-controls {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.location-button {
+  margin-right: 8px;
+}
+
+@media (min-width: 768px) {
+  .location-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}

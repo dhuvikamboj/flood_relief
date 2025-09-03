@@ -1,0 +1,7 @@
+{
+  "name": "FloodReliefApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
