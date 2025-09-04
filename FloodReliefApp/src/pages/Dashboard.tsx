@@ -22,6 +22,7 @@ import {
 } from '@ionic/react';
 import { location, time, checkmarkCircle, alertCircle, hourglass } from 'ionicons/icons';
 import axios from 'axios';
+import api from '../../services/api';
 import './Dashboard.css';
 
 interface UserRequest {

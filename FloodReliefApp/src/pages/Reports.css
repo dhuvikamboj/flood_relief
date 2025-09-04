@@ -3,6 +3,10 @@
   padding: 1rem;
 }
 
+.resources-header {
+  padding: 1rem;
+}
+
 .request-button {
   margin-bottom: 1rem;
 }
@@ -19,9 +23,26 @@
   padding: 1rem;
 }
 
+.resources-list {
+  padding: 1rem;
+  padding-bottom: 120px; /* Increased padding to account for floating tabs */
+}
+
 .no-requests {
   text-align: center;
   padding: 2rem;
+}
+
+.no-resources {
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
 }
 
 .no-requests ion-icon {
@@ -29,8 +50,139 @@
   margin-bottom: 1rem;
 }
 
+/* Tab-specific content styling */
+.tab-content {
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.map-tab-content {
+  position: relative;
+  /* height: calc(100vh - 140px); Adjust for header and button */
+}
+
+.data-tab-content {
+  padding-bottom: 20px;
+  height: calc(100vh - 140px); /* Adjust for header and button */
+  overflow-y: auto;
+}
+
+/* Floating Tab Segment */
+.floating-tab-segment {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.floating-tab-segment ion-segment {
+  --background: transparent;
+  margin: 0;
+  border-radius: 50px;
+}
+
+.floating-tab-segment ion-segment-button {
+  --indicator-color: var(--ion-color-primary);
+  --indicator-box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
+  --color-checked: var(--ion-color-primary);
+  --color: var(--ion-color-medium);
+  min-height: 40px;
+  border-radius: 50px;
+}
+
+.floating-tab-segment ion-segment-button ion-icon {
+  font-size: 1.1rem;
+}
+
+.floating-tab-segment ion-segment-button ion-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .floating-tab-segment {
+    bottom: 15px;
+    padding: 6px;
+  }
+  
+  .floating-tab-segment ion-segment-button {
+    min-height: 36px;
+  }
+  
+  .floating-tab-segment ion-segment-button ion-icon {
+    font-size: 1rem;
+  }
+  
+  .floating-tab-segment ion-segment-button ion-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Ensure content doesn't go behind floating elements */
+.data-tab-content .resources-list {
+  padding-bottom: 140px; /* Extra padding for floating elements */
+}
+
+/* Floating Location Button */
+
+
+
+.leaflet-bottom{
+  z-index: 700 !important;
+}
+.location-fab-button:hover {
+  transform: scale(1.05);
+  --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.location-fab-button ion-icon {
+  font-size: 1.2rem;
+}
+
+.location-fab-button {
+  --color: #fff;
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 2200;
+}
+
+/* Segment styling - remove the old static styles */
+ion-segment {
+  margin-bottom: 1rem;
+}
+
+ion-segment-button {
+  --indicator-color: var(--ion-color-primary);
+}
+
+ion-segment-button ion-icon {
+  font-size: 1.2rem;
+}
+
 .map-container {
   padding: 0 1rem 1rem 1rem;
+  position: relative; /* Added to position floating button relative to map */
+}
+
+/* When we want the location button over the map use this class */
+.map-container .location-fab.map-overlay {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 2100;
 }
 
 .map-embed {
@@ -165,11 +317,7 @@
   margin-bottom: 0.75rem;
 }
 
-.filter-row ion-label {
-  flex: 0 0 80px;
-  font-weight: 500;
-  margin-right: 1rem;
-}
+
 
 .filter-select {
   flex: 1;

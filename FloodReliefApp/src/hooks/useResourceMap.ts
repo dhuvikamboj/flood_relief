@@ -1,0 +1,225 @@
+import { useEffect, useRef, useState } from 'react';
+import L from 'leaflet';
+import { ReliefResource } from '../types/resource';
+import { useLocation } from './useLocation';
+
+export const useResourceMap = (resources: ReliefResource[]) => {
+  const {
+    userCoords,
+    stopWatching,
+    setUserCoords,
+  } = useLocation();
+
+  const mapRef = useRef<HTMLDivElement>(null);
+  const leafletMapRef = useRef<L.Map | null>(null);
+  const markersRef = useRef<L.Marker[]>([]);
+  
+  const [currentLayer, setCurrentLayer] = useState<string>(() => {
+    const saved = localStorage.getItem('preferred_map_layer');
+    return saved || 'satellite';
+  });
+
+  // Save layer preference to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('preferred_map_layer', currentLayer);
+  }, [currentLayer]);
+
+  // Define map layers
+  const mapLayers = {
+    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }),
+    streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }),
+    terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS'
+    }),
+    topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    })
+  };
+
+  const getAvailabilityIconColor = (availability: string) => {
+    switch (availability.toLowerCase()) {
+      case 'available': return '#10dc60'; // success color
+      case 'limited': return '#ffce00'; // warning color
+      case 'unavailable': return '#f04141'; // danger color
+      default: return '#92949c'; // medium color
+    }
+  };
+
+  const getResourceTypeColor = (resourceType?: string) => {
+    switch (resourceType?.toLowerCase()) {
+      case 'food': return 'warning';
+      case 'medical': return 'danger';
+      case 'shelter': return 'primary';
+      case 'water': return 'tertiary';
+      case 'supplies': return 'secondary';
+      default: return 'medium';
+    }
+  };
+
+  const getResourceTypeMapIcon = (resourceType?: string) => {
+    const color = getResourceTypeColor(resourceType);
+    let iconColor = '#3880ff'; // default blue
+    let iconSvg = '';
+
+    switch (resourceType?.toLowerCase()) {
+      case 'food':
+        iconColor = '#ffc409'; // yellow
+        iconSvg = `<path d="M7 4h2v2h2v2h-2v6h-2v-6h-2v-2h2z"/><path d="M9 14h2v2h-2z"/>`;
+        break;
+      case 'medical':
+        iconColor = '#eb445a'; // red
+        iconSvg = `<path d="M8 6h2v4h4v2h-4v4h-2v-4h-4v-2h4z"/>`;
+        break;
+      case 'shelter':
+        iconColor = '#3880ff'; // blue
+        iconSvg = `<path d="M6 8l3-3h6l3 3v8h-12z"/><path d="M8 16h8v2h-8z"/>`;
+        break;
+      case 'water':
+        iconColor = '#5260ff'; // purple
+        iconSvg = `<path d="M8 4c0-1.1.9-2 2-2s2 .9 2 2c0 .7-.4 1.4-1 1.7v2.3h2v2h-6v-2h2v-2.3c-.6-.3-1-1-1-1.7z"/><path d="M12 12h-2v-2h2z"/>`;
+        break;
+      case 'supplies':
+        iconColor = '#3dc2ff'; // light blue
+        iconSvg = `<path d="M6 6h8v8h-8z"/><path d="M8 8h4v4h-4z"/>`;
+        break;
+      default:
+        iconColor = '#92949c'; // gray
+        iconSvg = `<circle cx="10" cy="10" r="3"/>`;
+        break;
+    }
+
+    return new L.Icon({
+      iconUrl: `data:image/svg+xml;base64,${btoa(`
+        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="10" cy="10" r="9" fill="${iconColor}" stroke="#fff" stroke-width="1"/>
+          <g fill="#fff" transform="translate(0, 0)">
+            ${iconSvg}
+          </g>
+        </svg>
+      `)}`,
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+      popupAnchor: [0, -10],
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      shadowSize: [20, 20]
+    });
+  };
+
+  const getAvailabilityText = (availability: string) => {
+    switch (availability?.toLowerCase()) {
+      case 'available': return 'Available';
+      case 'limited': return 'Limited';
+      case 'unavailable': return 'Unavailable';
+      default: return availability || 'Unknown';
+    }
+  };
+
+  // Initialize map when userCoords are available
+  useEffect(() => {
+    if (!userCoords || !mapRef.current) return;
+
+    // Initialize map if not already done
+    if (!leafletMapRef.current) {
+      leafletMapRef.current = L.map(mapRef.current).setView([userCoords.lat, userCoords.lng], 13);
+
+      // Add the current layer to the map
+      mapLayers[currentLayer as keyof typeof mapLayers].addTo(leafletMapRef.current);
+
+      // Stop GPS watching when user pans or zooms the map
+      leafletMapRef.current.on('dragstart', () => stopWatching());
+      leafletMapRef.current.on('zoomstart', () => stopWatching());
+
+      // Allow changing location by clicking on the map
+      leafletMapRef.current.on('click', (e: L.LeafletMouseEvent) => {
+        stopWatching();
+        setUserCoords({ lat: e.latlng.lat, lng: e.latlng.lng });
+        leafletMapRef.current?.setView(e.latlng, leafletMapRef.current?.getZoom() || 13);
+      });
+    } else {
+      // Update map view
+      leafletMapRef.current.setView([userCoords.lat, userCoords.lng], 16);
+    }
+
+    // Clear existing markers
+    markersRef.current.forEach(marker => leafletMapRef.current?.removeLayer(marker));
+    markersRef.current = [];
+
+    // Add user location marker
+    const userMarker = L.marker([userCoords.lat, userCoords.lng])
+      .addTo(leafletMapRef.current)
+      .bindPopup(`<strong>Your Location</strong><br /><span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}" target="_blank" rel="noopener noreferrer">${userCoords.lat.toFixed(6)}, ${userCoords.lng.toFixed(6)}</a>`);
+    markersRef.current.push(userMarker);
+
+    // Add markers for all resources
+    resources.forEach(resource => {
+      const marker = L.marker([resource.lat, resource.lng], { icon: getResourceTypeMapIcon(resource.resource_type) })
+        .addTo(leafletMapRef.current!)
+        .bindPopup(`
+          <div style="max-width: 250px;">
+            <strong>${resource.location}</strong><br />
+            <strong style="color: ${getAvailabilityIconColor(resource.availability)};">● ${getAvailabilityText(resource.availability)}</strong><br />
+            ${resource.distance_km ? `<strong>Distance:</strong> ${parseFloat(resource.distance_km+""||"0").toFixed(1)} km<br />` : ''}
+            ${resource.resource_type ? `<strong>Type:</strong> ${resource.resource_type}<br />` : ''}
+            ${resource.capacity ? `<strong>Capacity:</strong> ${resource.capacity}<br />` : ''}
+            ${resource.details ? `<strong>Details:</strong> ${resource.details}<br />` : ''}
+            ${resource.address ? `<strong>Address:</strong> ${resource.address}<br />` : ''}
+            ${resource.contact ? `<strong>Contact:</strong> ${resource.contact}<br />` : ''}
+            ${resource.reporter_name ? `<strong>Provided by:</strong> ${resource.reporter_name}<br />` : ''}
+            ${resource.reporter_phone ? `<strong>Phone:</strong> ${resource.reporter_phone}<br />` : ''}
+            <strong>Coordinates:</strong> <span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${resource.lat},${resource.lng}" target="_blank" rel="noopener noreferrer">${resource.lat.toFixed(6)}, ${resource.lng.toFixed(6)}</a><br />
+            ${(resource.photos && resource.photos.length > 0) ? `<strong>Photos:</strong> ${resource.photos.length} attached<br />`+resource.photos.map(photo => `<img src="${photo}" alt="Photo" style="max-width: 100%;" /><br>`).join('') : ''}
+            ${(resource.videos && resource.videos.length > 0) ? `<strong>Videos:</strong> ${resource.videos.length} attached<br />` : ''}
+            <small>${resource.timestamp.toLocaleString()}</small>
+            <br /><button onclick="window.openResourceModal && window.openResourceModal(${JSON.stringify(resource).replace(/"/g, '&quot;')})" style="margin-top: 10px; padding: 5px 10px; background: #3880ff; color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>
+          </div>
+        `);
+      markersRef.current.push(marker);
+    });
+
+    return () => {
+      // Cleanup markers on unmount
+      markersRef.current.forEach(marker => leafletMapRef.current?.removeLayer(marker));
+      markersRef.current = [];
+    };
+  }, [userCoords, resources]);
+
+  // Handle layer changes
+  useEffect(() => {
+    if (!leafletMapRef.current) return;
+
+    // Remove all existing tile layers
+    Object.values(mapLayers).forEach(layer => {
+      if (leafletMapRef.current?.hasLayer(layer)) {
+        leafletMapRef.current.removeLayer(layer);
+      }
+    });
+
+    // Add the new layer
+    mapLayers[currentLayer as keyof typeof mapLayers].addTo(leafletMapRef.current);
+  }, [currentLayer]);
+
+  // Cleanup map on component unmount
+  useEffect(() => {
+    return () => {
+      if (leafletMapRef.current) {
+        try {
+          leafletMapRef.current.off('dragstart');
+          leafletMapRef.current.off('zoomstart');
+          leafletMapRef.current.off('click');
+        } catch {}
+        leafletMapRef.current.remove();
+        leafletMapRef.current = null;
+      }
+    };
+  }, []);
+
+  return {
+    mapRef,
+    currentLayer,
+    setCurrentLayer,
+  };
+};

@@ -1,5 +1,5 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import secureStorage from './secureStorage';
 
 // Base URL for your Laravel API
 // For development, use your computer's IP address instead of localhost
@@ -17,7 +17,7 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-    const token = await AsyncStorage.getItem('auth_token');
+    const token = await secureStorage.getItem('auth_token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -36,7 +36,7 @@ api.interceptors.response.use(
   async (error: AxiosError): Promise<AxiosError> => {
     if (error.response?.status === 401) {
       // Token expired or invalid
-      await AsyncStorage.removeItem('auth_token');
+      await secureStorage.removeItem('auth_token');
       // You might want to dispatch logout action here
     }
     return Promise.reject(error);
@@ -117,13 +117,13 @@ export const contactsAPI = {
 
 // Utility functions
 export const setAuthToken = async (token: string): Promise<void> => {
-  await AsyncStorage.setItem('auth_token', token);
+  await secureStorage.setItem('auth_token', token);
 };
 
 export const getAuthToken = async (): Promise<string | null> => {
-  return await AsyncStorage.getItem('auth_token');
+  return await secureStorage.getItem('auth_token');
 };
 
 export const removeAuthToken = async (): Promise<void> => {
-  await AsyncStorage.removeItem('auth_token');
+  await secureStorage.removeItem('auth_token');
 };
