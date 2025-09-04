@@ -76,6 +76,52 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
     }
   };
 
+  // Check permission state for geolocation when Permissions API is available
+  const checkPermissionState = async (): Promise<PermissionState | 'unsupported'> => {
+    try {
+      const perms = (navigator as any).permissions;
+      if (!perms || typeof perms.query !== 'function') return 'unsupported';
+      // Some browsers may not accept the exact type; cast to any
+      const status = await perms.query({ name: 'geolocation' } as any);
+      return status.state as PermissionState;
+    } catch (e) {
+      return 'unsupported';
+    }
+  };
+
+  // Try to prompt for permission in a user-initiated way and then start watching if granted
+  const requestPermissionAndWatch = async () => {
+    if (!('geolocation' in navigator)) {
+      setMapError('Geolocation not available in this browser');
+      return;
+    }
+
+    setMapLoading(true);
+    setMapError(null);
+
+    try {
+      // Calling getCurrentPosition will trigger the permission prompt in most browsers
+      await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve(pos),
+          (err) => reject(err),
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+        )
+      );
+
+      // If successful, start the watch to keep updating
+      startLocationWatch();
+    } catch (err: any) {
+      // If permission was denied, show actionable guidance
+      if (err && err.code === 1) {
+        setMapError('Location permission denied. Enable it in your browser settings (iOS: Settings → Safari → Location).');
+      } else {
+        setMapError(err?.message || 'Unable to get location');
+      }
+      setMapLoading(false);
+    }
+  };
+
   const clearLocation = () => {
     if (watchIdRef.current !== null && 'geolocation' in navigator) {
       try {
@@ -129,9 +175,26 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
   };
 
   useEffect(() => {
-    if (autoWatch) {
-      startLocationWatch();
-    }
+    let mounted = true;
+    const maybeAutoWatch = async () => {
+      if (!autoWatch) return;
+
+      const state = await checkPermissionState();
+
+      // Only auto-start the watch when permission is already granted. This avoids
+      // silently calling geolocation APIs on iOS web where the prompt may not appear
+      // without a user gesture.
+      if (state === 'granted') {
+        if (mounted) startLocationWatch();
+      } else if (state === 'denied') {
+        if (mounted) setMapError('Location permission denied. Enable it in your browser settings.');
+      } else {
+        // 'prompt' or unsupported: do not auto-request to avoid suppressed prompts on iOS.
+        if (mounted) setMapError('Tap the location button to enable location access');
+      }
+    };
+
+    maybeAutoWatch();
 
     return () => {
       clearLocation();
@@ -149,7 +212,7 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
     getCurrentLocation,
     clearLocation,
     setUserCoords: setUserCoordsExternal,
-  startWatching: startLocationWatch,
+  startWatching: requestPermissionAndWatch,
   stopWatching: clearLocation,
   };
 

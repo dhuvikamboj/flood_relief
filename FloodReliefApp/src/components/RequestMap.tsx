@@ -218,7 +218,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
           </IonButton>
           <IonButton
             size="small"
-            onClick={async () => { await getCurrentLocation(); startWatching(); }}
+            onClick={async () => { try { await startWatching(); } catch {} }}
             style={{ marginLeft: 8 }}
           >
             <IonIcon icon={locate} />

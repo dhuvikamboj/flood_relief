@@ -425,7 +425,7 @@ const Reports: React.FC = () => {
         <IonFab slot="fixed" vertical="bottom" horizontal="start" className="location-fab location-fab-fixed">
           <IonFabButton
             className="location-fab-button"
-            onClick={async () => { try { await getCurrentLocation(); startWatching(); } catch {} }}
+            onClick={async () => { try { await startWatching(); } catch {} }}
             title="Center on my location"
           >
             <IonIcon icon={locate} />

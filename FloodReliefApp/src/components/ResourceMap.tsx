@@ -87,13 +87,8 @@ const ResourceMap: React.FC<ResourceMapProps> = ({ resources }) => {
       {/* Floating Location Button */}
      <IonFab slot="fixed" vertical="bottom" horizontal="start" className="location-fab">
         <IonFabButton 
-         
-          
           className="location-fab-button"
-          onClick={async () => { 
-            await getCurrentLocation(); 
-            startWatching(); 
-          }}
+          onClick={async () => { try { await startWatching(); } catch {} }}
         >
           <IonIcon icon={locate} />
         </IonFabButton>
