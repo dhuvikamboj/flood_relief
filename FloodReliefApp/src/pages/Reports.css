@@ -193,6 +193,17 @@ ion-segment-button ion-icon {
   overflow: hidden;
 }
 
+.map-permission-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.map-permission-cta small {
+  color: var(--ion-color-medium);
+}
+
 .map-action-btn { margin-left: 8px; }
 
 .map-meta {

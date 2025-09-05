@@ -20,6 +20,7 @@ import {
   warning,
   call,
   documentText,
+  map,
   person,
   water
 } from 'ionicons/icons';
@@ -75,6 +76,17 @@ const Home: React.FC = () => {
                 </IonCardHeader>
                 <IonCardContent>
                   View and access available resources for flood relief efforts in your area.
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+            <IonCol size="12" sizeMd="6">
+              <IonCard button onClick={() => window.location.href = '/landing'}>
+                <IonCardHeader>
+                  <IonIcon icon={map} slot="start" color="tertiary" />
+                  <IonCardTitle>Maps — Help Needed & Available</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  Quick view: where help is needed and where resources are available nearby.
                 </IonCardContent>
               </IonCard>
             </IonCol>

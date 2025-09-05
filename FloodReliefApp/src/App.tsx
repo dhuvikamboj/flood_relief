@@ -33,6 +33,7 @@ import ReliefResources from './pages/ReliefResources';
 import Profile from './pages/Profile';
 import RequestForm from './pages/RequestForm';
 import ResourceForm from './pages/ResourceForm';
+import Landing from './pages/Landing';
 
 setupIonicReact();
 
@@ -99,7 +100,7 @@ console.log(isAuthenticated);
        
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
-            <Route exact path="/" render={() => <Redirect to="/login" />} />
+            <Route exact path="/" render={() => <Landing />} />
           </IonRouterOutlet>
   
       </IonReactRouter>

@@ -79,7 +79,13 @@ const ResourceMap: React.FC<ResourceMapProps> = ({ resources }) => {
       ) : (
         <IonCard>
           <IonCardContent>
-            <p>Map will appear here when location permission is granted.</p>
+            <div className="map-permission-cta">
+              <p>Map will appear here when location permission is granted.</p>
+              <IonButton onClick={async () => { try { await startWatching(); } catch {} }}>
+                Enable location
+              </IonButton>
+              <small>Tap to allow location in your browser; on iOS use Settings → Safari → Location if previously denied.</small>
+            </div>
           </IonCardContent>
         </IonCard>
       )}

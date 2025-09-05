@@ -198,7 +198,7 @@ export const useResources = (userCoords: { lat: number; lng: number } | null) =>
   };
 
   const isUserResource = (resource: ReliefResource) => {
-    return isAuthenticated && user && resource.user_id === user.id;
+    return isAuthenticated && user && resource.user_id == user.id;
   };
 
   const updateFilters = (newFilters: Partial<ResourceFilters>) => {

@@ -40,3 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/resources/{reliefResourceId}/comments', [CommentController::class, 'store']);
 });
 
+    Route::get('/requests', [ReliefRequestController::class, 'index']);
+    Route::post('/resources', [ReliefResourceController::class, 'store']);
+    Route::get('/requests/{reliefRequestId}/comments', [CommentController::class, 'index']);
+    Route::post('/resources/{reliefResourceId}/comments', [CommentController::class, 'store']);

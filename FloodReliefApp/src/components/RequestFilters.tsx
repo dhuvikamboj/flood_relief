@@ -38,9 +38,10 @@ export interface RequestFilters {
 interface RequestFiltersProps {
   filters: RequestFilters;
   onFiltersChange: (filters: Partial<RequestFilters>) => void;
+  landing?: boolean;
 }
 
-const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChange }) => {
+const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChange,landing }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Count active filters
@@ -72,7 +73,7 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
 
   return (
     <>
-      <IonFab slot="fixed" vertical="bottom" horizontal="end" className="floating-filters-fab">
+      <IonFab slot="fixed" vertical="bottom" horizontal={landing ? "start" : "end"} className="floating-filters-fab">
         <IonFabButton 
           id="request-filter-fab"
           className="filter-fab-button"

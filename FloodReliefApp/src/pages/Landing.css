@@ -1,0 +1,96 @@
+.landing-grid {
+  padding: 12px;
+}
+.landing-map-wrapper {
+  height: 360px;
+  width: 100%;
+}
+
+/* Ensure the map embed fills its container */
+.landing-map-wrapper .map-embed,
+.landing-map-wrapper .map-container {
+  height: 100%;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .landing-map-wrapper {
+    height: 480px;
+  }
+}
+
+/* New helper classes used by Landing.tsx */
+.landing-segment-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+}
+.landing-spinner-wrap {
+  padding: 12px;
+}
+.landing-no-results {
+  padding: 12px;
+}
+.landing-resource-title {
+  margin: 0;
+}
+
+.landing-resource-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-resource-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.landing-resource-footer {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.landing-resource-timestamp {
+  color: var(--ion-color-medium);
+}
+
+/* Request list styles */
+.landing-request-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-request-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.landing-request-footer {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.landing-request-priority {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.landing-request-status {
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.landing-request-title {
+  margin: 0;
+}
+
+.landing-request-right {
+  text-align: right;
+}

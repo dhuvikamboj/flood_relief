@@ -170,7 +170,8 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
                   >
                     <option value="all">All resources</option>
                     <option value="available">✅ Available</option>
-                    <option value="requested">📋 Requested</option>
+                    <option value="limited">⚠️ Limited</option>
+                    <option value="unavailable">❌ Unavailable</option>
                   </select>
                 </div>
 
