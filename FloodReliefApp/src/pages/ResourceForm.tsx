@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import './RequestForm.css';
 import axios from 'axios';
 import { useLocation } from '../hooks/useLocation';
+import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
 import {
   IonPage,
   IonHeader,
@@ -66,32 +67,15 @@ const ResourceForm: React.FC<Props> = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const mapZoomRef = useRef<number | null>(16);
-  const [currentLayer, setCurrentLayer] = useState<string>(() => {
-    const saved = localStorage.getItem('preferred_map_layer');
-    return saved || 'satellite';
+  const [currentLayer, setCurrentLayer] = useState<MapLayerKey>(() => {
+    return getMapLayerPreference();
   });
   // Manual override is managed by stopping/starting the geolocation watcher
 
   // Save layer preference to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('preferred_map_layer', currentLayer);
+    saveMapLayerPreference(currentLayer);
   }, [currentLayer]);
-
-  // Define map layers
-  const mapLayers = {
-    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }),
-    streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }),
-    terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Source: USGS, Esri, TANA, DeLorme, and NPS'
-    }),
-    topo: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-    })
-  };
 
   // auto-populate the location input when coordinates become available
   useEffect(() => {
@@ -134,7 +118,7 @@ const ResourceForm: React.FC<Props> = () => {
 
     const map = L.map(mapRef.current as HTMLElement).setView(userCoords ? [userCoords.lat, userCoords.lng] : [0,0], userCoords ?( mapZoomRef.current ? mapZoomRef.current : 16):17);
     // Add the current layer to the map
-    mapLayers[currentLayer as keyof typeof mapLayers].addTo(map);
+    MAP_LAYERS[currentLayer].addTo(map);
     leafletMapRef.current = map;
 
     if (userCoords) {
@@ -196,14 +180,14 @@ const ResourceForm: React.FC<Props> = () => {
     if (!leafletMapRef.current) return;
 
     // Remove all existing tile layers
-    Object.values(mapLayers).forEach(layer => {
+    Object.values(MAP_LAYERS).forEach(layer => {
       if (leafletMapRef.current?.hasLayer(layer)) {
         leafletMapRef.current.removeLayer(layer);
       }
     });
 
     // Add the new layer
-    mapLayers[currentLayer as keyof typeof mapLayers].addTo(leafletMapRef.current);
+    MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
   }, [currentLayer]);
 
   const handleSubmit = () => {
@@ -390,14 +374,14 @@ const ResourceForm: React.FC<Props> = () => {
                 <div className="map-controls">
                   <select
                     value={currentLayer}
-                    onChange={(e) => setCurrentLayer(e.target.value)}
+                    onChange={(e) => setCurrentLayer(e.target.value as MapLayerKey)}
                     className="layer-select"
                     title="Choose map layer"
                   >
                     <option value="satellite">🛰️ Satellite</option>
                     <option value="streets">🗺️ Streets</option>
                     <option value="terrain">🏔️ Terrain</option>
-                    <option value="topo">🗻 Topographic</option>
+                    <option value="topo">� Topographic</option>
                   </select>
                 </div>
                 <div ref={(el) => { if (el) mapRef.current = el; }} id="resource-map" className="map-embed" />

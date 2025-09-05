@@ -10,6 +10,7 @@ import { refreshOutline, locate } from 'ionicons/icons';
 import L from 'leaflet';
 import { ReliefRequest } from './RequestCard';
 import { useLocation } from '../hooks/useLocation';
+import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
 
 interface RequestMapProps {
   requests: ReliefRequest[];
@@ -34,20 +35,14 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
     setUserCoords,
   } = useLocation();
 
-  // Define map layers
-  const mapLayers = {
-    satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }),
-    streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }),
-  };
-
-  const [currentLayer, setCurrentLayer] = React.useState<string>(() => {
-    const saved = localStorage.getItem('preferred_map_layer');
-    return saved || 'satellite';
+  const [currentLayer, setCurrentLayer] = React.useState<MapLayerKey>(() => {
+    return getMapLayerPreference();
   });
+
+  // Save layer preference when it changes
+  useEffect(() => {
+    saveMapLayerPreference(currentLayer);
+  }, [currentLayer]);
 
   // Initialize map when userCoords are available
   useEffect(() => {
@@ -58,7 +53,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
       leafletMapRef.current = L.map(mapRef.current).setView([userCoords.lat, userCoords.lng], 13);
 
       // Add the current layer to the map
-      mapLayers[currentLayer as keyof typeof mapLayers].addTo(leafletMapRef.current);
+      MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
 
       // Stop GPS watching when user pans or zooms the map
       leafletMapRef.current.on('dragstart', () => stopWatching());
@@ -123,14 +118,14 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
     if (!leafletMapRef.current) return;
 
     // Remove all existing tile layers
-    Object.values(mapLayers).forEach(layer => {
+    Object.values(MAP_LAYERS).forEach(layer => {
       if (leafletMapRef.current?.hasLayer(layer)) {
         leafletMapRef.current.removeLayer(layer);
       }
     });
 
     // Add the new layer
-    mapLayers[currentLayer as keyof typeof mapLayers].addTo(leafletMapRef.current);
+    MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
   }, [currentLayer]);
 
   // Cleanup map on component unmount
@@ -226,12 +221,14 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
           </IonButton>
           <select
             value={currentLayer}
-            onChange={(e) => setCurrentLayer(e.target.value)}
+            onChange={(e) => setCurrentLayer(e.target.value as MapLayerKey)}
             className="layer-select"
             title="Choose map layer"
           >
             <option value="satellite">🛰️ Satellite</option>
             <option value="streets">🗺️ Streets</option>
+            <option value="terrain">🏔️ Terrain</option>
+            <option value="topo">📍 Topographic</option>
           </select>
         </div>
       </div>

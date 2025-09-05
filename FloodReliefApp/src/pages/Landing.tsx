@@ -39,6 +39,11 @@ import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutl
 import './Landing.css';
 
 const Landing: React.FC = () => {
+    // Add location state
+    const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+    const [locationError, setLocationError] = useState<string | null>(null);
+    const [fetchingLocation, setFetchingLocation] = useState(false);
+    
     const { userCoords } = useLocation();
     const [requests, setRequests] = useState<any[]>([]);
     const [resources, setResources] = useState<any[]>([]);
@@ -303,6 +308,55 @@ const Landing: React.FC = () => {
             render: (value) => value ? <small>{value}</small> : ''
         }
     ];
+
+    // Fetch current location once on component mount
+    useEffect(() => {
+        const fetchCurrentLocation = () => {
+            if (!navigator.geolocation) {
+                setLocationError('Geolocation is not supported by this browser');
+                return;
+            }
+
+            setFetchingLocation(true);
+            setLocationError(null);
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    setCurrentLocation(location);
+                    setFetchingLocation(false);
+                    console.log('Current location fetched:', location);
+                },
+                (error) => {
+                    let errorMessage = 'Failed to get location';
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Location access denied by user';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information unavailable';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Location request timed out';
+                            break;
+                    }
+                    setLocationError(errorMessage);
+                    setFetchingLocation(false);
+                    console.error('Location error:', errorMessage);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000 // 5 minutes
+                }
+            );
+        };
+
+        fetchCurrentLocation();
+    }, []); // Empty dependency array ensures this runs only once
 
     return (
         <IonPage>
