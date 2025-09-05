@@ -1,0 +1,72 @@
+/* Styles for the ResourceForm page */
+.map-container {
+  position: relative;
+  width: 100%;
+}
+
+.map-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.layer-select {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  min-width: 120px;
+}
+
+.map-embed {
+  border: 0;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#resource-map { width: 100%; height: 200px; border-radius: 8px; }
+
+.media-uploads {
+  padding: 0 1rem 1rem;
+}
+
+.media-photos {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  flex-wrap: wrap;
+}
+
+.media-photos img {
+  width: 100px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.media-videos {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  overflow-x: auto;
+}
+
+.media-videos video { width: 200px; }
+
+.location-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.location-input-row ion-input {
+  flex: 1 1 auto;
+}
