@@ -176,7 +176,7 @@ const Reports: React.FC = () => {
       } finally {
         setLoadingRequests(false);
       }
-    }, 500);
+    }, 1000);
 
     return () => {
       if (debounceRef.current) {

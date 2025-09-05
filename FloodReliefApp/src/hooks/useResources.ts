@@ -108,7 +108,7 @@ export const useResources = (userCoords: { lat: number; lng: number } | null) =>
       } finally {
         setLoadingResources(false);
       }
-    }, 500);
+    }, 1000);
 
     return () => {
       if (debounceRef.current) {

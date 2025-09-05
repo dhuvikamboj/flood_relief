@@ -1,0 +1,160 @@
+.data-table-card {
+    margin: 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.data-table-container {
+    overflow-x: auto;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.data-table-header {
+    background-color: var(--ion-color-light);
+    color: var(--ion-color-dark);
+    font-weight: 600;
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 2px solid var(--ion-color-medium);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-table-header.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.data-table-header.sortable:hover {
+    background-color: var(--ion-color-light-shade);
+}
+
+.data-table-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+}
+
+.data-table-sort-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.sort-icon {
+    font-size: 12px;
+    color: var(--ion-color-medium);
+    transition: color 0.2s ease;
+}
+
+.sort-icon.active {
+    color: var(--ion-color-primary);
+}
+
+.data-table-row {
+    border-bottom: 1px solid var(--ion-color-light);
+    transition: background-color 0.2s ease;
+}
+
+.data-table-row.clickable:hover {
+    background-color: var(--ion-color-light-tint);
+    cursor: pointer;
+}
+
+.data-table-cell {
+    padding: 12px 8px;
+    vertical-align: top;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+
+.data-table-actions {
+    white-space: nowrap;
+    width: 100px;
+}
+
+.data-table-actions ion-button {
+    margin: 0 2px;
+}
+
+.data-table-loading,
+.data-table-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.data-table-loading ion-spinner {
+    margin-bottom: 16px;
+}
+
+/* Badge styling in table cells */
+.data-table-cell ion-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .data-table {
+        font-size: 12px;
+    }
+    
+    .data-table-header,
+    .data-table-cell {
+        padding: 8px 6px;
+    }
+    
+    .data-table-cell {
+        max-width: 150px;
+    }
+}
+
+/* Status and priority badge colors */
+.status-badge-pending {
+    --background: var(--ion-color-warning);
+}
+
+.status-badge-in-progress {
+    --background: var(--ion-color-primary);
+}
+
+.status-badge-completed {
+    --background: var(--ion-color-success);
+}
+
+.priority-badge-high {
+    --background: var(--ion-color-danger);
+}
+
+.priority-badge-medium {
+    --background: var(--ion-color-warning);
+}
+
+.priority-badge-low {
+    --background: var(--ion-color-success);
+}
+
+.availability-badge-available {
+    --background: var(--ion-color-success);
+}
+
+.availability-badge-limited {
+    --background: var(--ion-color-warning);
+}
+
+.availability-badge-unavailable {
+    --background: var(--ion-color-medium);
+}

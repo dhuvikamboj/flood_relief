@@ -195,6 +195,8 @@ const Signup: React.FC = () => {
         } else {
           setErrors(prev => ({ ...prev, general: 'Registration failed. Please try again.' }));
         }
+      } else if (error.message) {
+        setErrors(prev => ({ ...prev, general: error.message }));
       } else if (error.request) {
         // Network error
         setErrors(prev => ({ ...prev, general: 'Network error. Please check your connection and try again.' }));

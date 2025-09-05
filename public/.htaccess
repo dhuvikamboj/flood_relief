@@ -5,6 +5,14 @@
 
     RewriteEngine On
 
+    # Redirect relief.davindersingh.dev to punjabrelief.in
+    RewriteCond %{HTTP_HOST} ^relief\.davindersingh\.dev$ [NC]
+    RewriteRule ^(.*)$ https://punjabrelief.in/$1 [L,R=301]
+
+    # Force HTTPS redirect
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

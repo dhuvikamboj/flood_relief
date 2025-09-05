@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     IonPage,
     IonHeader,
@@ -31,6 +31,7 @@ import { ResourceFilters as ResourceFiltersType } from '../types/resource';
 import RequestCard, { ReliefRequest } from '../components/RequestCard';
 import RequestModal from '../components/RequestModal';
 import ResourceModal from '../components/ResourceModal';
+import DataTable, { DataTableColumn } from '../components/DataTable';
 import { ReliefResource } from '../types/resource';
 import { useLocation } from '../hooks/useLocation';
 import api from '../../services/api';
@@ -42,7 +43,12 @@ const Landing: React.FC = () => {
     const [requests, setRequests] = useState<any[]>([]);
     const [resources, setResources] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState<'map' | 'data'>('map');
+    const [activeTab, setActiveTab] = useState<'map' | 'data' | 'table'>('map');
+    
+    // Debounce refs for API calls
+    const debounceRequestsRef = useRef<NodeJS.Timeout | null>(null);
+    const debounceResourcesRef = useRef<NodeJS.Timeout | null>(null);
+    
     const [filters, setFilters] = useState<RequestFiltersType>({
         searchRadius: 50,
         statusFilter: 'pending',
@@ -73,46 +79,54 @@ const Landing: React.FC = () => {
     const [selectedResource, setSelectedResource] = useState<ReliefResource | null>(null);
     const fetchResourceData = async () => {
         if(!userCoords) return;
-        const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+        
+        try {
+            const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
 
+            let resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
+            
+            // Add filter parameters
+            if (resourceFilters.availabilityFilter !== 'all') resUrl += `&availability=${resourceFilters.availabilityFilter}`;
+            if (resourceFilters.typeFilter !== 'all') resUrl += `&resource_type=${resourceFilters.typeFilter}`;
+            if (resourceFilters.searchTerm.trim()) resUrl += `&search=${encodeURIComponent(resourceFilters.searchTerm.trim())}`;
 
-        const resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords?.lat}&lng=${userCoords?.lng}&radius_km=10`;
-        const resRes = await api.get(resUrl, { headers: { Accept: 'application/json' } });
-        const resItems = (resRes.data && resRes.data.success) ? resRes.data.data.map((it: any) => ({
-            id: it.id,
-            location: it.location || `${it.lat},${it.lng}`,
-            address: it.address,
-            contact: it.contact,
-            resource_type: it.resource_type,
-            details: it.details || '',
-            capacity: it.capacity,
-            availability: it.availability || 'available',
-            distance_km: it.distance_km,
-            timestamp: new Date(it.created_at || Date.now()),
-            lat: parseFloat(it.lat),
-            lng: parseFloat(it.lng),
-            photos: it.photos ? (typeof it.photos === 'string' ? JSON.parse(it.photos) : it.photos) : undefined,
-        })) : [];
+            const resRes = await api.get(resUrl, { headers: { Accept: 'application/json' } });
+            const resItems = (resRes.data && resRes.data.success) ? resRes.data.data.map((it: any) => ({
+                id: it.id,
+                location: it.location || `${it.lat},${it.lng}`,
+                address: it.address,
+                contact: it.contact,
+                resource_type: it.resource_type,
+                details: it.details || '',
+                capacity: it.capacity,
+                availability: it.availability || 'available',
+                distance_km: it.distance_km,
+                timestamp: new Date(it.created_at || Date.now()),
+                lat: parseFloat(it.lat),
+                lng: parseFloat(it.lng),
+                photos: it.photos ? (typeof it.photos === 'string' ? JSON.parse(it.photos) : it.photos) : undefined,
+            })) : [];
 
-
-        setResources(resItems);
-
-
-    }
+            setResources(resItems);
+        } catch (e) {
+            console.error('Failed to fetch resource data', e);
+            // Keep existing resources on error
+        }
+    };
+    
+    // Debounced fetch for requests
     useEffect(() => {
-        const fetchData = async () => {
-            if (!userCoords) return;
+        if (!userCoords) return;
+
+        if (debounceRequestsRef.current) {
+            clearTimeout(debounceRequestsRef.current);
+        }
+
+        debounceRequestsRef.current = setTimeout(async () => {
             setLoading(true);
             try {
                 const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
-
-                let reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}`;
-                reqUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
-                if (resourceFilters.availabilityFilter !== 'all') reqUrl += `&availability=${resourceFilters.availabilityFilter}`;
-                if (resourceFilters.typeFilter !== 'all') reqUrl += `&resource_type=${resourceFilters.typeFilter}`;
-                if (resourceFilters.searchTerm.trim()) reqUrl += `&search=${encodeURIComponent(resourceFilters.searchTerm.trim())}`;
-                // Use regular nearby requests endpoint
-                reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${filters.searchRadius}`;
+                let reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${filters.searchRadius}`;
 
                 // Add filter parameters for nearby search
                 if (filters.statusFilter !== 'all') reqUrl += `&status=${filters.statusFilter}`;
@@ -138,37 +152,39 @@ const Landing: React.FC = () => {
                     status: it.status || 'pending',
                 })) : [];
 
-                const resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=10`;
-                const resRes = await api.get(resUrl, { headers: { Accept: 'application/json' } });
-                const resItems = (resRes.data && resRes.data.success) ? resRes.data.data.map((it: any) => ({
-                    id: it.id,
-                    location: it.location || `${it.lat},${it.lng}`,
-                    address: it.address,
-                    contact: it.contact,
-                    resource_type: it.resource_type,
-                    details: it.details || '',
-                    capacity: it.capacity,
-                    availability: it.availability || 'available',
-                    distance_km: it.distance_km,
-                    timestamp: new Date(it.created_at || Date.now()),
-                    lat: parseFloat(it.lat),
-                    lng: parseFloat(it.lng),
-                    photos: it.photos ? (typeof it.photos === 'string' ? JSON.parse(it.photos) : it.photos) : undefined,
-                })) : [];
-
                 setRequests(reqItems);
             } catch (e) {
-                // ignore network failures for now
-                console.error('Landing fetch failed', e);
+                console.error('Landing requests fetch failed', e);
+                // Keep existing requests on error
             } finally {
                 setLoading(false);
             }
-        };
+        }, 1000);
 
-        fetchData();
-    }, [userCoords,filters]);
+        return () => {
+            if (debounceRequestsRef.current) {
+                clearTimeout(debounceRequestsRef.current);
+            }
+        };
+    }, [userCoords, filters]);
+    
+    // Debounced fetch for resources
     useEffect(() => {
-        fetchResourceData();
+        if (!userCoords) return;
+
+        if (debounceResourcesRef.current) {
+            clearTimeout(debounceResourcesRef.current);
+        }
+
+        debounceResourcesRef.current = setTimeout(async () => {
+            await fetchResourceData();
+        }, 1000);
+
+        return () => {
+            if (debounceResourcesRef.current) {
+                clearTimeout(debounceResourcesRef.current);
+            }
+        };
     }, [userCoords, resourceFilters]);
     // Expose helpers for map popup buttons (RequestMap/ResourceMap use window.openRequestModal)
     useEffect(() => {
@@ -187,11 +203,112 @@ const Landing: React.FC = () => {
         };
     }, []);
 
+    // Define columns for request table
+    const requestColumns: DataTableColumn[] = [
+        {
+            key: 'location',
+            label: 'Location',
+            sortable: true,
+        },
+        {
+            key: 'request_type',
+            label: 'Type',
+            sortable: true,
+            render: (value) => value ? <IonBadge color="primary">{value}</IonBadge> : null
+        },
+        {
+            key: 'priority',
+            label: 'Priority',
+            sortable: true,
+            render: (value) => {
+                const color = value?.toLowerCase() === 'high' ? 'danger' : 
+                             value?.toLowerCase() === 'medium' ? 'warning' : 'success';
+                return value ? <IonBadge color={color}>{value}</IonBadge> : null;
+            }
+        },
+        {
+            key: 'status',
+            label: 'Status',
+            sortable: true,
+            render: (value) => {
+                const color = value === 'pending' ? 'warning' : 
+                             value === 'in-progress' ? 'primary' : 'success';
+                return value ? <IonBadge color={color}>{value}</IonBadge> : null;
+            }
+        },
+        {
+            key: 'distance_km',
+            label: 'Distance (km)',
+            sortable: true,
+            render: (value) => value !== undefined ? `${parseFloat(value).toFixed(1)} km` : ''
+        },
+        {
+            key: 'contact',
+            label: 'Contact',
+            sortable: false,
+            render: (value) => value ? <small>{value}</small> : ''
+        },
+        {
+            key: 'details',
+            label: 'Details',
+            sortable: false,
+            render: (value) => value ? <small>{value.substring(0, 100)}...</small> : ''
+        }
+    ];
+
+    // Define columns for resource table
+    const resourceColumns: DataTableColumn[] = [
+        {
+            key: 'location',
+            label: 'Location',
+            sortable: true,
+        },
+        {
+            key: 'resource_type',
+            label: 'Type',
+            sortable: true,
+            render: (value) => value ? <IonBadge color="primary">{value}</IonBadge> : null
+        },
+        {
+            key: 'availability',
+            label: 'Availability',
+            sortable: true,
+            render: (value) => {
+                const color = value === 'available' ? 'success' : 
+                             value === 'limited' ? 'warning' : 'medium';
+                return value ? <IonBadge color={color}>{value}</IonBadge> : null;
+            }
+        },
+        {
+            key: 'capacity',
+            label: 'Capacity',
+            sortable: true,
+        },
+        {
+            key: 'distance_km',
+            label: 'Distance (km)',
+            sortable: true,
+            render: (value) => value !== undefined ? `${parseFloat(value).toFixed(1)} km` : ''
+        },
+        {
+            key: 'contact',
+            label: 'Contact',
+            sortable: false,
+            render: (value) => value ? <small>{value}</small> : ''
+        },
+        {
+            key: 'address',
+            label: 'Address',
+            sortable: false,
+            render: (value) => value ? <small>{value}</small> : ''
+        }
+    ];
+
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Maps — Help Needed & Available</IonTitle>
+                    <IonTitle>Punjab Seva — Help Needed & Available</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>
@@ -265,13 +382,61 @@ const Landing: React.FC = () => {
                 <IonGrid className="landing-grid">
                     <IonRow>
                         <IonCol size="12">
+                            {/* Stats Summary Section */}
+                            <div className="landing-stats-section">
+                                <IonCard className="landing-stats-card">
+                                    <IonCardContent>
+                                        <div className="landing-stats-grid">
+                                            <div className="landing-stat-item">
+                                                <div className="landing-stat-count">
+                                                    <IonText color="danger">
+                                                        <h2>{requests.length}</h2>
+                                                    </IonText>
+                                                </div>
+                                                <div className="landing-stat-label">
+                                                    <IonText color="medium">
+                                                        <p>Relief Requests</p>
+                                                    </IonText>
+                                                    <IonBadge color="danger">Help Needed</IonBadge>
+                                                </div>
+                                            </div>
+                                            <div className="landing-stat-divider"></div>
+                                            <div className="landing-stat-item">
+                                                <div className="landing-stat-count">
+                                                    <IonText color="success">
+                                                        <h2>{resources.length}</h2>
+                                                    </IonText>
+                                                </div>
+                                                <div className="landing-stat-label">
+                                                    <IonText color="medium">
+                                                        <p>Relief Resources</p>
+                                                    </IonText>
+                                                    <IonBadge color="success">Help Available</IonBadge>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {loading && (
+                                            <div className="landing-stats-loading">
+                                                <IonSpinner name="crescent" />
+                                                <IonText color="medium">
+                                                    <small>Loading latest data...</small>
+                                                </IonText>
+                                            </div>
+                                        )}
+                                    </IonCardContent>
+                                </IonCard>
+                            </div>
+
                             <div className="landing-segment-wrap">
-                                <IonSegment value={activeTab} onIonChange={e => setActiveTab(e.detail.value as 'map' | 'data')}>
+                                <IonSegment value={activeTab} onIonChange={e => setActiveTab(e.detail.value as 'map' | 'data' | 'table')}>
                                     <IonSegmentButton value="map">
                                         <IonLabel>Map View</IonLabel>
                                     </IonSegmentButton>
                                     <IonSegmentButton value="data">
                                         <IonLabel>List View</IonLabel>
+                                    </IonSegmentButton>
+                                    <IonSegmentButton value="table">
+                                        <IonLabel>Table View</IonLabel>
                                     </IonSegmentButton>
                                 </IonSegment>
                             </div>
@@ -283,7 +448,12 @@ const Landing: React.FC = () => {
                                 <IonCol size="12" sizeMd="6">
                                     <IonCard style={{ height: '90vh' }}>
                                         <IonCardHeader>
-                                            <IonCardTitle>Where help is needed</IonCardTitle>
+                                            <IonCardTitle>
+                                                Where help is needed 
+                                                <IonBadge color="danger" style={{ marginLeft: '8px' }}>
+                                                    {requests.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
                                         </IonCardHeader>
                                         <IonCardContent>
                                             <IonText color="medium"><p>Relief requests reported in the area</p></IonText>
@@ -297,7 +467,12 @@ const Landing: React.FC = () => {
                                 <IonCol size="12" sizeMd="6" >
                                     <IonCard style={{ height: '90vh' }}>
                                         <IonCardHeader>
-                                            <IonCardTitle>Where help is available</IonCardTitle>
+                                            <IonCardTitle>
+                                                Where help is available 
+                                                <IonBadge color="success" style={{ marginLeft: '8px' }}>
+                                                    {resources.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
                                         </IonCardHeader>
                                         <IonCardContent>
                                             <IonText color="medium"><p>Resources and volunteers offering assistance</p></IonText>
@@ -316,7 +491,12 @@ const Landing: React.FC = () => {
                                 <IonCol size="12" sizeMd="6">
                                     <IonCard>
                                         <IonCardHeader>
-                                            <IonCardTitle>Where help is needed</IonCardTitle>
+                                            <IonCardTitle>
+                                                Where help is needed 
+                                                <IonBadge color="danger" style={{ marginLeft: '8px' }}>
+                                                    {requests.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
                                         </IonCardHeader>
                                         <IonCardContent>
                                             <IonText color="medium"><p>Relief requests</p></IonText>
@@ -366,7 +546,12 @@ const Landing: React.FC = () => {
                                 <IonCol size="12" sizeMd="6">
                                     <IonCard>
                                         <IonCardHeader>
-                                            <IonCardTitle>Where help is available</IonCardTitle>
+                                            <IonCardTitle>
+                                                Where help is available 
+                                                <IonBadge color="success" style={{ marginLeft: '8px' }}>
+                                                    {resources.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
                                         </IonCardHeader>
                                         <IonCardContent>
                                             <IonText color="medium"><p>Resources</p></IonText>
@@ -427,6 +612,61 @@ const Landing: React.FC = () => {
                                 </IonCol>
 
                                 {/* Floating filters are mounted as fixed children of IonContent below so the FAB/popover can position correctly */}
+                            </>
+                        )}
+
+                        {/* Table View */}
+                        {activeTab === 'table' && (
+                            <>
+                                <IonCol size="12">
+                                    <IonCard>
+                                        <IonCardHeader>
+                                            <IonCardTitle>
+                                                Relief Requests 
+                                                <IonBadge color="danger" style={{ marginLeft: '8px' }}>
+                                                    {requests.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
+                                        </IonCardHeader>
+                                        <IonCardContent>
+                                            <DataTable
+                                                data={requests}
+                                                columns={requestColumns}
+                                                loading={loading}
+                                                onRowClick={(request) => {
+                                                    setSelectedRequest(request);
+                                                    setShowRequestModal(true);
+                                                }}
+                                                emptyMessage="No relief requests found in your area"
+                                            />
+                                        </IonCardContent>
+                                    </IonCard>
+                                </IonCol>
+
+                                <IonCol size="12">
+                                    <IonCard>
+                                        <IonCardHeader>
+                                            <IonCardTitle>
+                                                Relief Resources 
+                                                <IonBadge color="success" style={{ marginLeft: '8px' }}>
+                                                    {resources.length}
+                                                </IonBadge>
+                                            </IonCardTitle>
+                                        </IonCardHeader>
+                                        <IonCardContent>
+                                            <DataTable
+                                                data={resources}
+                                                columns={resourceColumns}
+                                                loading={loading}
+                                                onRowClick={(resource) => {
+                                                    setSelectedResource(resource);
+                                                    setShowResourceModal(true);
+                                                }}
+                                                emptyMessage="No resources found in your area"
+                                            />
+                                        </IonCardContent>
+                                    </IonCard>
+                                </IonCol>
                             </>
                         )}
                     </IonRow>
