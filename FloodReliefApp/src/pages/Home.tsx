@@ -80,7 +80,7 @@ const Home: React.FC = () => {
               </IonCard>
             </IonCol>
             <IonCol size="12" sizeMd="6">
-              <IonCard button onClick={() => window.location.href = '/landing'}>
+              <IonCard button onClick={() => window.location.href = '/'}>
                 <IonCardHeader>
                   <IonIcon icon={map} slot="start" color="tertiary" />
                   <IonCardTitle>Maps — Help Needed & Available</IonCardTitle>

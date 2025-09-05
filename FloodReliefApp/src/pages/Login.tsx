@@ -12,9 +12,9 @@ import {
   IonAlert,
   IonLoading,
   IonText,
-  IonRouterLink
+  IonRouterLink,
+  IonSpinner
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
 import './Login.css';
@@ -22,6 +22,7 @@ import './Login.css';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [localLoading, setLocalLoading] = useState(false);
   const [errors, setErrors] = useState({
     email: '',
     password: '',
@@ -73,6 +74,7 @@ const Login: React.FC = () => {
       return;
     }
 
+    setLocalLoading(true);
     try {
       await login(email.trim(), password);
       presentToast({
@@ -116,9 +118,13 @@ const Login: React.FC = () => {
       } else if (error.request) {
         // Network error
         setErrors(prev => ({ ...prev, general: 'Network error. Please check your connection.' }));
+      } else if (error.message) {
+        setErrors(prev => ({ ...prev, general: error.message }));
       } else {
         setErrors(prev => ({ ...prev, general: 'An unexpected error occurred.' }));
       }
+    } finally {
+      setLocalLoading(false);
     }
   };
 
@@ -130,7 +136,7 @@ const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonLoading isOpen={loading} message="Logging in..." />
+        <IonLoading isOpen={localLoading || loading} message="Logging in..." />
 
         <div className="login-header">
           <IonText color="primary">
@@ -182,10 +188,10 @@ const Login: React.FC = () => {
         <IonButton
           expand="block"
           onClick={handleLogin}
-          disabled={loading || !email || !password}
+          disabled={localLoading || loading || !email || !password}
           style={{ marginTop: '1rem' }}
         >
-          Login
+          {(localLoading || loading) ? (<><IonSpinner name="dots" /> Logging in...</>) : 'Login'}
         </IonButton>
 
         <div className="signup-link">

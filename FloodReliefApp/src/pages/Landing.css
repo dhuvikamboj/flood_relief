@@ -1,6 +1,137 @@
 .landing-grid {
   padding: 12px;
 }
+
+/* Hero Section Styles */
+.landing-hero-section {
+  background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+  padding: 24px 0;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.landing-hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.landing-hero-content {
+  padding: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.landing-hero-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-hero-icon {
+  font-size: 2.4rem;
+  color: var(--ion-color-warning);
+}
+
+.landing-hero-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0 0 16px 0;
+  font-weight: 500;
+}
+
+.landing-hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.landing-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.landing-feature-item ion-icon {
+  color: var(--ion-color-warning);
+  font-size: 1.2rem;
+}
+
+.landing-hero-description {
+  margin-top: 16px;
+}
+
+.landing-hero-description p {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.landing-auth-section {
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.landing-auth-card {
+  max-width: 300px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.landing-auth-card h3 {
+  margin: 0 0 8px 0;
+  color: var(--ion-color-primary);
+  text-align: center;
+  font-weight: 600;
+}
+
+.landing-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.landing-auth-buttons ion-button {
+  font-weight: 600;
+}
+
+.landing-auth-card small {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+}
+
+@media (min-width: 768px) {
+  .landing-hero-features {
+    flex-direction: row;
+    gap: 24px;
+  }
+  
+  .landing-hero-title {
+    font-size: 2.8rem;
+  }
+  
+  .landing-hero-subtitle {
+    font-size: 1.2rem;
+  }
+}
 .landing-map-wrapper {
   height: 360px;
   width: 100%;

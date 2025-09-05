@@ -11,9 +11,9 @@ import {
   IonLabel,
   IonLoading,
   IonText,
-  IonRouterLink
+  IonRouterLink,
+  IonSpinner
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
 import './Signup.css';
@@ -37,9 +37,9 @@ const Signup: React.FC = () => {
     general: ''
   });
   const { register } = useAuth();
-  const history = useHistory();
   const [presentToast] = useIonToast();
-  const [loading, setLoading] = useState(false);
+  // use a local-only loading flag to avoid relying on any global/auth loading state
+  const [localLoading, setLocalLoading] = useState(false);
 
   const clearErrors = () => {
     setErrors({
@@ -146,7 +146,7 @@ const Signup: React.FC = () => {
     }
 
     try {
-      setLoading(true);
+      setLocalLoading(true);
   // register may have an extended signature; cast to any to forward extra fields
   await (register as any)(email.trim(), password, name.trim(), confirmPassword,phone.trim(), address.trim(), emergencyContact.trim());
       presentToast({
@@ -202,7 +202,7 @@ const Signup: React.FC = () => {
         setErrors(prev => ({ ...prev, general: 'An unexpected error occurred. Please try again.' }));
       }
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
 
@@ -214,7 +214,7 @@ const Signup: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonLoading isOpen={loading} message="Creating account..." />
+        <IonLoading isOpen={localLoading} message="Creating account..." />
 
         <div className="signup-header">
           <IonText color="primary">
@@ -340,10 +340,10 @@ const Signup: React.FC = () => {
         <IonButton
           expand="block"
           onClick={handleSignup}
-          disabled={loading || !name || !email || !password || !confirmPassword}
+          disabled={localLoading || !name || !email || !password || !confirmPassword}
           className="signup-button"
         >
-          Sign Up
+          {localLoading ? (<><IonSpinner name="dots" /> Creating...</>) : 'Sign Up'}
         </IonButton>
 
         <div className="login-link">

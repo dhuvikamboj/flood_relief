@@ -21,6 +21,7 @@ import {
     IonBadge,
     IonButton,
     IonIcon,
+    IonRouterLink,
 } from '@ionic/react';
 import RequestMap from '../components/RequestMap';
 import ResourceMap from '../components/ResourceMap';
@@ -33,6 +34,7 @@ import ResourceModal from '../components/ResourceModal';
 import { ReliefResource } from '../types/resource';
 import { useLocation } from '../hooks/useLocation';
 import api from '../../services/api';
+import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutline } from 'ionicons/icons';
 import './Landing.css';
 
 const Landing: React.FC = () => {
@@ -193,6 +195,73 @@ const Landing: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
+                {/* App Information Hero Section */}
+                <div className="landing-hero-section">
+                    <IonGrid>
+                        <IonRow className="ion-align-items-center">
+                            <IonCol size="12" sizeMd="8">
+                                <div className="landing-hero-content">
+                                    <h1 className="landing-hero-title">
+                                        <IonIcon icon={heartOutline} className="landing-hero-icon" />
+                                        Punjab Seva (Flood Relief)
+                                    </h1>
+                                    <p className="landing-hero-subtitle">
+                                        Real-time coordination platform connecting flood victims with resources and volunteers
+                                    </p>
+                                    <div className="landing-hero-features">
+                                        <div className="landing-feature-item">
+                                            <IonIcon icon={mapOutline} />
+                                            <span>Map relief requests & available resources</span>
+                                        </div>
+                                        <div className="landing-feature-item">
+                                            <IonIcon icon={handRightOutline} />
+                                            <span>Connect helpers with those in need</span>
+                                        </div>
+                                    </div>
+                                    <div className="landing-hero-description">
+                                        <IonText color="medium">
+                                            <p>
+                                                During flood emergencies, critical time is lost searching for help. 
+                                                Our platform instantly connects victims needing rescue, supplies, or shelter 
+                                                with nearby volunteers and resources.
+                                            </p>
+                                        </IonText>
+                                    </div>
+                                </div>
+                            </IonCol>
+                            <IonCol size="12" sizeMd="4">
+                                <div className="landing-auth-section">
+                                    <IonCard className="landing-auth-card">
+                                        <IonCardContent>
+                                            <h3>Help Save Lives</h3>
+                                            <IonText color="medium">
+                                                <p>Join our emergency response network</p>
+                                            </IonText>
+                                            <div className="landing-auth-buttons">
+                                                <IonRouterLink routerLink="/signup">
+                                                    <IonButton expand="block" color="primary">
+                                                        <IonIcon icon={personAddOutline} slot="start" />
+                                                        Sign Up to Help
+                                                    </IonButton>
+                                                </IonRouterLink>
+                                                <IonRouterLink routerLink="/login">
+                                                    <IonButton expand="block" fill="outline" color="primary">
+                                                        <IonIcon icon={logInOutline} slot="start" />
+                                                        Login
+                                                    </IonButton>
+                                                </IonRouterLink>
+                                            </div>
+                                            <IonText color="medium">
+                                                <small>View live updates without account</small>
+                                            </IonText>
+                                        </IonCardContent>
+                                    </IonCard>
+                                </div>
+                            </IonCol>
+                        </IonRow>
+                    </IonGrid>
+                </div>
+
                 <IonGrid className="landing-grid">
                     <IonRow>
                         <IonCol size="12">
@@ -212,7 +281,7 @@ const Landing: React.FC = () => {
                         {activeTab === 'map' && (
                             <>
                                 <IonCol size="12" sizeMd="6">
-                                    <IonCard>
+                                    <IonCard style={{ height: '90vh' }}>
                                         <IonCardHeader>
                                             <IonCardTitle>Where help is needed</IonCardTitle>
                                         </IonCardHeader>
@@ -225,8 +294,8 @@ const Landing: React.FC = () => {
                                     </IonCard>
                                 </IonCol>
 
-                                <IonCol size="12" sizeMd="6">
-                                    <IonCard>
+                                <IonCol size="12" sizeMd="6" >
+                                    <IonCard style={{ height: '90vh' }}>
                                         <IonCardHeader>
                                             <IonCardTitle>Where help is available</IonCardTitle>
                                         </IonCardHeader>

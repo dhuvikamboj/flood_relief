@@ -95,7 +95,7 @@ const slice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(login.pending, state => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<any>) => {
         const { token, user } = action.payload;
@@ -111,7 +111,7 @@ const slice = createSlice({
         state.loading = false;
       })
       .addCase(register.pending, state => {
-        state.loading = true;
+        // state.loading = true;
       })
       .addCase(register.fulfilled, (state, action: PayloadAction<any>) => {
         const { token, user } = action.payload;
@@ -128,7 +128,7 @@ const slice = createSlice({
       });
     builder
         .addCase(updateProfile.pending, state => {
-          state.loading = true;
+          // state.loading = true;
         })
         .addCase(updateProfile.fulfilled, (state, action: PayloadAction<any>) => {
           // payload can be either the user object or an object like { user: {...} }
