@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { getApiBaseUrl } from '../config/api';
 import {
     IonPage,
     IonHeader,
@@ -86,7 +87,7 @@ const Landing: React.FC = () => {
         if(!userCoords) return;
         
         try {
-            const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+            const base = getApiBaseUrl();
 
             let resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
             
@@ -130,7 +131,7 @@ const Landing: React.FC = () => {
         debounceRequestsRef.current = setTimeout(async () => {
             setLoading(true);
             try {
-                const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+                const base = getApiBaseUrl();
                 let reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${filters.searchRadius}`;
 
                 // Add filter parameters for nearby search

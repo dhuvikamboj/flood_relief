@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getApiBaseUrl } from '../config/api';
 import {
   IonContent,
   IonHeader,
@@ -55,7 +56,7 @@ const Dashboard: React.FC = () => {
         return;
       }
 
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const response = await axios.get(`${base}/api/user/requests`, {
         headers: {
           Authorization: `Bearer ${token}`,

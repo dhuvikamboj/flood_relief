@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { getApiBaseUrl } from '../config/api';
 // marker icons for Vite
 
-import './RequestForm.css';
+import './ResourceForm.css';
 import axios from 'axios';
 import { useLocation } from '../hooks/useLocation';
 import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
@@ -214,8 +215,8 @@ const ResourceForm: React.FC<Props> = () => {
   // Append videos using 'videos' (Laravel accepts videos[] or videos) — keep videos[] for compatibility
   videoFiles.forEach((f) => form.append('videos[]', f, f.name));
 
-    // Prefer Vite env var VITE_API_URL, fallback to localhost
-    const apiBase = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+    // Prefer Vite env var VITE_API_URL, fallback to centralized config
+    const apiBase = getApiBaseUrl();
     const endpoint = `${apiBase.replace(/\/$/, '')}/api/resources`;
 
     setUploading(true);

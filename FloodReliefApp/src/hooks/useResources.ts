@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import api from '../../services/api';
 import secureStorage from '../../services/secureStorage';
+import { getApiBaseUrl } from '../config/api';
 // ...existing code...
 import { useAuth } from '../contexts/AuthContext';
 import { ReliefResource, ResourceFilters } from '../types/resource';
@@ -40,7 +41,7 @@ export const useResources = (userCoords: { lat: number; lng: number } | null) =>
 
       // Build URL same as before
       try {
-        const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+        const base = getApiBaseUrl();
 
         let url: string;
         if (filters.myResourcesFilter && isAuthenticated && user) {
@@ -152,7 +153,7 @@ export const useResources = (userCoords: { lat: number; lng: number } | null) =>
 
   const deleteResource = async (id: number) => {
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/resources/${id}`;
 
       const headers: any = { Accept: 'application/json' };
@@ -174,7 +175,7 @@ export const useResources = (userCoords: { lat: number; lng: number } | null) =>
 
   const updateResourceAvailability = async (id: number, newAvailability: string) => {
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/resources/${id}/availability`;
 
       const headers: any = { Accept: 'application/json' };

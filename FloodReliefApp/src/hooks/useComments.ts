@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../../services/api';
 import secureStorage from '../../services/secureStorage';
+import { getApiBaseUrl } from '../config/api';
 import { useAuth } from '../contexts/AuthContext';
 import { Comment } from '../types/resource';
 
@@ -14,7 +15,7 @@ export const useComments = () => {
   const fetchComments = async (resourceId: number) => {
     setLoadingComments(true);
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/resources/${resourceId}/comments`;
 
       const cacheKey = `comments:${resourceId}`;
@@ -52,7 +53,7 @@ export const useComments = () => {
 
     setSubmittingComment(true);
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/resources/${resourceId}/comments`;
 
       const res = await api.post(url, { comment: newComment.trim() });

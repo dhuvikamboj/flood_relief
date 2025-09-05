@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { getApiUrl } from '../../config/api';
 
 interface User {
   id: number;
@@ -14,7 +15,7 @@ interface AuthState {
   token: string | null;
 }
 
-const API_BASE_URL = 'https://floodrelief.davindersingh.dev/api';
+const API_BASE_URL = getApiUrl();
 
 const initialFromStorage = (): AuthState => {
   try {

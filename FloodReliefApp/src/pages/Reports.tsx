@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { getApiBaseUrl } from '../config/api';
 import {
   IonContent,
   IonHeader,
@@ -126,7 +127,7 @@ const Reports: React.FC = () => {
     debounceRef.current = setTimeout(async () => {
       setLoadingRequests(true);
       try {
-        const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+        const base = getApiBaseUrl();
 
         let url: string;
         if (filters.myRequestsFilter && isAuthenticated && user) {
@@ -215,7 +216,7 @@ const Reports: React.FC = () => {
 
   const updateRequestStatus = async (id: number, newStatus: string) => {
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/requests/${id}/status`;
 
       // Include authentication headers if user is authenticated
@@ -243,7 +244,7 @@ const Reports: React.FC = () => {
 
   const deleteRequest = async (id: number) => {
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/requests/${id}`;
 
       // Include authentication headers if user is authenticated
@@ -282,7 +283,7 @@ const Reports: React.FC = () => {
   const fetchComments = async (requestId: number) => {
     setLoadingComments(true);
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/requests/${requestId}/comments`;
 
   const res = await api.get(url);
@@ -304,7 +305,7 @@ const Reports: React.FC = () => {
 
     setSubmittingComment(true);
     try {
-      const base = (import.meta as any)?.env?.VITE_API_URL ?? 'https://floodrelief.davindersingh.dev';
+      const base = getApiBaseUrl();
       const url = `${base.replace(/\/$/, '')}/api/requests/${selectedRequest.id}/comments`;
 
       const res = await axios.post(url, { comment: newComment.trim() });

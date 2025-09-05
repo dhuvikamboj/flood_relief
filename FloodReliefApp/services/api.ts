@@ -1,10 +1,11 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import secureStorage from './secureStorage';
+import { getApiUrl } from '../src/config/api';
 
 // Base URL for your Laravel API
 // For development, use your computer's IP address instead of localhost
 // You can find your IP with: ipconfig (Windows) or ifconfig (Mac/Linux)
-const API_BASE_URL = "https://floodrelief.davindersingh.dev/api";  // For production
+const API_BASE_URL = getApiUrl();  // For production
 
 // Create axios instance
 const api = axios.create({
