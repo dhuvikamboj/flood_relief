@@ -50,6 +50,7 @@ const Reports: React.FC = () => {
   const [pendingStatusUpdate, setPendingStatusUpdate] = useState<{ requestId: number; newStatus: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'data'>('map');
   const [isPageReady, setIsPageReady] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState<boolean>(!document.hidden);
   
   // Modal state
   const [selectedRequest, setSelectedRequest] = useState<ReliefRequest | null>(null);
@@ -69,6 +70,26 @@ const Reports: React.FC = () => {
       setIsPageReady(true);
     }, 100);
     return () => clearTimeout(timer);
+  }, []);
+
+  // Page visibility detection for navigation handling
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const visible = !document.hidden;
+      setIsPageVisible(visible);
+      
+      if (visible) {
+        // Page became visible - likely returned from navigation
+        // Reset page ready state to trigger map refresh
+        setIsPageReady(false);
+        setTimeout(() => {
+          setIsPageReady(true);
+        }, 200);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   // Filters state
@@ -346,7 +367,10 @@ const Reports: React.FC = () => {
 
   const renderMapView = () => (
     <div className={`map-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
-      <RequestMap requests={sortedRequests} isVisible={activeTab === 'map' && isPageReady} />
+      <RequestMap 
+        requests={sortedRequests} 
+        isVisible={activeTab === 'map' && isPageReady && isPageVisible} 
+      />
     </div>
   );
 

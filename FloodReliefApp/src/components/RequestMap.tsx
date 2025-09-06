@@ -21,6 +21,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const [isPageVisible, setIsPageVisible] = React.useState<boolean>(!document.hidden);
 
   const {
     userCoords,
@@ -44,6 +45,51 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
   useEffect(() => {
     saveMapLayerPreference(currentLayer);
   }, [currentLayer]);
+
+  // Page visibility detection for navigation handling
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const visible = !document.hidden;
+      setIsPageVisible(visible);
+      
+      if (visible && isVisible && leafletMapRef.current) {
+        // Page became visible - likely returned from navigation
+        setTimeout(() => {
+          try {
+            leafletMapRef.current?.invalidateSize(true);
+            const center = leafletMapRef.current?.getCenter();
+            if (center) {
+              leafletMapRef.current?.setView(center, leafletMapRef.current?.getZoom());
+            }
+          } catch (error) {
+            console.warn('Error refreshing map after navigation:', error);
+          }
+        }, 200);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isVisible]);
+
+  // Layer validation effect - ensures layers are present after navigation
+  useEffect(() => {
+    if (isVisible && isPageVisible && leafletMapRef.current) {
+      // Check if any tile layer is present, if not add the current one
+      const hasAnyTileLayer = Object.values(MAP_LAYERS).some(layer => 
+        leafletMapRef.current?.hasLayer(layer)
+      );
+      
+      if (!hasAnyTileLayer) {
+        console.log('No tile layer detected after navigation, adding current layer');
+        try {
+          MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+        } catch (error) {
+          console.warn('Error adding layer after navigation:', error);
+        }
+      }
+    }
+  }, [isVisible, isPageVisible, currentLayer]);
 
   // Handle visibility changes - invalidate map size when becoming visible
   useEffect(() => {
@@ -124,8 +170,22 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
     if (!leafletMapRef.current) {
       leafletMapRef.current = L.map(mapRef.current).setView([userCoords.lat, userCoords.lng], 13);
 
-      // Add the current layer to the map
-      MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+      // Add the current layer to the map with retry logic
+      try {
+        MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+      } catch (error) {
+        console.warn('Error adding initial layer, will retry:', error);
+        // Retry after a short delay
+        setTimeout(() => {
+          try {
+            if (leafletMapRef.current && !leafletMapRef.current.hasLayer(MAP_LAYERS[currentLayer])) {
+              MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+            }
+          } catch (retryError) {
+            console.warn('Retry failed for adding layer:', retryError);
+          }
+        }, 100);
+      }
 
       // Stop GPS watching when user pans or zooms the map
       leafletMapRef.current.on('dragstart', () => stopWatching());
@@ -142,8 +202,16 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
       leafletMapRef.current.setView([userCoords.lat, userCoords.lng], leafletMapRef.current.getZoom() || 13);
     }
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => leafletMapRef.current?.removeLayer(marker));
+    // Clear existing markers with error handling
+    markersRef.current.forEach(marker => {
+      try {
+        if (leafletMapRef.current && leafletMapRef.current.hasLayer(marker)) {
+          leafletMapRef.current.removeLayer(marker);
+        }
+      } catch (error) {
+        console.warn('Error removing existing marker:', error);
+      }
+    });
     markersRef.current = [];
 
     // Add user location marker
@@ -179,8 +247,16 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
     });
 
     return () => {
-      // Cleanup markers on unmount
-      markersRef.current.forEach(marker => leafletMapRef.current?.removeLayer(marker));
+      // Cleanup markers on unmount with error handling
+      markersRef.current.forEach(marker => {
+        try {
+          if (leafletMapRef.current && leafletMapRef.current.hasLayer(marker)) {
+            leafletMapRef.current.removeLayer(marker);
+          }
+        } catch (error) {
+          console.warn('Error removing marker:', error);
+        }
+      });
       markersRef.current = [];
     };
   }, [userCoords, requests, isVisible]);
@@ -189,28 +265,73 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
   useEffect(() => {
     if (!leafletMapRef.current) return;
 
-    // Remove all existing tile layers
+    // Skip layer changes if not visible to avoid issues
+    if (!isVisible) return;
+
+    // Remove all existing tile layers with error handling
     Object.values(MAP_LAYERS).forEach(layer => {
-      if (leafletMapRef.current?.hasLayer(layer)) {
-        leafletMapRef.current.removeLayer(layer);
+      try {
+        if (leafletMapRef.current && leafletMapRef.current.hasLayer(layer)) {
+          leafletMapRef.current.removeLayer(layer);
+        }
+      } catch (error) {
+        console.warn('Error removing tile layer:', error);
       }
     });
 
-    // Add the new layer
-    MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
-  }, [currentLayer]);
+    // Add the new layer with error handling and validation
+    try {
+      if (leafletMapRef.current && MAP_LAYERS[currentLayer]) {
+        // Ensure the layer isn't already added
+        if (!leafletMapRef.current.hasLayer(MAP_LAYERS[currentLayer])) {
+          MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+        }
+      }
+    } catch (error) {
+      console.warn('Error adding tile layer:', error);
+      // Retry after a short delay
+      setTimeout(() => {
+        try {
+          if (leafletMapRef.current && MAP_LAYERS[currentLayer] && 
+              !leafletMapRef.current.hasLayer(MAP_LAYERS[currentLayer])) {
+            MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
+          }
+        } catch (retryError) {
+          console.warn('Retry failed for layer change:', retryError);
+        }
+      }, 200);
+    }
+  }, [currentLayer, isVisible]);
 
   // Cleanup map on component unmount
   useEffect(() => {
     return () => {
       if (leafletMapRef.current) {
         try {
+          // Remove all markers first
+          markersRef.current.forEach(marker => {
+            try {
+              if (leafletMapRef.current && leafletMapRef.current.hasLayer(marker)) {
+                leafletMapRef.current.removeLayer(marker);
+              }
+            } catch (error) {
+              console.warn('Error removing marker during cleanup:', error);
+            }
+          });
+          markersRef.current = [];
+
+          // Remove event listeners
           leafletMapRef.current.off('dragstart');
           leafletMapRef.current.off('zoomstart');
           leafletMapRef.current.off('click');
-        } catch {}
-        leafletMapRef.current.remove();
-        leafletMapRef.current = null;
+          
+          // Remove the map
+          leafletMapRef.current.remove();
+        } catch (error) {
+          console.warn('Error during map cleanup:', error);
+        } finally {
+          leafletMapRef.current = null;
+        }
       }
     };
   }, []);
@@ -279,7 +400,9 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
           {lastUpdated && <small>Updated: {lastUpdated.toLocaleTimeString()}</small>}
         </div>
         <div>
-          <IonButton size="small" onClick={refreshLocation}>
+          <IonButton size="small" onClick={()=>{
+            window.location.reload();
+          }}>
             <IonIcon icon={refreshOutline} />
             Refresh
           </IonButton>

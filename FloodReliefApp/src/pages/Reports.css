@@ -22,18 +22,38 @@
 /* Tab content visibility controls */
 .map-tab-content {
   display: block;
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  overflow: visible;
 }
 
 .map-tab-content.hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
 }
 
 .data-tab-content {
   display: block;
+  visibility: visible;
+  opacity: 1;
+  height: auto;
+  overflow: visible;
 }
 
 .data-tab-content.hidden {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
 }
 
 .requests-list {

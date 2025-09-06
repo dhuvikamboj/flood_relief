@@ -69,7 +69,7 @@ const Home: React.FC = () => {
               </IonCard>
             </IonCol>
         <IonCol size="12" sizeMd="6">
-              <IonCard button onClick={() => history.push('/tabs/reports')}>
+              <IonCard button onClick={() => history.push('/tabs/resources')}>
                 <IonCardHeader>
                   <IonIcon icon={documentText} slot="start" color="primary" />
                   <IonCardTitle>Available Resources</IonCardTitle>

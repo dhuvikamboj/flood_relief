@@ -324,3 +324,234 @@
 .landing-user-address {
   margin-top: 4px;
 }
+
+/* Tutorial Section Styles */
+.landing-tutorial-section {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.landing-tutorial-details {
+  width: 100%;
+}
+
+.landing-tutorial-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.landing-tutorial-summary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.landing-tutorial-summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing-tutorial-summary::marker {
+  display: none;
+}
+
+.landing-tutorial-content {
+  padding: 0 16px 20px 16px;
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0 0 12px 12px;
+  margin-top: -1px;
+}
+
+.tutorial-step {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--ion-color-warning);
+}
+
+.tutorial-step h4 {
+  margin: 0 0 8px 0;
+  color: var(--ion-color-warning);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tutorial-step p {
+  margin: 4px 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.tutorial-step p strong {
+  color: white;
+  font-weight: 600;
+}
+
+.map-legend-red {
+  color: var(--ion-color-danger);
+  font-weight: bold;
+}
+
+.map-legend-green {
+  color: var(--ion-color-success);
+  font-weight: bold;
+}
+
+.tutorial-important {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid var(--ion-color-warning);
+}
+
+.tutorial-important strong {
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+/* Authentication Flow Specific Styles */
+.tutorial-auth-flow {
+  background: rgba(59, 130, 246, 0.1) !important;
+  border-left-color: var(--ion-color-primary) !important;
+}
+
+.auth-comparison {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+@media (min-width: 768px) {
+  .auth-comparison {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+.without-login, .with-login {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.without-login {
+  border-left: 4px solid var(--ion-color-warning);
+}
+
+.with-login {
+  border-left: 4px solid var(--ion-color-success);
+}
+
+.without-login h5, .with-login h5 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--ion-color-warning);
+}
+
+.with-login h5 {
+  color: var(--ion-color-success);
+}
+
+.without-login p, .with-login p {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+/* Journey Steps Styles */
+.tutorial-journey {
+  background: rgba(34, 197, 94, 0.1) !important;
+  border-left-color: var(--ion-color-success) !important;
+}
+
+.journey-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.journey-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.step-number {
+  background: var(--ion-color-success);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content strong {
+  display: block;
+  color: var(--ion-color-success);
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+}
+
+/* Login Required Indicators */
+.tutorial-step h4:contains("⚠️ ਲਾਗਇਨ ਚਾਹੀਦਾ") {
+  color: var(--ion-color-danger) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .journey-steps {
+    gap: 8px;
+  }
+  
+  .journey-step {
+    padding: 10px;
+  }
+  
+  .step-number {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+  
+  .auth-comparison {
+    gap: 12px;
+  }
+  
+  .without-login, .with-login {
+    padding: 10px;
+  }
+}
