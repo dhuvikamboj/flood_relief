@@ -55,15 +55,11 @@ const AppTabs: React.FC = () => {
           <IonIcon icon={home} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="reports" href="/tabs/reports" onClick={() => {
-          window.location.href = '/tabs/reports';
-        }}>
+        <IonTabButton tab="reports" href="/tabs/reports" >
           <IonIcon icon={documentText} />
           <IonLabel>Reports</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="resources" href="/tabs/resources" onClick={() => {
-          window.location.href = '/tabs/resources';
-        }}>
+        <IonTabButton tab="resources" href="/tabs/resources" >
           <IonIcon icon={briefcase} />
           <IonLabel>Resources</IonLabel>
         </IonTabButton>

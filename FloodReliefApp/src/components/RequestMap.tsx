@@ -14,9 +14,10 @@ import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference 
 
 interface RequestMapProps {
   requests: ReliefRequest[];
+  isVisible?: boolean;
 }
 
-const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
+const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
@@ -44,9 +45,80 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
     saveMapLayerPreference(currentLayer);
   }, [currentLayer]);
 
+  // Handle visibility changes - invalidate map size when becoming visible
+  useEffect(() => {
+    if (isVisible && leafletMapRef.current) {
+      // Small delay to ensure DOM has updated
+      setTimeout(() => {
+        try {
+          leafletMapRef.current?.invalidateSize();
+          // Force a redraw by slightly moving the view
+          const center = leafletMapRef.current?.getCenter();
+          if (center) {
+            leafletMapRef.current?.setView(center, leafletMapRef.current?.getZoom());
+          }
+        } catch (error) {
+          console.warn('Error invalidating map size:', error);
+        }
+      }, 150);
+    }
+  }, [isVisible]);
+
+  // Additional effect to handle map container size issues after navigation
+  useEffect(() => {
+    if (isVisible && leafletMapRef.current && userCoords) {
+      // Additional delay to handle navigation-related issues
+      const timer = setTimeout(() => {
+        try {
+          if (leafletMapRef.current && mapRef.current) {
+            // Check if container has proper dimensions
+            const container = mapRef.current;
+            const rect = container.getBoundingClientRect();
+            
+            if (rect.width > 0 && rect.height > 0) {
+              leafletMapRef.current.invalidateSize(true);
+              leafletMapRef.current.setView([userCoords.lat, userCoords.lng], leafletMapRef.current.getZoom() || 13);
+            } else {
+              // Container not ready, try again
+              setTimeout(() => {
+                if (leafletMapRef.current) {
+                  leafletMapRef.current.invalidateSize(true);
+                }
+              }, 300);
+            }
+          }
+        } catch (error) {
+          console.warn('Error in navigation map fix:', error);
+        }
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, userCoords]);
+
   // Initialize map when userCoords are available
   useEffect(() => {
     if (!userCoords || !mapRef.current) return;
+
+    // Don't initialize map if container is hidden - wait until visible
+    if (!isVisible) return;
+
+    // Check if container has proper dimensions before initializing
+    const container = mapRef.current;
+    const rect = container.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) {
+      // Container not ready, wait a bit and try again
+      const timer = setTimeout(() => {
+        if (mapRef.current && isVisible) {
+          const newRect = mapRef.current.getBoundingClientRect();
+          if (newRect.width > 0 && newRect.height > 0) {
+            // Trigger this effect again by updating current layer
+            setCurrentLayer(currentLayer);
+          }
+        }
+      }, 200);
+      return () => clearTimeout(timer);
+    }
 
     // Initialize map if not already done
     if (!leafletMapRef.current) {
@@ -111,7 +183,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests }) => {
       markersRef.current.forEach(marker => leafletMapRef.current?.removeLayer(marker));
       markersRef.current = [];
     };
-  }, [userCoords, requests]);
+  }, [userCoords, requests, isVisible]);
 
   // Handle layer changes
   useEffect(() => {

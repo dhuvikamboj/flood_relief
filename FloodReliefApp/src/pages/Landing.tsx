@@ -498,182 +498,170 @@ const Landing: React.FC = () => {
                         </IonCol>
 
                         {/* Maps side */}
-                        {activeTab === 'map' && (
-                            <>
-                                <IonCol size="12" sizeMd="6">
-                                    <IonCard style={{ height: '90vh' }}>
-                                        <IonCardHeader>
-                                            <IonCardTitle>
-                                                Where help is needed 
-                                                <IonBadge color="danger" style={{ marginLeft: '8px' }}>
-                                                    {requests.length}
-                                                </IonBadge>
-                                            </IonCardTitle>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <IonText color="medium"><p>Relief requests reported in the area</p></IonText>
-                                            <div className="landing-map-wrapper">
-                                                <RequestMap requests={requests} />
-                                            </div>
-                                        </IonCardContent>
-                                    </IonCard>
-                                </IonCol>
+                        <IonCol size="12" sizeMd="6" className={`landing-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
+                            <IonCard style={{ height: '90vh' }}>
+                                <IonCardHeader>
+                                    <IonCardTitle>
+                                        Where help is needed 
+                                        <IonBadge color="danger" style={{ marginLeft: '8px' }}>
+                                            {requests.length}
+                                        </IonBadge>
+                                    </IonCardTitle>
+                                </IonCardHeader>
+                                <IonCardContent>
+                                    <IonText color="medium"><p>Relief requests reported in the area</p></IonText>
+                                    <div className="landing-map-wrapper">
+                                        <RequestMap requests={requests} isVisible={activeTab === 'map'} />
+                                    </div>
+                                </IonCardContent>
+                            </IonCard>
+                        </IonCol>
 
-                                <IonCol size="12" sizeMd="6" >
-                                    <IonCard style={{ height: '90vh' }}>
-                                        <IonCardHeader>
-                                            <IonCardTitle>
-                                                Where help is available 
-                                                <IonBadge color="success" style={{ marginLeft: '8px' }}>
-                                                    {resources.length}
-                                                </IonBadge>
-                                            </IonCardTitle>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <IonText color="medium"><p>Resources and volunteers offering assistance</p></IonText>
-                                            <div className="landing-map-wrapper">
-                                                <ResourceMap resources={resources} />
-                                            </div>
-                                        </IonCardContent>
-                                    </IonCard>
-                                </IonCol>
-                            </>
-                        )}
+                        <IonCol size="12" sizeMd="6" className={`landing-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
+                            <IonCard style={{ height: '90vh' }}>
+                                <IonCardHeader>
+                                    <IonCardTitle>
+                                        Where help is available 
+                                        <IonBadge color="success" style={{ marginLeft: '8px' }}>
+                                            {resources.length}
+                                        </IonBadge>
+                                    </IonCardTitle>
+                                </IonCardHeader>
+                                <IonCardContent>
+                                    <IonText color="medium"><p>Resources and volunteers offering assistance</p></IonText>
+                                    <div className="landing-map-wrapper">
+                                        <ResourceMap resources={resources} isVisible={activeTab === 'map'} />
+                                    </div>
+                                </IonCardContent>
+                            </IonCard>
+                        </IonCol>
 
                         {/* Data / List side - show lists and filters */}
-                        {activeTab === 'data' && (
-                            <>
-                                <IonCol size="12" sizeMd="6">
-                                    <IonCard>
-                                        <IonCardHeader>
-                                            <IonCardTitle>
-                                                Where help is needed 
-                                                <IonBadge color="danger" style={{ marginLeft: '8px' }}>
-                                                    {requests.length}
-                                                </IonBadge>
-                                            </IonCardTitle>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <IonText color="medium"><p>Relief requests</p></IonText>
-                                            {loading ? (
-                                                <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
-                                            ) : requests.length === 0 ? (
-                                                <div className="landing-no-results"><IonText color="medium"><p>No relief requests in your area</p></IonText></div>
-                                            ) : (
-                                                <IonList>
-                                                    {requests.map((r: any) => (
-                                                        <IonCard key={r.id} button onClick={() => { setSelectedRequest(r); setShowRequestModal(true); }}>
-                                                            <IonCardContent>
-                                                                <div className="landing-request-row">
-                                                                    <div>
-                                                                        <h3 className="landing-request-title">{r.location}</h3>
-                                                                        <div className="landing-request-meta">
-                                                                            <small>{r.request_type || ''}</small>
-                                                                            {r.address && <small>• {r.address}</small>}
-                                                                            {r.distance_km !== undefined && <small>• {parseFloat(r.distance_km + "" || "0").toFixed(1)} km</small>}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="landing-request-right">
-                                                                        {r.priority && <div className="landing-request-priority">{r.priority}</div>}
-                                                                        {r.status && <div className="landing-request-status">{r.status}</div>}
-                                                                    </div>
+                        <IonCol size="12" sizeMd="6" className={`landing-tab-content ${activeTab !== 'data' ? 'hidden' : ''}`}>
+                            <IonCard>
+                                <IonCardHeader>
+                                    <IonCardTitle>
+                                        Where help is needed 
+                                        <IonBadge color="danger" style={{ marginLeft: '8px' }}>
+                                            {requests.length}
+                                        </IonBadge>
+                                    </IonCardTitle>
+                                </IonCardHeader>
+                                <IonCardContent>
+                                    <IonText color="medium"><p>Relief requests</p></IonText>
+                                    {loading ? (
+                                        <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
+                                    ) : requests.length === 0 ? (
+                                        <div className="landing-no-results"><IonText color="medium"><p>No relief requests in your area</p></IonText></div>
+                                    ) : (
+                                        <IonList>
+                                            {requests.map((r: any) => (
+                                                <IonCard key={r.id} button onClick={() => { setSelectedRequest(r); setShowRequestModal(true); }}>
+                                                    <IonCardContent>
+                                                        <div className="landing-request-row">
+                                                            <div>
+                                                                <h3 className="landing-request-title">{r.location}</h3>
+                                                                <div className="landing-request-meta">
+                                                                    <small>{r.request_type || ''}</small>
+                                                                    {r.address && <small>• {r.address}</small>}
+                                                                    {r.distance_km !== undefined && <small>• {parseFloat(r.distance_km + "" || "0").toFixed(1)} km</small>}
                                                                 </div>
+                                                            </div>
+                                                            <div className="landing-request-right">
+                                                                {r.priority && <div className="landing-request-priority">{r.priority}</div>}
+                                                                {r.status && <div className="landing-request-status">{r.status}</div>}
+                                                            </div>
+                                                        </div>
 
-                                                                <p>{r.details}</p>
+                                                        <p>{r.details}</p>
 
-                                                                {r.contact && <div><small><strong>Contact:</strong> {r.contact}</small></div>}
+                                                        {r.contact && <div><small><strong>Contact:</strong> {r.contact}</small></div>}
 
-                                                                <div className="landing-request-footer">
-                                                                    <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedRequest(r); setShowRequestModal(true); }}>View</IonButton>
-                                                                    {r.lat && r.lng && (
-                                                                        <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${r.lat},${r.lng}`, '_blank'); }}>Directions</IonButton>
-                                                                    )}
-                                                                </div>
-                                                            </IonCardContent>
-                                                        </IonCard>
-                                                    ))}
-                                                </IonList>
-                                            )}
-                                        </IonCardContent>
-                                    </IonCard>
-                                </IonCol>
+                                                        <div className="landing-request-footer">
+                                                            <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedRequest(r); setShowRequestModal(true); }}>View</IonButton>
+                                                            {r.lat && r.lng && (
+                                                                <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${r.lat},${r.lng}`, '_blank'); }}>Directions</IonButton>
+                                                            )}
+                                                        </div>
+                                                    </IonCardContent>
+                                                </IonCard>
+                                            ))}
+                                        </IonList>
+                                    )}
+                                </IonCardContent>
+                            </IonCard>
+                        </IonCol>
 
-                                <IonCol size="12" sizeMd="6">
-                                    <IonCard>
-                                        <IonCardHeader>
-                                            <IonCardTitle>
-                                                Where help is available 
-                                                <IonBadge color="success" style={{ marginLeft: '8px' }}>
-                                                    {resources.length}
-                                                </IonBadge>
-                                            </IonCardTitle>
-                                        </IonCardHeader>
-                                        <IonCardContent>
-                                            <IonText color="medium"><p>Resources</p></IonText>
-                                            {loading ? (
-                                                <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
-                                            ) : resources.length === 0 ? (
-                                                <div className="landing-no-results"><IonText color="medium"><p>No resources found nearby</p></IonText></div>
-                                            ) : (
-                                                <IonList>
-                                                    {resources.map((res: any) => (
-                                                        <IonCard key={res.id} className="landing-resource-card" button onClick={() => { setSelectedResource(res); setShowResourceModal(true); }}>
-                                                            <IonCardContent>
-                                                                <div className="landing-resource-row">
-                                                                    <h3 className="landing-resource-title">{res.location || res.address || 'Resource'}</h3>
-                                                                    <div className="landing-resource-meta">
-                                                                        {res.resource_type && <IonBadge color="primary">{res.resource_type}</IonBadge>}
-                                                                        {res.availability && <IonBadge color={res.availability === 'available' ? 'success' : res.availability === 'limited' ? 'warning' : 'medium'}>{res.availability}</IonBadge>}
-                                                                    </div>
-                                                                </div>
+                        <IonCol size="12" sizeMd="6" style={{ display: activeTab === 'data' ? 'block' : 'none' }}>
+                            <IonCard>
+                                <IonCardHeader>
+                                    <IonCardTitle>
+                                        Where help is available 
+                                        <IonBadge color="success" style={{ marginLeft: '8px' }}>
+                                            {resources.length}
+                                        </IonBadge>
+                                    </IonCardTitle>
+                                </IonCardHeader>
+                                <IonCardContent>
+                                    <IonText color="medium"><p>Resources</p></IonText>
+                                    {loading ? (
+                                        <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
+                                    ) : resources.length === 0 ? (
+                                        <div className="landing-no-results"><IonText color="medium"><p>No resources found nearby</p></IonText></div>
+                                    ) : (
+                                        <IonList>
+                                            {resources.map((res: any) => (
+                                                <IonCard key={res.id} className="landing-resource-card" button onClick={() => { setSelectedResource(res); setShowResourceModal(true); }}>
+                                                    <IonCardContent>
+                                                        <div className="landing-resource-row">
+                                                            <h3 className="landing-resource-title">{res.location || res.address || 'Resource'}</h3>
+                                                            <div className="landing-resource-meta">
+                                                                {res.resource_type && <IonBadge color="primary">{res.resource_type}</IonBadge>}
+                                                                {res.availability && <IonBadge color={res.availability === 'available' ? 'success' : res.availability === 'limited' ? 'warning' : 'medium'}>{res.availability}</IonBadge>}
+                                                            </div>
+                                                        </div>
 
-                                                                {res.capacity !== undefined && (
-                                                                    <div><small><strong>Capacity:</strong> {res.capacity}</small></div>
-                                                                )}
+                                                        {res.capacity !== undefined && (
+                                                            <div><small><strong>Capacity:</strong> {res.capacity}</small></div>
+                                                        )}
 
-                                                                {res.address && (
-                                                                    <div><small><strong>Address:</strong> {res.address}</small></div>
-                                                                )}
+                                                        {res.address && (
+                                                            <div><small><strong>Address:</strong> {res.address}</small></div>
+                                                        )}
 
-                                                                {res.distance_km !== undefined && (
-                                                                    <div><small><strong>Distance:</strong> {parseFloat(res.distance_km + "" || "0").toFixed(1)} km</small></div>
-                                                                )}
+                                                        {res.distance_km !== undefined && (
+                                                            <div><small><strong>Distance:</strong> {parseFloat(res.distance_km + "" || "0").toFixed(1)} km</small></div>
+                                                        )}
 
-                                                                {res.contact && (
-                                                                    <div><small><strong>Contact:</strong> {res.contact}</small></div>
-                                                                )}
+                                                        {res.contact && (
+                                                            <div><small><strong>Contact:</strong> {res.contact}</small></div>
+                                                        )}
 
-                                                                {res.reporter_name && (
-                                                                    <div><small><strong>Provided by:</strong> {res.reporter_name}</small></div>
-                                                                )}
+                                                        {res.reporter_name && (
+                                                            <div><small><strong>Provided by:</strong> {res.reporter_name}</small></div>
+                                                        )}
 
-                                                                {res.timestamp && (
-                                                                    <div><small className="landing-resource-timestamp">{new Date(res.timestamp).toLocaleString()}</small></div>
-                                                                )}
+                                                        {res.timestamp && (
+                                                            <div><small className="landing-resource-timestamp">{new Date(res.timestamp).toLocaleString()}</small></div>
+                                                        )}
 
-                                                                <div className="landing-resource-footer">
-                                                                    <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedResource(res); setShowResourceModal(true); }}>View</IonButton>
-                                                                    {res.lat && res.lng && (
-                                                                        <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${res.lat},${res.lng}`, '_blank'); }}>Directions</IonButton>
-                                                                    )}
-                                                                </div>
-                                                            </IonCardContent>
-                                                        </IonCard>
-                                                    ))}
-                                                </IonList>
-                                            )}
-                                        </IonCardContent>
-                                    </IonCard>
-                                </IonCol>
-
-                                {/* Floating filters are mounted as fixed children of IonContent below so the FAB/popover can position correctly */}
-                            </>
-                        )}
+                                                        <div className="landing-resource-footer">
+                                                            <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedResource(res); setShowResourceModal(true); }}>View</IonButton>
+                                                            {res.lat && res.lng && (
+                                                                <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${res.lat},${res.lng}`, '_blank'); }}>Directions</IonButton>
+                                                            )}
+                                                        </div>
+                                                    </IonCardContent>
+                                                </IonCard>
+                                            ))}
+                                        </IonList>
+                                    )}
+                                </IonCardContent>
+                            </IonCard>
+                        </IonCol>
 
                         {/* Table View */}
-                        {activeTab === 'table' && (
-                            <>
-                                <IonCol size="12">
+                        <IonCol size="12" style={{ display: activeTab === 'table' ? 'block' : 'none' }}>
                                     <IonCard>
                                         <IonCardHeader>
                                             <IonCardTitle>
@@ -722,8 +710,6 @@ const Landing: React.FC = () => {
                                         </IonCardContent>
                                     </IonCard>
                                 </IonCol>
-                            </>
-                        )}
                     </IonRow>
                 </IonGrid>
                 {/* Mount floating FAB filter controls directly under IonContent so they can use slot="fixed" and popovers work */}

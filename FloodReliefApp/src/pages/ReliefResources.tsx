@@ -47,6 +47,15 @@ const ReliefResources: React.FC = () => {
   const [showAvailabilityAlert, setShowAvailabilityAlert] = useState(false);
   const [pendingAvailabilityUpdate, setPendingAvailabilityUpdate] = useState<{ resourceId: number; newAvailability: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'data'>('map');
+  const [isPageReady, setIsPageReady] = useState(false);
+
+  // Ensure page is ready before map initialization
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
   
   // Modal state
   const [selectedResource, setSelectedResource] = useState<ReliefResource | null>(null);
@@ -127,14 +136,14 @@ const ReliefResources: React.FC = () => {
   };
 
   const renderMapView = () => (
-    <div className="map-tab-content">
+    <div className={`map-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
       {/* Map Component */}
-      <ResourceMap resources={sortedResources} />
+      <ResourceMap resources={sortedResources} isVisible={activeTab === 'map' && isPageReady} />
     </div>
   );
 
   const renderDataView = () => (
-    <div className="data-tab-content">
+    <div className={`data-tab-content ${activeTab !== 'data' ? 'hidden' : ''}`}>
       <div className="resources-list">
         <IonText color="primary">
           <h2>Relief Resources</h2>
@@ -190,8 +199,8 @@ const ReliefResources: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'map' && renderMapView()}
-        {activeTab === 'data' && renderDataView()}
+        {renderMapView()}
+        {renderDataView()}
 
         {/* Floating Filters FAB - Available in both views */}
         <FloatingFilters

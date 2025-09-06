@@ -19,6 +19,23 @@
   margin-top: 1rem;
 }
 
+/* Tab content visibility controls */
+.map-tab-content {
+  display: block;
+}
+
+.map-tab-content.hidden {
+  display: none;
+}
+
+.data-tab-content {
+  display: block;
+}
+
+.data-tab-content.hidden {
+  display: none;
+}
+
 .requests-list {
   padding: 1rem;
 }

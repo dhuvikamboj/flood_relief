@@ -18,9 +18,10 @@ import { ReliefResource } from '../types/resource';
 
 interface ResourceMapProps {
   resources: ReliefResource[];
+  isVisible?: boolean;
 }
 
-const ResourceMap: React.FC<ResourceMapProps> = ({ resources }) => {
+const ResourceMap: React.FC<ResourceMapProps> = ({ resources, isVisible = true }) => {
   const {
     accuracy,
     lastUpdated,
@@ -31,7 +32,7 @@ const ResourceMap: React.FC<ResourceMapProps> = ({ resources }) => {
     startWatching,
   } = useLocation();
 
-  const { mapRef, currentLayer, setCurrentLayer } = useResourceMap(resources);
+  const { mapRef, currentLayer, setCurrentLayer } = useResourceMap(resources, isVisible);
 
   return (
     <>

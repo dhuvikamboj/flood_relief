@@ -2,6 +2,15 @@
   padding: 12px;
 }
 
+/* Tab visibility controls */
+.landing-tab-content {
+  display: block;
+}
+
+.landing-tab-content.hidden {
+  display: none;
+}
+
 /* Hero Section Styles */
 .landing-hero-section {
   background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);

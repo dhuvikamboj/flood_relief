@@ -49,6 +49,7 @@ const Reports: React.FC = () => {
   const [showStatusAlert, setShowStatusAlert] = useState(false);
   const [pendingStatusUpdate, setPendingStatusUpdate] = useState<{ requestId: number; newStatus: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'map' | 'data'>('map');
+  const [isPageReady, setIsPageReady] = useState(false);
   
   // Modal state
   const [selectedRequest, setSelectedRequest] = useState<ReliefRequest | null>(null);
@@ -61,6 +62,14 @@ const Reports: React.FC = () => {
   // Get user coordinates and auth (also expose controls to center on user)
   const { userCoords, getCurrentLocation, startWatching, refreshLocation } = useLocation();
   const { user, isAuthenticated } = useAuth();
+
+  // Ensure page is ready before map initialization
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsPageReady(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Filters state
   const [filters, setFilters] = useState<RequestFiltersType>({
@@ -336,13 +345,13 @@ const Reports: React.FC = () => {
   };
 
   const renderMapView = () => (
-    <div className="map-tab-content">
-      <RequestMap requests={sortedRequests} />
+    <div className={`map-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
+      <RequestMap requests={sortedRequests} isVisible={activeTab === 'map' && isPageReady} />
     </div>
   );
 
   const renderDataView = () => (
-    <div className="data-tab-content">
+    <div className={`data-tab-content ${activeTab !== 'data' ? 'hidden' : ''}`}>
       <div className="requests-list">
         <IonText color="primary">
           <h2>Relief Requests</h2>
@@ -413,8 +422,8 @@ const Reports: React.FC = () => {
         </div>
 
         {/* Tab Content */}
-        {activeTab === 'map' && renderMapView()}
-        {activeTab === 'data' && renderDataView()}
+        {renderMapView()}
+        {renderDataView()}
 
         {/* Floating Filters FAB - Available in both views */}
         <RequestFilters
