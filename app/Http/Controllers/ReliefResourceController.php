@@ -175,7 +175,7 @@ class ReliefResourceController extends Controller
         $resource = ReliefResource::findOrFail($id);
 
         // Check if the user owns this resource
-        if ($resource->user_id !== $request->user()?->id) {
+        if ($resource->user_id != $request->user()?->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'You can only update your own resources'
@@ -196,7 +196,7 @@ class ReliefResourceController extends Controller
         $resource = ReliefResource::findOrFail($id);
 
         // Check if the user owns this resource
-        if ($resource->user_id !== $request->user()?->id) {
+        if ($resource->user_id != $request->user()?->id) {
             return response()->json([
                 'success' => false,
                 'message' => 'You can only delete your own resources'
