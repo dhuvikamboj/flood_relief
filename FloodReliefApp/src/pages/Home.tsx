@@ -20,9 +20,9 @@ import {
   warning,
   call,
   documentText,
-  map,
   person,
-  water
+  water,
+  map
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
@@ -58,7 +58,7 @@ const Home: React.FC = () => {
         <IonGrid>
           <IonRow>
             <IonCol size="12" sizeMd="6">
-              <IonCard button onClick={() => window.location.href = '/tabs/reports'}>
+              <IonCard button onClick={() => history.push('/tabs/reports')}>
                 <IonCardHeader>
                   <IonIcon icon={documentText} slot="start" color="primary" />
                   <IonCardTitle>Request Assistance</IonCardTitle>
@@ -69,7 +69,7 @@ const Home: React.FC = () => {
               </IonCard>
             </IonCol>
         <IonCol size="12" sizeMd="6">
-              <IonCard button onClick={() => window.location.href = '/tabs/resources'}>
+              <IonCard button onClick={() => history.push('/tabs/reports')}>
                 <IonCardHeader>
                   <IonIcon icon={documentText} slot="start" color="primary" />
                   <IonCardTitle>Available Resources</IonCardTitle>
@@ -80,7 +80,7 @@ const Home: React.FC = () => {
               </IonCard>
             </IonCol>
             <IonCol size="12" sizeMd="6">
-              <IonCard button onClick={() => window.location.href = '/'}>
+              <IonCard button onClick={() => history.push('/')}>
                 <IonCardHeader>
                   <IonIcon icon={map} slot="start" color="tertiary" />
                   <IonCardTitle>Maps — Help Needed & Available</IonCardTitle>

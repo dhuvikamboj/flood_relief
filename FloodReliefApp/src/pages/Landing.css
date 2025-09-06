@@ -296,3 +296,31 @@
 .landing-request-right {
   text-align: right;
 }
+
+/* User Information Styles */
+.landing-user-info {
+  margin-bottom: 16px;
+}
+
+.landing-user-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.landing-user-header ion-icon {
+  margin-right: 8px;
+}
+
+.landing-user-details {
+  font-size: 0.9em;
+  color: var(--ion-color-medium);
+}
+
+.landing-user-details:not(:last-child) {
+  margin-bottom: 2px;
+}
+
+.landing-user-address {
+  margin-top: 4px;
+}

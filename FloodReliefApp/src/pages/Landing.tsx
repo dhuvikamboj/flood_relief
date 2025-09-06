@@ -35,8 +35,9 @@ import ResourceModal from '../components/ResourceModal';
 import DataTable, { DataTableColumn } from '../components/DataTable';
 import { ReliefResource } from '../types/resource';
 import { useLocation } from '../hooks/useLocation';
+import { useAuth } from '../contexts/AuthContext';
 import api from '../../services/api';
-import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutline } from 'ionicons/icons';
+import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutline, personOutline, logOutOutline, homeOutline } from 'ionicons/icons';
 import './Landing.css';
 
 const Landing: React.FC = () => {
@@ -44,6 +45,9 @@ const Landing: React.FC = () => {
     const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
     const [locationError, setLocationError] = useState<string | null>(null);
     const [fetchingLocation, setFetchingLocation] = useState(false);
+    
+    // Add authentication state
+    const { isAuthenticated, user, logout } = useAuth();
     
     const { userCoords } = useLocation();
     const [requests, setRequests] = useState<any[]>([]);
@@ -405,27 +409,73 @@ const Landing: React.FC = () => {
                                 <div className="landing-auth-section">
                                     <IonCard className="landing-auth-card">
                                         <IonCardContent>
-                                            <h3>Help Save Lives</h3>
-                                            <IonText color="medium">
-                                                <p>Join our emergency response network</p>
-                                            </IonText>
-                                            <div className="landing-auth-buttons">
-                                                <IonRouterLink routerLink="/signup">
-                                                    <IonButton expand="block" color="primary">
-                                                        <IonIcon icon={personAddOutline} slot="start" />
-                                                        Sign Up to Help
-                                                    </IonButton>
-                                                </IonRouterLink>
-                                                <IonRouterLink routerLink="/login">
-                                                    <IonButton expand="block" fill="outline" color="primary">
-                                                        <IonIcon icon={logInOutline} slot="start" />
-                                                        Login
-                                                    </IonButton>
-                                                </IonRouterLink>
-                                            </div>
-                                            <IonText color="medium">
-                                                <small>View live updates without account</small>
-                                            </IonText>
+                                            {isAuthenticated && user ? (
+                                                // Show user information when logged in
+                                                <>
+                                                    <h3>Welcome Back!</h3>
+                                                    <div className="landing-user-info">
+                                                        <div className="landing-user-header">
+                                                            <IonIcon icon={personOutline} />
+                                                            <strong>{user.name || user.email}</strong>
+                                                        </div>
+                                                        {user.email && (
+                                                            <div className="landing-user-details">
+                                                                {user.email}
+                                                            </div>
+                                                        )}
+                                                        {user.phone && (
+                                                            <div className="landing-user-details">
+                                                                📞 {user.phone}
+                                                            </div>
+                                                        )}
+                                                        {user.address && (
+                                                            <div className="landing-user-details landing-user-address">
+                                                                📍 {user.address}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <div className="landing-auth-buttons">
+                                                        <IonRouterLink routerLink="/tabs/home">
+                                                            <IonButton expand="block" color="primary">
+                                                                <IonIcon icon={homeOutline} slot="start" />
+                                                                Dashboard
+                                                            </IonButton>
+                                                        </IonRouterLink>
+                                                        <IonButton expand="block" fill="outline" color="medium" onClick={logout}>
+                                                            <IonIcon icon={logOutOutline} slot="start" />
+                                                            Logout
+                                                        </IonButton>
+                                                    </div>
+                                                    <IonText color="medium">
+                                                        <small>Manage your relief requests and resources</small>
+                                                    </IonText>
+                                                </>
+                                            ) : (
+                                                // Show login/signup when not authenticated
+                                                <>
+                                                    <h3>Help Save Lives</h3>
+                                                    <IonText color="medium">
+                                                        <p>Join our emergency response network</p>
+                                                    </IonText>
+                                                    <div className="landing-auth-buttons">
+                                                        <IonRouterLink routerLink="/signup">
+                                                            <IonButton expand="block" color="primary">
+                                                                <IonIcon icon={personAddOutline} slot="start" />
+                                                                Sign Up to Help
+                                                            </IonButton>
+                                                        </IonRouterLink>
+                                                        <IonRouterLink routerLink="/login">
+                                                            <IonButton expand="block" fill="outline" color="primary">
+                                                                <IonIcon icon={logInOutline} slot="start" />
+                                                                Login
+                                                            </IonButton>
+                                                        </IonRouterLink>
+                                                    </div>
+                                                    <IonText color="medium">
+                                                        <small>View live updates without account</small>
+                                                    </IonText>
+                                                </>
+                                            )}
                                         </IonCardContent>
                                     </IonCard>
                                 </div>
