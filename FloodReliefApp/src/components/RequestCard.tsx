@@ -130,7 +130,12 @@ const RequestCard: React.FC<RequestCardProps> = ({
           color={getRequestTypeColor(request.request_type)} 
         />
         <IonLabel>
-          <h2>{request.location}</h2>
+          <h2>
+            {request.location}
+            <IonBadge color="medium" style={{ marginLeft: '8px', fontSize: '0.7em' }}>
+              ID: {request.id}
+            </IonBadge>
+          </h2>
           <p>
             <strong>Priority:</strong> {request.priority}
             {request.distance_km && <span> • {parseFloat(request.distance_km+""||"0").toFixed(1)} km away</span>}

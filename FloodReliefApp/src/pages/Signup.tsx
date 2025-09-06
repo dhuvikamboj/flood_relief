@@ -231,7 +231,7 @@ const Signup: React.FC = () => {
           <IonLabel position="stacked">Full Name</IonLabel>
           <IonInput
             value={name}
-            onIonChange={(e) => handleNameChange(e.detail.value!)}
+            onIonInput={(e) => handleNameChange(e.detail.value!)}
             placeholder="Enter your full name"
             required
           />
@@ -247,7 +247,7 @@ const Signup: React.FC = () => {
           <IonInput
             type="email"
             value={email}
-            onIonChange={(e) => handleEmailChange(e.detail.value!)}
+            onIonInput={(e) => handleEmailChange(e.detail.value!)}
             placeholder="Enter your email"
             required
           />
@@ -263,7 +263,7 @@ const Signup: React.FC = () => {
           <IonInput
             type="password"
             value={password}
-            onIonChange={(e) => handlePasswordChange(e.detail.value!)}
+            onIonInput={(e) => handlePasswordChange(e.detail.value!)}
             placeholder="Enter your password"
             required
           />
@@ -279,7 +279,7 @@ const Signup: React.FC = () => {
           <IonInput
             type="password"
             value={confirmPassword}
-            onIonChange={(e) => handleConfirmPasswordChange(e.detail.value!)}
+            onIonInput={(e) => handleConfirmPasswordChange(e.detail.value!)}
             placeholder="Confirm your password"
             required
           />
@@ -295,7 +295,7 @@ const Signup: React.FC = () => {
           <IonInput
             type="tel"
             value={phone}
-            onIonChange={(e) => handlePhoneChange(e.detail.value!)}
+            onIonInput={(e) => handlePhoneChange(e.detail.value!)}
             placeholder="Enter a phone number"
           />
         </IonItem>
@@ -309,7 +309,7 @@ const Signup: React.FC = () => {
           <IonLabel position="stacked">Address (optional)</IonLabel>
           <IonInput
             value={address}
-            onIonChange={(e) => handleAddressChange(e.detail.value!)}
+            onIonInput={(e) => handleAddressChange(e.detail.value!)}
             placeholder="Enter an address"
           />
         </IonItem>
@@ -323,7 +323,7 @@ const Signup: React.FC = () => {
           <IonLabel position="stacked">Emergency Contact (optional)</IonLabel>
           <IonInput
             value={emergencyContact}
-            onIonChange={(e) => handleEmergencyContactChange(e.detail.value!)}
+            onIonInput={(e) => handleEmergencyContactChange(e.detail.value!)}
             placeholder="Enter an emergency contact name or number"
           />
         </IonItem>

@@ -158,7 +158,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
         .addTo(leafletMapRef.current!)
         .bindPopup(`
           <div style="max-width: 250px;">
-            <strong>${request.location}</strong><br />
+            <strong>${request.location}</strong> <span style="color: #666; font-size: 0.8em;">(ID: ${request.id})</span><br />
             <strong>Priority:</strong> ${request.priority}<br />
             <strong>Status:</strong> ${getStatusText(request.status || 'pending')}<br />
             ${request.distance_km ? `<strong>Distance:</strong> ${parseFloat(request.distance_km+""||"0").toFixed(1)} km<br />` : ''}

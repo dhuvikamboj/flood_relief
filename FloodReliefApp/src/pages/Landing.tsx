@@ -560,7 +560,12 @@ const Landing: React.FC = () => {
                                                     <IonCardContent>
                                                         <div className="landing-request-row">
                                                             <div>
-                                                                <h3 className="landing-request-title">{r.location}</h3>
+                                                                <h3 className="landing-request-title">
+                                                                    {r.location}
+                                                                    <IonBadge color="medium" style={{ marginLeft: '8px', fontSize: '0.6em' }}>
+                                                                        ID: {r.id}
+                                                                    </IonBadge>
+                                                                </h3>
                                                                 <div className="landing-request-meta">
                                                                     <small>{r.request_type || ''}</small>
                                                                     {r.address && <small>• {r.address}</small>}
@@ -614,7 +619,12 @@ const Landing: React.FC = () => {
                                                 <IonCard key={res.id} className="landing-resource-card" button onClick={() => { setSelectedResource(res); setShowResourceModal(true); }}>
                                                     <IonCardContent>
                                                         <div className="landing-resource-row">
-                                                            <h3 className="landing-resource-title">{res.location || res.address || 'Resource'}</h3>
+                                                            <h3 className="landing-resource-title">
+                                                                {res.location || res.address || 'Resource'}
+                                                                <IonBadge color="medium" style={{ marginLeft: '8px', fontSize: '0.6em' }}>
+                                                                    ID: {res.id}
+                                                                </IonBadge>
+                                                            </h3>
                                                             <div className="landing-resource-meta">
                                                                 {res.resource_type && <IonBadge color="primary">{res.resource_type}</IonBadge>}
                                                                 {res.availability && <IonBadge color={res.availability === 'available' ? 'success' : res.availability === 'limited' ? 'warning' : 'medium'}>{res.availability}</IonBadge>}
@@ -686,7 +696,7 @@ const Landing: React.FC = () => {
                                     </IonCard>
                                 </IonCol>
 
-                                <IonCol size="12">
+                                <IonCol size="12"  style={{ display: activeTab === 'table' ? 'block' : 'none' }}>
                                     <IonCard>
                                         <IonCardHeader>
                                             <IonCardTitle>

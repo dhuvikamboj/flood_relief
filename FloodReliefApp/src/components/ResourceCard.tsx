@@ -42,9 +42,12 @@ const ResourceCard: React.FC<ResourceCardProps> = ({
         <IonLabel>
           <h2>
             {resource.location}
+            <IonBadge color="medium" style={{ marginLeft: '8px', fontSize: '0.7em' }}>
+              ID: {resource.id}
+            </IonBadge>
             <IonBadge 
               color={getAvailabilityColor(resource.availability)} 
-              style={{ fontSize: '0.8em', padding: '2px 6px' }}
+              style={{ fontSize: '0.8em', padding: '2px 6px', marginLeft: '4px' }}
             >
               {getAvailabilityText(resource.availability)}
             </IonBadge>

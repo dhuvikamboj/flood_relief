@@ -231,7 +231,7 @@ export const useResourceMap = (resources: ReliefResource[], isVisible: boolean =
         .addTo(leafletMapRef.current!)
         .bindPopup(`
           <div style="max-width: 250px;">
-            <strong>${resource.location}</strong><br />
+            <strong>${resource.location}</strong> <span style="color: #666; font-size: 0.8em;">(ID: ${resource.id})</span><br />
             <strong style="color: ${getAvailabilityIconColor(resource.availability)};">● ${getAvailabilityText(resource.availability)}</strong><br />
             ${resource.distance_km ? `<strong>Distance:</strong> ${parseFloat(resource.distance_km+""||"0").toFixed(1)} km<br />` : ''}
             ${resource.resource_type ? `<strong>Type:</strong> ${resource.resource_type}<br />` : ''}
