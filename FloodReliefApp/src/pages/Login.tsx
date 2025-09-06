@@ -15,11 +15,13 @@ import {
   IonRouterLink,
   IonSpinner
 } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
 import './Login.css';
 
 const Login: React.FC = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [localLoading, setLocalLoading] = useState(false);
@@ -132,18 +134,18 @@ const Login: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Flood Relief - Login</IonTitle>
+          <IonTitle>{t('forms.login.title')}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonLoading isOpen={localLoading || loading} message="Logging in..." />
+        <IonLoading isOpen={localLoading || loading} message={t('common.loading')} />
 
         <div className="login-header">
           <IonText color="primary">
-            <h1>Welcome Back</h1>
+            <h1>{t('forms.login.title')}</h1>
           </IonText>
           <IonText color="medium">
-            <p>Sign in to access flood relief services</p>
+            <p>{t('forms.login.subtitle')}</p>
           </IonText>
         </div>
 

@@ -26,9 +26,11 @@ import {
 } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import './Home.css';
+import { useTranslation } from 'react-i18next';
 
 const Home: React.FC = () => {
   const history = useHistory();
+  const { t } = useTranslation();
 
   const emergencyContacts = [
     // { name: 'Emergency Services', number: '911', icon: call, description: 'General emergency' },
@@ -41,17 +43,17 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Flood Relief Hub</IonTitle>
+          <IonTitle>{t('home.title')}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <div className="home-header">
           <IonIcon icon={water} size="large" color="primary" />
           <IonText color="primary">
-            <h1>Flood Relief Services</h1>
+            <h1>{t('home.header')}</h1>
           </IonText>
           <IonText color="medium">
-            <p>Stay informed and help your community during flood emergencies</p>
+            <p>{t('home.subtitle')}</p>
           </IonText>
         </div>
 
@@ -61,10 +63,10 @@ const Home: React.FC = () => {
               <IonCard button onClick={() => history.push('/tabs/reports')}>
                 <IonCardHeader>
                   <IonIcon icon={documentText} slot="start" color="primary" />
-                  <IonCardTitle>Request Assistance</IonCardTitle>
+                  <IonCardTitle>{t('home.cards.requestAssistance.title')}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  Submit requests for assistance during flood emergencies to help authorities respond effectively.
+                  {t('home.cards.requestAssistance.desc')}
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -72,10 +74,10 @@ const Home: React.FC = () => {
               <IonCard button onClick={() => history.push('/tabs/resources')}>
                 <IonCardHeader>
                   <IonIcon icon={documentText} slot="start" color="primary" />
-                  <IonCardTitle>Available Resources</IonCardTitle>
+                  <IonCardTitle>{t('home.cards.availableResources.title')}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  View and access available resources for flood relief efforts in your area.
+                  {t('home.cards.availableResources.desc')}
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -83,10 +85,10 @@ const Home: React.FC = () => {
               <IonCard button onClick={() => history.push('/')}>
                 <IonCardHeader>
                   <IonIcon icon={map} slot="start" color="tertiary" />
-                  <IonCardTitle>Maps — Help Needed & Available</IonCardTitle>
+                  <IonCardTitle>{t('home.cards.maps.title')}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  Quick view: where help is needed and where resources are available nearby.
+                  {t('home.cards.maps.desc')}
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -94,10 +96,10 @@ const Home: React.FC = () => {
               <IonCard button onClick={() => history.push('/tabs/profile')}>
                 <IonCardHeader>
                   <IonIcon icon={person} slot="start" color="secondary" />
-                  <IonCardTitle>My Profile</IonCardTitle>
+                  <IonCardTitle>{t('home.cards.myProfile.title')}</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                  Manage your account settings and emergency contact information.
+                  {t('home.cards.myProfile.desc')}
                 </IonCardContent>
               </IonCard>
             </IonCol>
@@ -106,9 +108,9 @@ const Home: React.FC = () => {
 
         <div className="emergency-section">
           <IonText color="danger">
-            <h2>🚨 Emergency Contacts</h2>
+            <h2>{t('home.emergency.title')}</h2>
           </IonText>
-          <p className="emergency-subtitle">Quick access to emergency services during flood situations</p>
+          <p className="emergency-subtitle">{t('home.emergency.subtitle')}</p>
 
           {emergencyContacts.map((contact, index) => (
             <IonCard key={index} className="emergency-card">
@@ -125,14 +127,14 @@ const Home: React.FC = () => {
                     <small>{contact.description}</small>
                   </IonText>
                 </div>
-                <IonButton
+                  <IonButton
                   fill="solid"
                   color="danger"
                   href={`tel:${contact.number}`}
                   className="call-button"
                 >
                   <IonIcon icon={call} slot="start" />
-                  Call
+                  {t('common.call')}
                 </IonButton>
               </IonCardContent>
             </IonCard>
@@ -141,16 +143,16 @@ const Home: React.FC = () => {
 
         <div className="safety-tips">
           <IonText color="warning">
-            <h2>Safety Tips</h2>
+            <h2>{t('home.safety.title')}</h2>
           </IonText>
           <IonCard>
             <IonCardContent>
               <ul>
-                <li>Move to higher ground immediately if flooding is imminent</li>
-                <li>Avoid walking or driving through flood waters</li>
-                <li>Stay informed via local news and emergency alerts</li>
-                <li>Prepare an emergency kit with essential supplies</li>
-                <li>Have an evacuation plan ready for your family</li>
+                <li>{t('home.safety.tip1')}</li>
+                <li>{t('home.safety.tip2')}</li>
+                <li>{t('home.safety.tip3')}</li>
+                <li>{t('home.safety.tip4')}</li>
+                <li>{t('home.safety.tip5')}</li>
               </ul>
             </IonCardContent>
           </IonCard>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { ReliefResource } from '../types/resource';
 import { useLocation } from './useLocation';
+import { getAvailabilityText } from '../utils/resourceUtils';
 
 export const useResourceMap = (resources: ReliefResource[], isVisible: boolean = true) => {
   const {
@@ -164,14 +165,7 @@ export const useResourceMap = (resources: ReliefResource[], isVisible: boolean =
     });
   };
 
-  const getAvailabilityText = (availability: string) => {
-    switch (availability?.toLowerCase()) {
-      case 'available': return 'Available';
-      case 'limited': return 'Limited';
-      case 'unavailable': return 'Unavailable';
-      default: return availability || 'Unknown';
-    }
-  };
+
 
   // Handle visibility changes - invalidate map size when becoming visible
   useEffect(() => {

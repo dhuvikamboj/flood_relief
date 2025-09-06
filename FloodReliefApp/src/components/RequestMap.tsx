@@ -11,6 +11,7 @@ import L from 'leaflet';
 import { ReliefRequest } from './RequestCard';
 import { useLocation } from '../hooks/useLocation';
 import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
+import { useTranslation } from 'react-i18next';
 
 interface RequestMapProps {
   requests: ReliefRequest[];
@@ -18,6 +19,7 @@ interface RequestMapProps {
 }
 
 const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) => {
+  const { t } = useTranslation();
   const mapRef = useRef<HTMLDivElement>(null);
   const leafletMapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
@@ -217,7 +219,7 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
     // Add user location marker
     const userMarker = L.marker([userCoords.lat, userCoords.lng])
       .addTo(leafletMapRef.current)
-      .bindPopup(`<strong>Your Location</strong><br /><span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}" target="_blank" rel="noopener noreferrer">${userCoords.lat.toFixed(6)}, ${userCoords.lng.toFixed(6)}</a>`);
+      .bindPopup(`${'<strong>' + t('map.yourLocation') + '</strong>'}<br /><span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${userCoords.lat},${userCoords.lng}" target="_blank" rel="noopener noreferrer">${userCoords.lat.toFixed(6)}, ${userCoords.lng.toFixed(6)}</a>`);
     markersRef.current.push(userMarker);
 
     // Add markers for all requests
@@ -227,20 +229,20 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
         .bindPopup(`
           <div style="max-width: 250px;">
             <strong>${request.location}</strong> <span style="color: #666; font-size: 0.8em;">(ID: ${request.id})</span><br />
-            <strong>Priority:</strong> ${request.priority}<br />
-            <strong>Status:</strong> ${getStatusText(request.status || 'pending')}<br />
-            ${request.distance_km ? `<strong>Distance:</strong> ${parseFloat(request.distance_km+""||"0").toFixed(1)} km<br />` : ''}
-            ${request.request_type ? `<strong>Type:</strong> ${request.request_type}<br />` : ''}
-            ${request.details ? `<strong>Details:</strong> ${request.details}<br />` : ''}
-            ${request.address ? `<strong>Address:</strong> ${request.address}<br />` : ''}
-            ${request.contact ? `<strong>Contact:</strong> ${request.contact}<br />` : ''}
-            ${request.reporter_name ? `<strong>Reported by:</strong> ${request.reporter_name}<br />` : ''}
-            ${request.reporter_phone ? `<strong>Reported by Phone:</strong> ${request.reporter_phone}<br />` : ''}
-            <strong>Coordinates:</strong> <span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${request.lat},${request.lng}" target="_blank" rel="noopener noreferrer">${request.lat.toFixed(6)}, ${request.lng.toFixed(6)}</a><br />
-            ${(request.photos && request.photos.length > 0) ? `<strong>Photos:</strong> ${request.photos.length} attached<br />`+request.photos.map(photo => `<img src="${photo}" alt="Photo" style="max-width: 50px;" /><br>`).join('') : ''}
-            ${(request.videos && request.videos.length > 0) ? `<strong>Videos:</strong> ${request.videos.length} attached<br />` : ''}
+            <strong>${t('map.priorityLabel')}</strong> ${request.priority}<br />
+            <strong>${t('map.statusLabel')}</strong> ${getStatusText(request.status || 'pending')}<br />
+            ${request.distance_km ? `<strong>${t('map.distanceLabel')}</strong> ${parseFloat(request.distance_km+""||"0").toFixed(1)} km<br />` : ''}
+            ${request.request_type ? `<strong>${t('map.typeLabel')}</strong> ${request.request_type}<br />` : ''}
+            ${request.details ? `<strong>${t('map.detailsLabel')}</strong> ${request.details}<br />` : ''}
+            ${request.address ? `<strong>${t('map.addressLabel')}</strong> ${request.address}<br />` : ''}
+            ${request.contact ? `<strong>${t('map.contactLabel')}</strong> ${request.contact}<br />` : ''}
+            ${request.reporter_name ? `<strong>${t('map.reportedByLabel')}</strong> ${request.reporter_name}<br />` : ''}
+            ${request.reporter_phone ? `<strong>${t('map.reportedByPhoneLabel')}</strong> ${request.reporter_phone}<br />` : ''}
+            <strong>${t('map.coordinatesLabel')}</strong> <span style="display: inline-block; margin-right: 4px;">🗺️</span><a href="https://www.google.com/maps?q=${request.lat},${request.lng}" target="_blank" rel="noopener noreferrer">${request.lat.toFixed(6)}, ${request.lng.toFixed(6)}</a><br />
+            ${(request.photos && request.photos.length > 0) ? `<strong>${t('map.photos')}</strong> ${request.photos.length} attached<br />`+request.photos.map(photo => `<img src="${photo}" alt="${t('map.photoAlt',{index:1})}" style="max-width: 50px;" /><br>`).join('') : ''}
+            ${(request.videos && request.videos.length > 0) ? `<strong>${t('map.videos')}</strong> ${request.videos.length} attached<br />` : ''}
             <small>${request.timestamp.toLocaleString()}</small>
-            <br /><button onclick="window.openRequestModal && window.openRequestModal(${JSON.stringify(request).replace(/"/g, '&quot;')})" style="margin-top: 10px; padding: 5px 10px; background: #3880ff; color: white; border: none; border-radius: 4px; cursor: pointer;">View Details</button>
+            <br /><button onclick="window.openRequestModal && window.openRequestModal(${JSON.stringify(request).replace(/"/g, '&quot;')})" style="margin-top: 10px; padding: 5px 10px; background: #3880ff; color: white; border: none; border-radius: 4px; cursor: pointer;">${t('map.viewDetails')}</button>
           </div>
         `);
       markersRef.current.push(marker);
@@ -338,10 +340,10 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
 
   const getStatusText = (status: string) => {
     switch (status?.toLowerCase()) {
-      case 'pending': return 'Pending';
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      case 'cancelled': return 'Cancelled';
+  case 'pending': return t('requestFilters.status.pending');
+  case 'in-progress': return t('requestFilters.status.inProgress');
+  case 'completed': return t('requestFilters.status.completed');
+  case 'cancelled': return t('requestFilters.status.cancelled');
       default: return status || 'Unknown';
     }
   };
@@ -396,15 +398,15 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
     <div className="map-container">
       <div className="map-meta">
         <div>
-          {accuracy !== null && <small>Accuracy: {Math.round(accuracy)} m</small>}
-          {lastUpdated && <small>Updated: {lastUpdated.toLocaleTimeString()}</small>}
+          {accuracy !== null && <small>{t('map.accuracy')}: {Math.round(accuracy)} m</small>}
+          {lastUpdated && <small>{t('map.updated')}: {lastUpdated.toLocaleTimeString()}</small>}
         </div>
         <div>
           <IonButton size="small" onClick={()=>{
             window.location.reload();
           }}>
             <IonIcon icon={refreshOutline} />
-            Refresh
+            {t('map.refresh')}
           </IonButton>
           <IonButton
             size="small"
@@ -412,18 +414,18 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
             style={{ marginLeft: 8 }}
           >
             <IonIcon icon={locate} />
-            Current Location
+            {t('map.currentLocation')}
           </IonButton>
           <select
             value={currentLayer}
             onChange={(e) => setCurrentLayer(e.target.value as MapLayerKey)}
             className="layer-select"
-            title="Choose map layer"
+            title={t('map.chooseLayer')}
           >
-            <option value="satellite">🛰️ Satellite</option>
-            <option value="streets">🗺️ Streets</option>
-            <option value="terrain">🏔️ Terrain</option>
-            <option value="topo">📍 Topographic</option>
+            <option value="satellite">🛰️ {t('map.layer.satellite')}</option>
+            <option value="streets">🗺️ {t('map.layer.streets')}</option>
+            <option value="terrain">🏔️ {t('map.layer.terrain')}</option>
+            <option value="topo">📍 {t('map.layer.topo')}</option>
           </select>
         </div>
       </div>
@@ -436,10 +438,10 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
             </IonText>
           </IonCardContent>
         </IonCard>
-      ) : mapLoading && !userCoords ? (
+  ) : mapLoading && !userCoords ? (
         <IonCard>
           <IonCardContent>
-            <p>Locating you...</p>
+    <p>{t('map.locating')}</p>
           </IonCardContent>
         </IonCard>
       ) : userCoords ? (
@@ -451,18 +453,18 @@ const RequestMap: React.FC<RequestMapProps> = ({ requests, isVisible = true }) =
         <IonCard>
           <IonCardContent>
             <div className="map-permission-cta">
-              <p>Map will appear here when location permission is granted.</p>
-              <IonButton onClick={async () => { try { await startWatching(); } catch {} }}>
-                Enable location
-              </IonButton>
-              <small>Tap to allow location in your browser; on iOS use Settings → Safari → Location if previously denied.</small>
+                  <p>{t('map.permissionMessage')}</p>
+                  <IonButton onClick={async () => { try { await startWatching(); } catch {} }}>
+                    {t('map.enableLocation')}
+                  </IonButton>
+                  <small>{t('map.permissionHelp')}</small>
             </div>
           </IonCardContent>
         </IonCard>
       )}
       <div className="map-refresh-note">
         <IonText color="medium">
-          <small>(if maps are not visible properly, hit refresh button)</small>
+              <small>({t('map.refreshNote')})</small>
         </IonText>
       </div>
     </div>

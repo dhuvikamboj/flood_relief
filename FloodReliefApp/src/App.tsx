@@ -3,6 +3,8 @@ import { IonApp, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel, Io
 import { IonReactRouter } from '@ionic/react-router';
 import { home, documentText, person, briefcase } from 'ionicons/icons';
 import { setupIonicReact } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './components/LanguageSelector';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -23,6 +25,9 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/* i18n setup */
+import './i18n';
+
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LocationProvider } from './contexts/LocationContext';
 import Login from './pages/Login';
@@ -38,8 +43,13 @@ import Landing from './pages/Landing';
 setupIonicReact();
 
 const AppTabs: React.FC = () => {
+  const { t } = useTranslation();
+  
   return (
     <IonTabs>
+      <div className="app-language-wrapper">
+        <LanguageSelector />
+      </div>
       <IonRouterOutlet>
         <Route exact path="/tabs/home" component={Home} />
   <Route exact path="/tabs/request/new" component={RequestForm} />
@@ -53,19 +63,19 @@ const AppTabs: React.FC = () => {
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/tabs/home">
           <IonIcon icon={home} />
-          <IonLabel>Home</IonLabel>
+          <IonLabel>{t('navigation.home')}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="reports" href="/tabs/reports" >
           <IonIcon icon={documentText} />
-          <IonLabel>Reports</IonLabel>
+          <IonLabel>{t('navigation.reports')}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="resources" href="/tabs/resources" >
           <IonIcon icon={briefcase} />
-          <IonLabel>Resources</IonLabel>
+          <IonLabel>{t('navigation.resources')}</IonLabel>
         </IonTabButton>
         <IonTabButton tab="profile" href="/tabs/profile">
           <IonIcon icon={person} />
-          <IonLabel>Profile</IonLabel>
+          <IonLabel>{t('navigation.profile')}</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>

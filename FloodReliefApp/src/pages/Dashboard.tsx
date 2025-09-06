@@ -25,6 +25,7 @@ import { location, time, checkmarkCircle, alertCircle, hourglass } from 'ionicon
 import axios from 'axios';
 import api from '../../services/api';
 import './Dashboard.css';
+import { useTranslation } from 'react-i18next';
 
 interface UserRequest {
   id: number;
@@ -40,6 +41,7 @@ interface UserRequest {
 }
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation();
   const [userRequests, setUserRequests] = useState<UserRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +54,7 @@ const Dashboard: React.FC = () => {
       // Get user token from localStorage or context
       const token = localStorage.getItem('auth_token');
       if (!token) {
-        setError('Please login to view your dashboard');
+        setError(t('dashboard.loginRequired'));
         return;
       }
 
@@ -67,11 +69,11 @@ const Dashboard: React.FC = () => {
       if (response.data.success) {
         setUserRequests(response.data.data);
       } else {
-        setError('Failed to load your requests');
+        setError(t('dashboard.loadFailed'));
       }
     } catch (err: any) {
       console.error('Failed to fetch user requests:', err);
-      setError(err.response?.data?.message || 'Failed to load your requests');
+      setError(err.response?.data?.message || t('dashboard.loadFailed'));
     } finally {
       setLoading(false);
     }
@@ -130,7 +132,7 @@ const Dashboard: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>My Dashboard</IonTitle>
+          <IonTitle>{t('dashboard.title')}</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -142,7 +144,7 @@ const Dashboard: React.FC = () => {
         {/* Stats Cards */}
         <div className="dashboard-header">
           <IonText color="primary">
-            <h2>📊 Your Relief Requests</h2>
+            <h2>📊 {t('dashboard.header')}</h2>
           </IonText>
 
           <div className="stats-grid">
@@ -151,7 +153,7 @@ const Dashboard: React.FC = () => {
                 <IonText color="primary">
                   <h1>{stats.total}</h1>
                 </IonText>
-                <p>Total Requests</p>
+                <p>{t('dashboard.totalRequests')}</p>
               </IonCardContent>
             </IonCard>
 
@@ -160,7 +162,7 @@ const Dashboard: React.FC = () => {
                 <IonText color="success">
                   <h1>{stats.completed}</h1>
                 </IonText>
-                <p>Completed</p>
+                <p>{t('dashboard.completed')}</p>
               </IonCardContent>
             </IonCard>
 
@@ -169,7 +171,7 @@ const Dashboard: React.FC = () => {
                 <IonText color="primary">
                   <h1>{stats.inProgress}</h1>
                 </IonText>
-                <p>In Progress</p>
+                <p>{t('dashboard.inProgress')}</p>
               </IonCardContent>
             </IonCard>
 
@@ -178,7 +180,7 @@ const Dashboard: React.FC = () => {
                 <IonText color="warning">
                   <h1>{stats.pending}</h1>
                 </IonText>
-                <p>Pending</p>
+                <p>{t('dashboard.pending')}</p>
               </IonCardContent>
             </IonCard>
           </div>
@@ -188,7 +190,7 @@ const Dashboard: React.FC = () => {
         {loading ? (
           <div className="loading-container">
             <IonSpinner name="crescent" />
-            <p>Loading your requests...</p>
+            <p>{t('dashboard.loadingRequests')}</p>
           </div>
         ) : error ? (
           <IonCard>
@@ -203,8 +205,8 @@ const Dashboard: React.FC = () => {
             <IonCardContent className="empty-state">
               <IonIcon icon={alertCircle} size="large" color="medium" />
               <IonText color="medium">
-                <h3>No requests yet</h3>
-                <p>Submit your first relief request to get started!</p>
+                <h3>{t('dashboard.noRequestsTitle')}</h3>
+                <p>{t('dashboard.noRequestsMsg')}</p>
               </IonText>
             </IonCardContent>
           </IonCard>
@@ -220,8 +222,8 @@ const Dashboard: React.FC = () => {
                 <IonLabel>
                   <h2>{request.location}</h2>
                   <p>
-                    <strong>Type:</strong> {request.request_type || 'General'} •
-                    <strong>Priority:</strong> {request.priority}
+                    <strong>{t('common.type')}:</strong> {request.request_type || t('common.general')} •
+                    <strong>{t('common.priority')}:</strong> {request.priority}
                   </p>
                   <p>{request.details}</p>
                   {request.address && <p><strong>Address:</strong> {request.address}</p>}

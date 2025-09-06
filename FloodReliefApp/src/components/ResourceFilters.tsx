@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   IonLabel,
   IonRange,
@@ -25,12 +26,14 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
   showTitle = true,
   compact = false 
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div className={compact ? 'filters-compact' : ''}>
       {/* Radius Control */}
       <div className="radius-control">
         <IonLabel>
-          <small>Search Radius: {filters.searchRadius} km</small>
+          <small>{t('filters.radius', { value: filters.searchRadius })}</small>
         </IonLabel>
         <IonRange
           min={1}
@@ -46,13 +49,13 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
       <div className="filter-controls">
         {showTitle && (
           <IonText color="primary">
-            <h4>🔍 Filters & Search</h4>
+            <h4>🔍 {t('filters.title')}</h4>
           </IonText>
         )}
 
         {/* Search Field */}
         <div className="filter-row">
-          <IonLabel>Search:</IonLabel>
+          <IonLabel>{t('filters.search')}</IonLabel>
           <input
             type="text"
             value={filters.searchTerm}
@@ -64,39 +67,39 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
         </div>
 
         <div className="filter-row">
-          <IonLabel>Availability:</IonLabel>
+          <IonLabel>{t('filters.availability.label')}</IonLabel>
           <select
             value={filters.availabilityFilter}
             onChange={(e) => onFiltersChange({ availabilityFilter: e.target.value })}
             className="filter-select"
             title="Filter by availability"
           >
-            <option value="all">All Availability</option>
-            <option value="available">Available</option>
-            <option value="limited">Limited</option>
-            <option value="unavailable">Unavailable</option>
+            <option value="all">{t('filters.availability.all')}</option>
+            <option value="available">{t('filters.availability.available')}</option>
+            <option value="limited">{t('filters.availability.limited')}</option>
+            <option value="unavailable">{t('filters.availability.unavailable')}</option>
           </select>
         </div>
 
         <div className="filter-row">
-          <IonLabel>Type:</IonLabel>
+          <IonLabel>{t('filters.typeLabel')}</IonLabel>
           <select
             value={filters.typeFilter}
             onChange={(e) => onFiltersChange({ typeFilter: e.target.value })}
             className="filter-select"
             title="Filter by resource type"
           >
-            <option value="all">All Types</option>
-            <option value="food">Food</option>
-            <option value="medical">Medical</option>
-            <option value="shelter">Shelter</option>
-            <option value="water">Water</option>
-            <option value="supplies">Supplies</option>
+            <option value="all">{t('filters.types.all')}</option>
+            <option value="food">{t('filters.types.food')}</option>
+            <option value="medical">{t('filters.types.medical')}</option>
+            <option value="shelter">{t('filters.types.shelter')}</option>
+            <option value="water">{t('filters.types.water')}</option>
+            <option value="supplies">{t('filters.types.supplies')}</option>
           </select>
         </div>
 
         <div className="filter-row">
-          <IonLabel>My Resources:</IonLabel>
+          <IonLabel>{t('filters.myResourcesOnly')}</IonLabel>
           <input
             type="checkbox"
             checked={filters.myResourcesFilter}
@@ -107,27 +110,27 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
         </div>
 
         <div className="filter-row">
-          <IonLabel>Sort by:</IonLabel>
+          <IonLabel>{t('filters.sortBy' )}</IonLabel>
           <select
             value={filters.sortBy}
             onChange={(e) => onFiltersChange({ sortBy: e.target.value as any })}
             className="filter-select"
             title="Sort resources by"
           >
-            <option value="distance_km">Distance</option>
-            <option value="capacity">Capacity</option>
-            <option value="availability">Availability</option>
-            <option value="timestamp">Date</option>
+            <option value="distance_km">{t('filters.sorting.distance','Distance')}</option>
+            <option value="capacity">{t('filters.sorting.capacity','Capacity')}</option>
+            <option value="availability">{t('filters.sorting.availability','Availability')}</option>
+            <option value="timestamp">{t('filters.sorting.date','Date')}</option>
           </select>
-          <IonLabel>Order:</IonLabel>
+          <IonLabel>{t('filters.order')}</IonLabel>
           <select
             value={filters.sortOrder}
             onChange={(e) => onFiltersChange({ sortOrder: e.target.value as any })}
             className="filter-select"
             title="Sort order"
           >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc">{t('filters.orderAsc','Ascending')}</option>
+            <option value="desc">{t('filters.orderDesc','Descending')}</option>
           </select>
         </div>
       </div>
@@ -137,10 +140,10 @@ const ResourceFilters: React.FC<ResourceFiltersProps> = ({
         <div className="filter-summary">
           <IonText color="medium">
             <small>
-              <strong>Active Filters:</strong>
-              {filters.myResourcesFilter && ' My Resources'}
-              {filters.availabilityFilter !== 'all' && ` • Availability: ${getAvailabilityText(filters.availabilityFilter)}`}
-              {filters.typeFilter !== 'all' && ` • Type: ${filters.typeFilter}`}
+              <strong>{t('reports.activeFilters')}</strong>
+              {filters.myResourcesFilter && ` • ${t('filters.myResourcesOnly')}`}
+              {filters.availabilityFilter !== 'all' && ` • ${t('filters.availability.label')}: ${getAvailabilityText(filters.availabilityFilter)}`}
+              {filters.typeFilter !== 'all' && ` • ${t('filters.typeLabel')}: ${t(`filters.types.${filters.typeFilter}`) || filters.typeFilter}`}
             </small>
           </IonText>
         </div>

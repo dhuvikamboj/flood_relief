@@ -21,6 +21,7 @@ import {
   trash,
   person
 } from 'ionicons/icons';
+import { useTranslation } from 'react-i18next';
 
 export interface Comment {
   id: number;
@@ -70,6 +71,7 @@ const RequestCard: React.FC<RequestCardProps> = ({
   onStatusUpdate,
   onDeleteRequest,
 }) => {
+  const { t } = useTranslation();
   const getRequestTypeIcon = (requestType?: string) => {
     switch (requestType?.toLowerCase()) {
       case 'medical': return medkit;
@@ -113,10 +115,10 @@ const RequestCard: React.FC<RequestCardProps> = ({
 
   const getStatusText = (status: string) => {
     switch (status?.toLowerCase()) {
-      case 'pending': return 'Pending';
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      case 'cancelled': return 'Cancelled';
+  case 'pending': return t('requestFilters.status.pending');
+  case 'in-progress': return t('requestFilters.status.inProgress');
+  case 'completed': return t('requestFilters.status.completed');
+  case 'cancelled': return t('requestFilters.status.cancelled');
       default: return status || 'Unknown';
     }
   };
@@ -137,8 +139,8 @@ const RequestCard: React.FC<RequestCardProps> = ({
             </IonBadge>
           </h2>
           <p>
-            <strong>Priority:</strong> {request.priority}
-            {request.distance_km && <span> • {parseFloat(request.distance_km+""||"0").toFixed(1)} km away</span>}
+            <strong>{t('requestFilters.priorityLabel')}:</strong> {request.priority}
+            {request.distance_km && <span> • {parseFloat(request.distance_km+""||"0").toFixed(1)} {t('common.km')}</span>}
             <IonBadge color={getStatusColor(request.status || 'pending')} style={{ marginLeft: '8px' }}>
               {getStatusText(request.status || 'pending')}
             </IonBadge>
@@ -146,22 +148,22 @@ const RequestCard: React.FC<RequestCardProps> = ({
           {request.request_type && (
             <p>
               <IonIcon icon={getRequestTypeIcon(request.request_type)} style={{ marginRight: '4px' }} />
-              <strong>Type:</strong> {request.request_type}
+              <strong>{t('requestFilters.typeLabel')}:</strong> {request.request_type}
             </p>
           )}
           <p>{request.details}</p>
-          {request.address && <p><strong>Address:</strong> {request.address}</p>}
-          {request.contact && <p><strong>Contact:</strong> {request.contact}</p>}
-          {request.reporter_name && <p><strong>Reported by:</strong> {request.reporter_name}</p>}
-          {request.reporter_phone && <p><strong>Phone:</strong> {request.reporter_phone}</p>}
+          {request.address && <p><strong>{t('table.address')}:</strong> {request.address}</p>}
+          {request.contact && <p><strong>{t('common.contact')}:</strong> {request.contact}</p>}
+          {request.reporter_name && <p><strong>{t('requests.reportedBy')}:</strong> {request.reporter_name}</p>}
+          {request.reporter_phone && <p><strong>{t('common.phone')}:</strong> {request.reporter_phone}</p>}
           {(request.photos && request.photos.length > 0) && (
-            <p><strong>Photos:</strong> {request.photos.length} attached</p>
+            <p><strong>{t('requests.photos', { count: request.photos.length })}</strong></p>
           )}
           {(request.videos && request.videos.length > 0) && (
-            <p><strong>Videos:</strong> {request.videos.length} attached</p>
+            <p><strong>{t('requests.videos', { count: request.videos.length })}</strong></p>
           )}
           {request.comments && request.comments.length > 0 && (
-            <p><strong>Comments:</strong> {request.comments.length}</p>
+            <p><strong>{t('comments.title', { count: request.comments.length })}</strong></p>
           )}
           <small>{request.timestamp.toLocaleString()}</small>
         </IonLabel>

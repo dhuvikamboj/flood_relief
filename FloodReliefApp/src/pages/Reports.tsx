@@ -27,6 +27,7 @@ import api from '../../services/api';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Reports.css';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from '../hooks/useLocation';
 import { useAuth } from '../contexts/AuthContext';
 import { ReliefRequest, Comment } from '../components/RequestCard';
@@ -44,6 +45,7 @@ L.Icon.Default.mergeOptions({
 });
 
 const Reports: React.FC = () => {
+  const { t } = useTranslation();
   const [showToast, setToastMessage] = useState(false);
   const [toastMessage, setToastMessageContent] = useState('');
   const [showStatusAlert, setShowStatusAlert] = useState(false);
@@ -356,13 +358,7 @@ const Reports: React.FC = () => {
   };
 
   const getStatusText = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case 'pending': return 'Pending';
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      case 'cancelled': return 'Cancelled';
-      default: return status || 'Unknown';
-    }
+    return t(`requestFilters.status.${status}`) || status || 'Unknown';
   };
 
   const renderMapView = () => (
@@ -378,20 +374,20 @@ const Reports: React.FC = () => {
     <div className={`data-tab-content ${activeTab !== 'data' ? 'hidden' : ''}`}>
       <div className="requests-list">
         <IonText color="primary">
-          <h2>Relief Requests</h2>
+          <h2>{t('reports.title')}</h2>
         </IonText>
 
         {/* Current filter summary */}
         {(filters.statusFilter !== 'all' || filters.priorityFilter !== 'all' || filters.typeFilter !== 'all' || filters.myRequestsFilter || filters.searchTerm.trim()) && (
           <div className="filter-summary">
             <IonText color="medium">
-              <small>
-                <strong>Active Filters:</strong>
-                {filters.myRequestsFilter && ' My Reports'}
-                {filters.statusFilter !== 'all' && ` • Status: ${filters.statusFilter}`}
-                {filters.priorityFilter !== 'all' && ` • Priority: ${filters.priorityFilter}`}
-                {filters.typeFilter !== 'all' && ` • Type: ${filters.typeFilter}`}
-                {filters.searchTerm.trim() && ` • Search: "${filters.searchTerm.trim()}"`}
+                <small>
+                <strong>{t('reports.activeFilters')}:</strong>
+                {filters.myRequestsFilter && ` ${t('reports.myReports')}`}
+                {filters.statusFilter !== 'all' && ` • ${t('common.status')}: ${t(`requestFilters.status.${filters.statusFilter}`) || filters.statusFilter}`}
+                {filters.priorityFilter !== 'all' && ` • ${t('common.priority')}: ${t(`requestFilters.priority.${filters.priorityFilter}`) || filters.priorityFilter}`}
+                {filters.typeFilter !== 'all' && ` • ${t('common.type')}: ${t(`requestFilters.type.${filters.typeFilter}`) || filters.typeFilter}`}
+                {filters.searchTerm.trim() && ` • ${t('common.search')}: "${filters.searchTerm.trim()}"`}
               </small>
             </IonText>
           </div>
@@ -402,11 +398,11 @@ const Reports: React.FC = () => {
             <IonSpinner name="crescent" />
           </div>
         ) : requests.length === 0 ? (
-          <IonCard>
+              <IonCard>
             <IonCardContent className="no-requests">
               <IonIcon icon={warning} color="medium" />
               <IonText color="medium">
-                <p>No relief requests in your area</p>
+                <p>{t('reports.noRequests')}</p>
               </IonText>
             </IonCardContent>
           </IonCard>
@@ -430,10 +426,8 @@ const Reports: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Relief Requests</IonTitle>
-          <IonButton slot="end" routerLink="/dashboard" fill="clear">
-            <IonIcon icon={person} />
-          </IonButton>
+          <IonTitle>{t('reports.pageTitle')}</IonTitle>
+          {/* dashboard header button removed per request */}
         </IonToolbar>
       </IonHeader>
       
@@ -441,7 +435,7 @@ const Reports: React.FC = () => {
         <div className="requests-header">
           <IonButton expand="block" routerLink="/tabs/request/new" className="request-button">
             <IonIcon icon={add} slot="start" />
-            Submit Relief Request
+            {t('reports.submitRequest')}
           </IonButton>
         </div>
 
@@ -474,11 +468,11 @@ const Reports: React.FC = () => {
           >
             <IonSegmentButton value="map">
               <IonIcon icon={map} />
-              <IonLabel>Map</IonLabel>
+              <IonLabel>{t('common.map')}</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="data">
               <IonIcon icon={list} />
-              <IonLabel>List</IonLabel>
+              <IonLabel>{t('common.list')}</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </div>
@@ -495,16 +489,16 @@ const Reports: React.FC = () => {
         <IonAlert
           isOpen={showStatusAlert}
           onDidDismiss={handleStatusUpdateCancel}
-          header={'Confirm Status Update'}
-          message={`Are you sure you want to change the status to "${getStatusText(pendingStatusUpdate?.newStatus || '')}"?`}
+      header={t('reports.confirmStatusHeader')}
+      message={t('reports.confirmStatusMessage', { status: getStatusText(pendingStatusUpdate?.newStatus || '') })}
           buttons={[
             {
-              text: 'Cancel',
+        text: t('common.cancel'),
               role: 'cancel',
               handler: handleStatusUpdateCancel,
             },
             {
-              text: 'Confirm',
+        text: t('common.confirm'),
               role: 'confirm',
               handler: handleStatusUpdateConfirm,
             },

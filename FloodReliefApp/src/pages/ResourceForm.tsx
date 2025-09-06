@@ -31,6 +31,7 @@ import {
   IonButtons
   ,IonProgressBar
 } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   // optional: you can wire this to a store or API later
@@ -38,6 +39,7 @@ interface Props {
 
 const ResourceForm: React.FC<Props> = () => {
   const auth = useAuth();
+  const { t } = useTranslation();
 
   // Use the location hook without auto-watching
   const {
@@ -193,7 +195,7 @@ const ResourceForm: React.FC<Props> = () => {
 
   const handleSubmit = () => {
     if (!location || !resourceType || !details) {
-      setToastMessage('Please fill in all required fields');
+    setToastMessage(t('forms.fillRequired'));
       setShowToast(true);
       return;
     }
@@ -238,7 +240,7 @@ const ResourceForm: React.FC<Props> = () => {
   }).then((res) => {
       setUploading(false);
       setUploadProgress(null);
-      setToastMessage('Relief resource added successfully');
+  setToastMessage(t('resourceForm.added'));
       setShowToast(true);
       setLocation('');
       setAddress('');
@@ -300,13 +302,13 @@ const ResourceForm: React.FC<Props> = () => {
 
   const handleGetCurrentLocation = async () => {
     try {
-      setToastMessage('Getting current location...');
+  setToastMessage(t('common.gettingLocation'));
       setShowToast(true);
 
   const coords = await getCurrentLocation();
   startWatching(); // Ensure watching resumes after manual stop
 
-      setToastMessage('Location updated successfully!');
+  setToastMessage(t('common.locationUpdated'));
       setShowToast(true);
 
       // Update map and marker if initialized
@@ -337,13 +339,13 @@ const ResourceForm: React.FC<Props> = () => {
       console.error('Location error:', error);
 
       // Provide more helpful error messages
-      let errorMessage = 'Failed to get location.';
+  let errorMessage = t('common.locationFailed');
       if (error.message?.includes('permission')) {
-        errorMessage = 'Location permission denied. Please enable location access in your browser settings.';
+  errorMessage = t('common.locationPermissionDenied');
       } else if (error.message?.includes('timeout')) {
-        errorMessage = 'Location request timed out. Please try again or check your GPS signal.';
+  errorMessage = t('common.locationTimeout');
       } else if (error.message?.includes('unavailable')) {
-        errorMessage = 'Geolocation is not available in this browser.';
+  errorMessage = t('common.locationUnavailable');
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -358,15 +360,15 @@ const ResourceForm: React.FC<Props> = () => {
       <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref="/tabs/resources" text="Back" />
+              <IonBackButton defaultHref="/tabs/resources" text={t('common.back')} />
             </IonButtons>
-            <IonTitle>Add Relief Resource</IonTitle>
+            <IonTitle>{t('resourceForm.title')}</IonTitle>
           </IonToolbar>
         </IonHeader>
       <IonContent>
         <IonCard className="request-form">
           <IonCardHeader>
-            <IonCardTitle>Add Relief Resource</IonCardTitle>
+            <IonCardTitle>{t('resourceForm.title')}</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
 
@@ -387,19 +389,19 @@ const ResourceForm: React.FC<Props> = () => {
                 </div>
                 <div ref={(el) => { if (el) mapRef.current = el; }} id="resource-map" className="map-embed" />
               </div>
-              <small>Tap/click on the map to set resource location (lat, lng will populate)</small>
+              <small>{t('resourceForm.mapNote')}</small>
             </div>
 
             <IonItem>
-              <IonLabel position="stacked">Location *</IonLabel>
+              <IonLabel position="stacked">{t('forms.locationRequired')}</IonLabel>
               <div className="location-input-row">
-                <IonInput value={location} readonly placeholder="Auto-filled from GPS or map click" />
+                <IonInput value={location} readonly placeholder={t('forms.locationPlaceholder')} />
                 <IonButton
                   size="small"
                   onClick={handleGetCurrentLocation}
                   disabled={mapLoading}
                 >
-                  {mapLoading ? 'Getting Location...' : 'Get Current Location'}
+                  {mapLoading ? t('common.gettingLocation') : t('common.getCurrentLocation')}
                 </IonButton>
               </div>
               {mapError && (
@@ -410,33 +412,33 @@ const ResourceForm: React.FC<Props> = () => {
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Address (optional)</IonLabel>
-              <IonInput value={address} onIonInput={(e) => setAddress(e.detail.value!)} placeholder="Street, city or landmark" />
+              <IonLabel position="stacked">{t('forms.addressOptional')}</IonLabel>
+              <IonInput value={address} onIonInput={(e) => setAddress(e.detail.value!)} placeholder={t('forms.addressPlaceholder')} />
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Contact info (email)</IonLabel>
-              <IonInput value={contact} onIonInput={(e) => setContact(e.detail.value!)} placeholder="Email address (optional)" />
+              <IonLabel position="stacked">{t('forms.contactInfo')}</IonLabel>
+              <IonInput value={contact} onIonInput={(e) => setContact(e.detail.value!)} placeholder={t('forms.contactPlaceholder')} />
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Contact phone</IonLabel>
-              <IonInput value={contactPhone} onIonInput={(e) => setContactPhone(e.detail.value!)} placeholder="Phone number (optional)" />
+              <IonLabel position="stacked">{t('forms.contactPhone')}</IonLabel>
+              <IonInput value={contactPhone} onIonInput={(e) => setContactPhone(e.detail.value!)} placeholder={t('forms.contactPhonePlaceholder')} />
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Type of Resource *</IonLabel>
-              <IonSelect value={resourceType} placeholder="Select type" onIonChange={e => setResourceType(e.detail.value!)}>
-                <IonSelectOption value="food">Food Distribution</IonSelectOption>
-                <IonSelectOption value="water">Water Supply</IonSelectOption>
-                <IonSelectOption value="shelter">Shelter</IonSelectOption>
-                <IonSelectOption value="medical">Medical Supplies</IonSelectOption>
-                <IonSelectOption value="supplies">General Supplies</IonSelectOption>
+              <IonLabel position="stacked">{t('forms.typeOfResource')}</IonLabel>
+              <IonSelect value={resourceType} placeholder={t('common.select')} onIonChange={e => setResourceType(e.detail.value!)}>
+                <IonSelectOption value="food">{t('resourceForm.types.food')}</IonSelectOption>
+                <IonSelectOption value="water">{t('resourceForm.types.water')}</IonSelectOption>
+                <IonSelectOption value="shelter">{t('resourceForm.types.shelter')}</IonSelectOption>
+                <IonSelectOption value="medical">{t('resourceForm.types.medical')}</IonSelectOption>
+                <IonSelectOption value="supplies">{t('resourceForm.types.supplies')}</IonSelectOption>
               </IonSelect>
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Capacity (people served)</IonLabel>
+              <IonLabel position="stacked">{t('resourceForm.capacity')}</IonLabel>
               <IonInput
                 type="number"
                 value={capacity}
@@ -447,17 +449,17 @@ const ResourceForm: React.FC<Props> = () => {
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Current Availability</IonLabel>
+              <IonLabel position="stacked">{t('resourceForm.currentAvailability')}</IonLabel>
               <IonSelect value={availability} onIonChange={(e) => setAvailability(e.detail.value)}>
-                <IonSelectOption value="available">Available</IonSelectOption>
-                <IonSelectOption value="limited">Limited</IonSelectOption>
-                <IonSelectOption value="unavailable">Unavailable</IonSelectOption>
+                <IonSelectOption value="available">{t('resourceForm.availability.available')}</IonSelectOption>
+                <IonSelectOption value="limited">{t('resourceForm.availability.limited')}</IonSelectOption>
+                <IonSelectOption value="unavailable">{t('resourceForm.availability.unavailable')}</IonSelectOption>
               </IonSelect>
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Details *</IonLabel>
-              <IonTextarea value={details} onIonInput={(e) => setDetails(e.detail.value!)} rows={6} placeholder="Describe the resource, hours of operation, requirements, etc." />
+              <IonLabel position="stacked">{t('forms.detailsRequired')}</IonLabel>
+              <IonTextarea value={details} onIonInput={(e) => setDetails(e.detail.value!)} rows={6} placeholder={t('resourceForm.detailsPlaceholder')} />
             </IonItem>
 
         <div className="media-uploads">
@@ -475,7 +477,7 @@ const ResourceForm: React.FC<Props> = () => {
 
           {/* Videos upload temporarily hidden */}
         </div>
-            <IonButton expand="block" onClick={handleSubmit} className="submit-button" disabled={uploading}>Add Resource</IonButton>
+            <IonButton expand="block" onClick={handleSubmit} className="submit-button" disabled={uploading}>{t('resourceForm.addResource')}</IonButton>
             {uploading && typeof uploadProgress === 'number' && (
               <div className="upload-progress">
                 <IonLabel>Uploading: {uploadProgress}%</IonLabel>

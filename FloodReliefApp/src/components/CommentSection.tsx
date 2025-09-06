@@ -4,6 +4,7 @@ import {
   IonLabel,
   IonText,
 } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
 import { Comment } from '../types/resource';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -25,15 +26,16 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   submittingComment,
 }) => {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="request-modal-comments">
-      <h3>💬 Comments ({comments.length})</h3>
+      <h3>💬 {t('comments.title', { count: comments.length })}</h3>
 
       {loadingComments ? (
-        <p>Loading comments...</p>
+        <p>{t('common.loading')}</p>
       ) : comments.length === 0 ? (
-        <p>No comments yet. Be the first to comment!</p>
+        <p>{t('comments.noComments')}</p>
       ) : (
         <div className="comments-list">
           {comments.map((comment) => (
@@ -51,12 +53,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       {isAuthenticated && (
         <div className="add-comment-section">
           <IonLabel>
-            <h4>Add a Comment</h4>
+            <h4>{t('comments.addTitle')}</h4>
           </IonLabel>
           <textarea
             value={newComment}
             onChange={(e) => onNewCommentChange(e.target.value)}
-            placeholder="Write your comment here..."
+            placeholder={t('comments.placeholder')}
             rows={3}
             className="comment-textarea"
           />
@@ -65,7 +67,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             onClick={onSubmitComment}
             disabled={!newComment.trim() || submittingComment}
           >
-            {submittingComment ? 'Posting...' : 'Post Comment'}
+            {submittingComment ? t('comments.posting') : t('comments.post')}
           </IonButton>
         </div>
       )}
@@ -73,7 +75,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       {!isAuthenticated && (
         <div className="login-prompt">
           <IonText color="medium">
-            <p>Please log in to add comments</p>
+            <p>{t('comments.loginPrompt')}</p>
           </IonText>
         </div>
       )}

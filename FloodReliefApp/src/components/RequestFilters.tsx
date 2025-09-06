@@ -23,6 +23,7 @@ import {
   checkmarkOutline 
 } from 'ionicons/icons';
 import './FloatingFilters.css';
+import { useTranslation } from 'react-i18next';
 
 export interface RequestFilters {
   searchRadius: number;
@@ -42,6 +43,7 @@ interface RequestFiltersProps {
 }
 
 const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChange,landing }) => {
+  const { t } = useTranslation();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Count active filters
@@ -104,7 +106,7 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
             <IonToolbar>
               <IonTitle size="small">
                 <IonIcon icon={funnelOutline} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
-                Filters
+                {t('filters.title')}
               </IonTitle>
               <IonButton 
                 slot="end" 
@@ -112,7 +114,7 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
                 size="small"
                 onClick={() => setIsPopoverOpen(false)}
               >
-                <IonIcon icon={close} />
+                <IonIcon icon={close} title={t('common.close') as any} />
               </IonButton>
             </IonToolbar>
           </IonHeader>
@@ -122,21 +124,21 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
               <div className="filter-section">
                 <div className="filter-section-title">
                   <IonIcon icon={searchOutline} />
-                  Search & Location
+                  {t('filters.searchLocation')}
                 </div>
                 
                 <div className="filter-row">
                   <input
                     type="text"
                     className="search-input"
-                    placeholder="Search location, details, reporter..."
+                    placeholder={t('filters.searchPlaceholder')}
                     value={filters.searchTerm}
                     onChange={(e) => onFiltersChange({ searchTerm: e.target.value })}
                   />
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Radius: {filters.searchRadius} km</IonLabel>
+                  <IonLabel>{t('filters.radius', { value: filters.searchRadius })}</IonLabel>
                   <div className="radius-control">
                     <IonRange
                       className="radius-slider"
@@ -155,54 +157,54 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
               <div className="filter-section">
                 <div className="filter-section-title">
                   <IonIcon icon={layersOutline} />
-                  Filters
+                  {t('filters.title')}
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Status:</IonLabel>
+                  <IonLabel>{t('requestFilters.statusLabel')}</IonLabel>
                   <select 
                     className="filter-select"
                     value={filters.statusFilter} 
                     onChange={(e) => onFiltersChange({ statusFilter: e.target.value })}
                     aria-label="Select status filter"
                   >
-                    <option value="all">All Status</option>
-                    <option value="pending">⏳ Pending</option>
-                    <option value="in-progress">🔄 In Progress</option>
-                    <option value="completed">✅ Completed</option>
-                    <option value="cancelled">❌ Cancelled</option>
+                    <option value="all">{t('requestFilters.status.all')}</option>
+                    <option value="pending">⏳ {t('requestFilters.status.pending')}</option>
+                    <option value="in-progress">🔄 {t('requestFilters.status.inProgress')}</option>
+                    <option value="completed">✅ {t('requestFilters.status.completed')}</option>
+                    <option value="cancelled">❌ {t('requestFilters.status.cancelled')}</option>
                   </select>
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Priority:</IonLabel>
+                  <IonLabel>{t('requestFilters.priorityLabel')}</IonLabel>
                   <select 
                     className="filter-select"
                     value={filters.priorityFilter} 
                     onChange={(e) => onFiltersChange({ priorityFilter: e.target.value })}
                     aria-label="Select priority filter"
                   >
-                    <option value="all">All Priorities</option>
-                    <option value="high">🔴 High</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="low">🟢 Low</option>
+                    <option value="all">{t('requestFilters.priority.all')}</option>
+                    <option value="high">🔴 {t('requestFilters.priority.high')}</option>
+                    <option value="medium">🟡 {t('requestFilters.priority.medium')}</option>
+                    <option value="low">🟢 {t('requestFilters.priority.low')}</option>
                   </select>
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Type:</IonLabel>
+                  <IonLabel>{t('requestFilters.typeLabel')}</IonLabel>
                   <select 
                     className="filter-select"
                     value={filters.typeFilter} 
                     onChange={(e) => onFiltersChange({ typeFilter: e.target.value })}
                     aria-label="Select request type"
                   >
-                    <option value="all">All Types</option>
-                    <option value="medical">⚕️ Medical</option>
-                    <option value="food">🍲 Food</option>
-                    <option value="shelter">🏠 Shelter</option>
-                    <option value="water">💧 Water</option>
-                    <option value="supplies">📦 Supplies</option>
+                    <option value="all">{t('filters.types.all')}</option>
+                    <option value="medical">⚕️ {t('filters.types.medical')}</option>
+                    <option value="food">🍲 {t('filters.types.food')}</option>
+                    <option value="shelter">🏠 {t('filters.types.shelter')}</option>
+                    <option value="water">💧 {t('filters.types.water')}</option>
+                    <option value="supplies">📦 {t('filters.types.supplies')}</option>
                   </select>
                 </div>
 
@@ -215,42 +217,42 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
                     aria-label="Show only my requests"
                   />
                   <label className="filter-checkbox-label">
-                    My requests only
+                    {t('requestFilters.myRequestsOnly')}
                   </label>
                 </div>
               </div>
 
-              <div className="filter-section">
+                <div className="filter-section">
                 <div className="filter-section-title">
                   <IonIcon icon={layersOutline} />
-                  Sorting
+                  {t('filters.sortingLabel')}
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Sort by:</IonLabel>
+                  <IonLabel>{t('filters.sorting.distance')}</IonLabel>
                   <select 
                     className="filter-select"
                     value={filters.sortBy} 
                     onChange={(e) => onFiltersChange({ sortBy: e.target.value })}
                     aria-label="Select sort criteria"
                   >
-                    <option value="distance_km">📏 Distance</option>
-                    <option value="priority">⚠️ Priority</option>
-                    <option value="timestamp">📅 Date</option>
-                    <option value="status">📊 Status</option>
+                    <option value="distance_km">📏 {t('filters.sorting.distance')}</option>
+                    <option value="priority">⚠️ {t('filters.sorting.capacity') /* capacity used for priority label fallback */}</option>
+                    <option value="timestamp">📅 {t('filters.sorting.date')}</option>
+                    <option value="status">📊 {t('filters.sorting.availability')}</option>
                   </select>
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Order:</IonLabel>
+                  <IonLabel>{t('filters.order')}</IonLabel>
                   <select 
                     className="filter-select"
                     value={filters.sortOrder} 
                     onChange={(e) => onFiltersChange({ sortOrder: e.target.value as 'asc' | 'desc' })}
                     aria-label="Select sort order"
                   >
-                    <option value="asc">⬆️ Ascending</option>
-                    <option value="desc">⬇️ Descending</option>
+                    <option value="asc">⬆️ {t('filters.orderAsc')}</option>
+                    <option value="desc">⬇️ {t('filters.orderDesc')}</option>
                   </select>
                 </div>
               </div>
@@ -258,15 +260,15 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
               {activeFilterCount > 0 && (
                 <div className="filter-summary-active">
                   <div className="filter-summary-title">
-                    Active Filters
+                    {t('reports.activeFilters')}
                   </div>
                   <div className="filter-summary-items">
-                    {filters.myRequestsFilter && <div>My Requests Only</div>}
-                    {filters.statusFilter !== 'all' && <div>Status: {filters.statusFilter}</div>}
-                    {filters.priorityFilter !== 'all' && <div>Priority: {filters.priorityFilter}</div>}
-                    {filters.typeFilter !== 'all' && <div>Type: {filters.typeFilter}</div>}
-                    {filters.searchTerm.trim() && <div>Search: "{filters.searchTerm}"</div>}
-                    {filters.searchRadius !== 5 && <div>Radius: {filters.searchRadius} km</div>}
+                    {filters.myRequestsFilter && <div>{t('requestFilters.myRequestsOnly')}</div>}
+                    {filters.statusFilter !== 'all' && <div>{t('requestFilters.statusLabel')}: {t(`requestFilters.status.${filters.statusFilter}`) || filters.statusFilter}</div>}
+                    {filters.priorityFilter !== 'all' && <div>{t('requestFilters.priorityLabel')}: {t(`requestFilters.priority.${filters.priorityFilter}`) || filters.priorityFilter}</div>}
+                    {filters.typeFilter !== 'all' && <div>{t('requestFilters.typeLabel')}: {t(`requestFilters.type.${filters.typeFilter}`) || filters.typeFilter}</div>}
+                    {filters.searchTerm.trim() && <div>{t('filters.search')}: "{filters.searchTerm}"</div>}
+                    {filters.searchRadius !== 5 && <div>{t('filters.radius', { value: filters.searchRadius })}</div>}
                   </div>
                 </div>
               )}
@@ -279,14 +281,14 @@ const RequestFilters: React.FC<RequestFiltersProps> = ({ filters, onFiltersChang
                   disabled={activeFilterCount === 0}
                 >
                   <IonIcon icon={refreshOutline} slot="start" />
-                  Clear All
+                  {t('filters.clearAll')}
                 </IonButton>
                 <IonButton 
                   expand="full"
                   onClick={() => setIsPopoverOpen(false)}
                 >
                   <IonIcon icon={checkmarkOutline} slot="start" />
-                  Apply Filters
+                  {t('filters.apply')}
                 </IonButton>
               </div>
             </div>

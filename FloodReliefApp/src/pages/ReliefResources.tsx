@@ -22,7 +22,9 @@ import { add, warning, person, map, list } from 'ionicons/icons';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Reports.css';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from '../hooks/useLocation';
+import { useLocation as useRouterLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useResources } from '../hooks/useResources';
 import { useComments } from '../hooks/useComments';
@@ -42,6 +44,7 @@ L.Icon.Default.mergeOptions({
 });
 
 const ReliefResources: React.FC = () => {
+  const { t } = useTranslation();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [showAvailabilityAlert, setShowAvailabilityAlert] = useState(false);
@@ -63,6 +66,9 @@ const ReliefResources: React.FC = () => {
 
   // Get user coordinates
   const { userCoords } = useLocation();
+
+  // Router location (page URL) — used to conditionally show UI based on current path
+  const routerLocation = useRouterLocation();
 
   // Get user authentication
   const { user, isAuthenticated } = useAuth();
@@ -146,7 +152,7 @@ const ReliefResources: React.FC = () => {
     <div className={`data-tab-content ${activeTab !== 'data' ? 'hidden' : ''}`}>
       <div className="resources-list">
         <IonText color="primary">
-          <h2>Relief Resources</h2>
+          <h2>{t('resources.title')}</h2>
         </IonText>
 
         {loadingResources ? (
@@ -154,11 +160,11 @@ const ReliefResources: React.FC = () => {
             <IonSpinner name="crescent" />
           </div>
         ) : sortedResources.length === 0 ? (
-          <IonCard>
+      <IonCard>
             <IonCardContent className="no-resources">
               <IonIcon icon={warning} color="medium" />
               <IonText color="medium">
-                <p>No relief resources in your area</p>
+        <p>{t('resources.noResources')}</p>
               </IonText>
             </IonCardContent>
           </IonCard>
@@ -183,10 +189,10 @@ const ReliefResources: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Relief Resources</IonTitle>
-          <IonButton slot="end" routerLink="/dashboard" fill="clear">
+          <IonTitle>{t('resources.pageTitle')}</IonTitle>
+          {/* <IonButton slot="end" routerLink="/dashboard" fill="clear">
             <IonIcon icon={person} />
-          </IonButton>
+          </IonButton> */}
         </IonToolbar>
       </IonHeader>
       
@@ -194,7 +200,7 @@ const ReliefResources: React.FC = () => {
         <div className="resources-header">
           <IonButton expand="block" routerLink="/tabs/resource/new" className="request-button">
             <IonIcon icon={add} slot="start" />
-            Add Relief Resource
+            {t('resources.addResource')}
           </IonButton>
         </div>
 
@@ -202,11 +208,13 @@ const ReliefResources: React.FC = () => {
         {renderMapView()}
         {renderDataView()}
 
-        {/* Floating Filters FAB - Available in both views */}
-        <FloatingFilters
-          filters={filters}
-          onFiltersChange={updateFilters}
-        />
+        {/* Floating Filters FAB - show only when on the resources page URL (uses pathname) */}
+        {routerLocation.pathname.startsWith('/tabs/resources') && (
+          <FloatingFilters
+            filters={filters}
+            onFiltersChange={updateFilters}
+          />
+        )}
 
         {/* Floating Tab Segment */}
         <div className="floating-tab-segment">
@@ -216,11 +224,11 @@ const ReliefResources: React.FC = () => {
           >
             <IonSegmentButton value="map">
               <IonIcon icon={map} />
-              <IonLabel>Map</IonLabel>
+              <IonLabel>{t('common.map')}</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="data">
               <IonIcon icon={list} />
-              <IonLabel>List</IonLabel>
+              <IonLabel>{t('common.list')}</IonLabel>
             </IonSegmentButton>
           </IonSegment>
         </div>
@@ -237,16 +245,16 @@ const ReliefResources: React.FC = () => {
         <IonAlert
           isOpen={showAvailabilityAlert}
           onDidDismiss={handleAvailabilityUpdateCancel}
-          header={'Confirm Availability Update'}
-          message={`Are you sure you want to change the availability to "${getAvailabilityText(pendingAvailabilityUpdate?.newAvailability || '')}"?`}
+      header={t('resources.confirmAvailabilityHeader')}
+      message={t('resources.confirmAvailabilityMessage', { availability: getAvailabilityText(pendingAvailabilityUpdate?.newAvailability || '') })}
           buttons={[
             {
-              text: 'Cancel',
+        text: t('common.cancel'),
               role: 'cancel',
               handler: handleAvailabilityUpdateCancel,
             },
             {
-              text: 'Confirm',
+        text: t('common.confirm'),
               role: 'confirm',
               handler: handleAvailabilityUpdateConfirm,
             },
@@ -255,7 +263,7 @@ const ReliefResources: React.FC = () => {
       </IonContent>
 
       {/* Resource Details Modal */}
-      <ResourceModal
+     { <ResourceModal
         isOpen={showResourceModal}
         resource={selectedResource}
         comments={comments}
@@ -267,7 +275,7 @@ const ReliefResources: React.FC = () => {
         isUserResource={selectedResource ? isUserResource(selectedResource) : false}
         onClose={closeResourceModal}
         onAvailabilityUpdate={confirmAvailabilityUpdate}
-      />
+      />}
     </IonPage>
   );
   };

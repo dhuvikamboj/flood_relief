@@ -16,9 +16,11 @@ import {
 } from '@ionic/react';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
 import './Signup.css';
 
 const Signup: React.FC = () => {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,46 +104,46 @@ const Signup: React.FC = () => {
 
     // Basic validation
     if (!name.trim()) {
-      setErrors(prev => ({ ...prev, name: 'Please enter your full name' }));
+      setErrors(prev => ({ ...prev, name: t('signup.errors.enterFullName') }));
       return;
     }
 
     if (!email.trim()) {
-      setErrors(prev => ({ ...prev, email: 'Please enter your email address' }));
+      setErrors(prev => ({ ...prev, email: t('signup.errors.enterEmail') }));
       return;
     }
 
     if (!password.trim()) {
-      setErrors(prev => ({ ...prev, password: 'Please enter a password' }));
+      setErrors(prev => ({ ...prev, password: t('signup.errors.enterPassword') }));
       return;
     }
 
     if (!confirmPassword.trim()) {
-      setErrors(prev => ({ ...prev, confirmPassword: 'Please confirm your password' }));
+      setErrors(prev => ({ ...prev, confirmPassword: t('signup.errors.confirmPassword') }));
       return;
     }
 
     // Optional phone validation
     if (phone && phone.length < 6) {
-      setErrors(prev => ({ ...prev, phone: 'Please enter a valid phone number' }));
+      setErrors(prev => ({ ...prev, phone: t('signup.errors.validPhone') }));
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setErrors(prev => ({ ...prev, email: 'Please enter a valid email address' }));
+      setErrors(prev => ({ ...prev, email: t('signup.errors.validEmail') }));
       return;
     }
 
     // Password validation
     if (password.length < 6) {
-      setErrors(prev => ({ ...prev, password: 'Password must be at least 6 characters long' }));
+      setErrors(prev => ({ ...prev, password: t('signup.errors.passwordLength') }));
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: 'Passwords do not match' }));
+      setErrors(prev => ({ ...prev, confirmPassword: t('signup.errors.passwordsDoNotMatch') }));
       return;
     }
 
@@ -150,7 +152,7 @@ const Signup: React.FC = () => {
   // register may have an extended signature; cast to any to forward extra fields
   await (register as any)(email.trim(), password, name.trim(), confirmPassword,phone.trim(), address.trim(), emergencyContact.trim());
       presentToast({
-        message: 'Account created successfully! Welcome to Flood Relief.',
+        message: t('signup.success.accountCreated'),
         duration: 3000,
         color: 'success',
         position: 'top',
@@ -186,22 +188,22 @@ const Signup: React.FC = () => {
           } else if (error.response.data?.message) {
             setErrors(prev => ({ ...prev, general: error.response.data.message }));
           } else {
-            setErrors(prev => ({ ...prev, general: 'Please check your information and try again' }));
+            setErrors(prev => ({ ...prev, general: t('signup.errors.checkInfo') }));
           }
         } else if (error.response.status === 409) {
-          setErrors(prev => ({ ...prev, email: 'An account with this email already exists' }));
+          setErrors(prev => ({ ...prev, email: t('signup.errors.accountExists') }));
         } else if (error.response.data?.message) {
           setErrors(prev => ({ ...prev, general: error.response.data.message }));
         } else {
-          setErrors(prev => ({ ...prev, general: 'Registration failed. Please try again.' }));
+          setErrors(prev => ({ ...prev, general: t('signup.errors.registrationFailed') }));
         }
       } else if (error.message) {
         setErrors(prev => ({ ...prev, general: error.message }));
       } else if (error.request) {
         // Network error
-        setErrors(prev => ({ ...prev, general: 'Network error. Please check your connection and try again.' }));
+        setErrors(prev => ({ ...prev, general: t('signup.errors.networkError') }));
       } else {
-        setErrors(prev => ({ ...prev, general: 'An unexpected error occurred. Please try again.' }));
+        setErrors(prev => ({ ...prev, general: t('signup.errors.unexpectedError') }));
       }
     } finally {
       setLocalLoading(false);
@@ -212,27 +214,27 @@ const Signup: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Flood Relief - Sign Up</IonTitle>
+          <IonTitle>{t('signup.title')}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonLoading isOpen={localLoading} message="Creating account..." />
+        <IonLoading isOpen={localLoading} message={t('signup.loading')} />
 
         <div className="signup-header">
           <IonText color="primary">
-            <h1>Join Flood Relief</h1>
+            <h1>{t('signup.joinFloodRelief')}</h1>
           </IonText>
           <IonText color="medium">
-            <p>Create an account to help your community</p>
+            <p>{t('signup.createAccount')}</p>
           </IonText>
         </div>
 
         <IonItem>
-          <IonLabel position="stacked">Full Name</IonLabel>
+          <IonLabel position="stacked">{t('signup.fullName')}</IonLabel>
           <IonInput
             value={name}
             onIonInput={(e) => handleNameChange(e.detail.value!)}
-            placeholder="Enter your full name"
+            placeholder={t('signup.placeholders.fullName')}
             required
           />
         </IonItem>
@@ -243,12 +245,12 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Email</IonLabel>
+          <IonLabel position="stacked">{t('signup.email')}</IonLabel>
           <IonInput
             type="email"
             value={email}
             onIonInput={(e) => handleEmailChange(e.detail.value!)}
-            placeholder="Enter your email"
+            placeholder={t('signup.placeholders.email')}
             required
           />
         </IonItem>
@@ -259,12 +261,12 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Password</IonLabel>
+          <IonLabel position="stacked">{t('signup.password')}</IonLabel>
           <IonInput
             type="password"
             value={password}
             onIonInput={(e) => handlePasswordChange(e.detail.value!)}
-            placeholder="Enter your password"
+            placeholder={t('signup.placeholders.password')}
             required
           />
         </IonItem>
@@ -275,12 +277,12 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Confirm Password</IonLabel>
+          <IonLabel position="stacked">{t('signup.confirmPassword')}</IonLabel>
           <IonInput
             type="password"
             value={confirmPassword}
             onIonInput={(e) => handleConfirmPasswordChange(e.detail.value!)}
-            placeholder="Confirm your password"
+            placeholder={t('signup.placeholders.confirmPassword')}
             required
           />
         </IonItem>
@@ -291,12 +293,12 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Phone (optional)</IonLabel>
+          <IonLabel position="stacked">{t('signup.phone')} ({t('signup.optional')})</IonLabel>
           <IonInput
             type="tel"
             value={phone}
             onIonInput={(e) => handlePhoneChange(e.detail.value!)}
-            placeholder="Enter a phone number"
+            placeholder={t('signup.placeholders.phone')}
           />
         </IonItem>
         {errors.phone && (
@@ -306,11 +308,11 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Address (optional)</IonLabel>
+          <IonLabel position="stacked">{t('signup.address')} ({t('signup.optional')})</IonLabel>
           <IonInput
             value={address}
             onIonInput={(e) => handleAddressChange(e.detail.value!)}
-            placeholder="Enter an address"
+            placeholder={t('signup.placeholders.address')}
           />
         </IonItem>
         {errors.address && (
@@ -320,11 +322,11 @@ const Signup: React.FC = () => {
         )}
 
         <IonItem>
-          <IonLabel position="stacked">Emergency Contact (optional)</IonLabel>
+          <IonLabel position="stacked">{t('signup.emergencyContact')} ({t('signup.optional')})</IonLabel>
           <IonInput
             value={emergencyContact}
             onIonInput={(e) => handleEmergencyContactChange(e.detail.value!)}
-            placeholder="Enter an emergency contact name or number"
+            placeholder={t('signup.placeholders.emergencyContact')}
           />
         </IonItem>
         {errors.emergencyContact && (
@@ -345,13 +347,13 @@ const Signup: React.FC = () => {
           disabled={localLoading || !name || !email || !password || !confirmPassword}
           className="signup-button"
         >
-          {localLoading ? (<><IonSpinner name="dots" /> Creating...</>) : 'Sign Up'}
+          {localLoading ? (<><IonSpinner name="dots" /> {t('signup.creating')}...</>) : t('signup.signUp')}
         </IonButton>
 
         <div className="login-link">
           <IonText>
-            Already have an account?{' '}
-            <IonRouterLink routerLink="/login">Login</IonRouterLink>
+            {t('signup.alreadyHaveAccount')} {' '}
+            <IonRouterLink routerLink="/login">{t('signup.login')}</IonRouterLink>
           </IonText>
         </div>
       </IonContent>

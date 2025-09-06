@@ -1,0 +1,9 @@
+.language-selector {
+  padding: 0 12px;
+}
+
+.app-language-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

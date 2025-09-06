@@ -12,6 +12,8 @@ import {
   IonRange,
   IonLabel,
 } from '@ionic/react';
+import { useTranslation } from 'react-i18next';
+import { getAvailabilityText } from '../utils/resourceUtils';
 import { 
   options, 
   close, 
@@ -32,6 +34,7 @@ interface FloatingFiltersProps {
 }
 
 const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersChange }) => {
+  const { t } = useTranslation();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Count active filters
@@ -90,13 +93,14 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
             <IonToolbar>
               <IonTitle size="small">
                 <IonIcon icon={funnelOutline} style={{ marginRight: '6px', verticalAlign: 'middle' }} />
-                Filters
+                {t('filters.title')}
               </IonTitle>
               <IonButton 
                 slot="end" 
                 fill="clear" 
                 size="small"
                 onClick={() => setIsPopoverOpen(false)}
+                title={t('common.close')}
               >
                 <IonIcon icon={close} />
               </IonButton>
@@ -108,21 +112,21 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
               <div className="filter-section">
                 <div className="filter-section-title">
                   <IonIcon icon={searchOutline} />
-                  Search & Location
+                  {t('filters.searchLocation')}
                 </div>
                 
                 <div className="filter-row">
                   <input
                     type="text"
                     className="search-input"
-                    placeholder="Search resources..."
+                    placeholder={t('filters.searchPlaceholder')}
                     value={filters.searchTerm}
                     onChange={(e) => onFiltersChange({ searchTerm: e.target.value })}
                   />
                 </div>
                 
                 <div className="filter-row">
-                  <IonLabel>Radius: {filters.searchRadius} km</IonLabel>
+                  <IonLabel>{t('filters.radius', { value: filters.searchRadius })}</IonLabel>
                   <div className="radius-control">
                     <IonRange
                       className="radius-slider"
@@ -141,7 +145,7 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
               <div className="filter-section">
                 <div className="filter-section-title">
                   <IonIcon icon={layersOutline} />
-                  Filters
+                  {t('filters.title')}
                 </div>
                 
                 <div className="filter-row">
@@ -151,13 +155,13 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
                     onChange={(e) => onFiltersChange({ typeFilter: e.target.value as 'all' | 'food' | 'shelter' | 'medical' | 'transportation' | 'clothing' | 'other' })}
                     aria-label="Select resource type"
                   >
-                    <option value="all">All types</option>
-                    <option value="food">🍲 Food & Water</option>
-                    <option value="shelter">🏠 Shelter</option>
-                    <option value="medical">⚕️ Medical</option>
-                    <option value="transportation">🚐 Transport</option>
-                    <option value="clothing">👕 Clothing</option>
-                    <option value="other">🔧 Other</option>
+                    <option value="all">{t('filters.types.all')}</option>
+                    <option value="food">🍲 {t('filters.types.food')}</option>
+                    <option value="shelter">🏠 {t('filters.types.shelter')}</option>
+                    <option value="medical">⚕️ {t('filters.types.medical')}</option>
+                    <option value="transportation">🚐 {t('filters.types.transportation')}</option>
+                    <option value="clothing">👕 {t('filters.types.clothing')}</option>
+                    <option value="other">🔧 {t('filters.types.other')}</option>
                   </select>
                 </div>
                 
@@ -168,10 +172,10 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
                     onChange={(e) => onFiltersChange({ availabilityFilter: e.target.value as 'all' | 'available' | 'requested' })}
                     aria-label="Select availability filter"
                   >
-                    <option value="all">All resources</option>
-                    <option value="available">✅ Available</option>
-                    <option value="limited">⚠️ Limited</option>
-                    <option value="unavailable">❌ Unavailable</option>
+                    <option value="all">{t('filters.availability.all')}</option>
+                    <option value="available">✅ {t('filters.availability.available')}</option>
+                    <option value="limited">⚠️ {t('filters.availability.limited')}</option>
+                    <option value="unavailable">❌ {t('filters.availability.unavailable')}</option>
                   </select>
                 </div>
 
@@ -184,7 +188,7 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
                     aria-label="Show only my resources"
                   />
                   <label className="filter-checkbox-label">
-                    My resources only
+                    {t('filters.myResourcesOnly')}
                   </label>
                 </div>
               </div>
@@ -192,14 +196,14 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
               {activeFilterCount > 0 && (
                 <div className="filter-summary-active">
                   <div className="filter-summary-title">
-                    Active Filters
+                    {t('reports.activeFilters')}
                   </div>
                   <div className="filter-summary-items">
-                    {filters.myResourcesFilter && <div>My Resources Only</div>}
-                    {filters.availabilityFilter !== 'all' && <div>Availability: {filters.availabilityFilter}</div>}
-                    {filters.typeFilter !== 'all' && <div>Type: {filters.typeFilter}</div>}
-                    {filters.searchTerm.trim() && <div>Search: "{filters.searchTerm}"</div>}
-                    {filters.searchRadius !== 5 && <div>Radius: {filters.searchRadius} km</div>}
+                    {filters.myResourcesFilter && <div>{t('filters.myResourcesOnly')}</div>}
+                    {filters.availabilityFilter !== 'all' && <div>{t('filters.availability.label')}: {getAvailabilityText(filters.availabilityFilter)}</div>}
+                    {filters.typeFilter !== 'all' && <div>{t('filters.typeLabel')}: {t(`filters.types.${filters.typeFilter}`) || filters.typeFilter}</div>}
+                    {filters.searchTerm.trim() && <div>{t('filters.search')}: "{filters.searchTerm}"</div>}
+                    {filters.searchRadius !== 5 && <div>{t('filters.radius', { value: filters.searchRadius })}</div>}
                   </div>
                 </div>
               )}
@@ -212,14 +216,14 @@ const FloatingFilters: React.FC<FloatingFiltersProps> = ({ filters, onFiltersCha
                   disabled={activeFilterCount === 0}
                 >
                   <IonIcon icon={refreshOutline} slot="start" />
-                  Clear All
+                  {t('filters.clearAll')}
                 </IonButton>
                 <IonButton 
                   expand="full"
                   onClick={() => setIsPopoverOpen(false)}
                 >
                   <IonIcon icon={checkmarkOutline} slot="start" />
-                  Apply Filters
+                  {t('filters.apply')}
                 </IonButton>
               </div>
             </div>

@@ -10,6 +10,7 @@ import {
   briefcase, 
   location as locationIcon 
 } from 'ionicons/icons';
+import i18n from 'i18next';
 
 export const getAvailabilityColor = (availability: string) => {
   switch (availability.toLowerCase()) {
@@ -21,10 +22,11 @@ export const getAvailabilityColor = (availability: string) => {
 };
 
 export const getAvailabilityText = (availability: string) => {
+  if (!availability) return availability || 'Unknown';
   switch (availability?.toLowerCase()) {
-    case 'available': return 'Available';
-    case 'limited': return 'Limited';
-    case 'unavailable': return 'Unavailable';
+    case 'available': return i18n.t('resourceForm.availability.available');
+    case 'limited': return i18n.t('resourceForm.availability.limited');
+    case 'unavailable': return i18n.t('resourceForm.availability.unavailable');
     default: return availability || 'Unknown';
   }
 };

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getApiBaseUrl } from '../config/api';
 import {
     IonPage,
@@ -23,6 +24,7 @@ import {
     IonButton,
     IonIcon,
     IonRouterLink,
+    IonButtons,
 } from '@ionic/react';
 import RequestMap from '../components/RequestMap';
 import ResourceMap from '../components/ResourceMap';
@@ -38,9 +40,13 @@ import { useLocation } from '../hooks/useLocation';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../services/api';
 import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutline, personOutline, logOutOutline, homeOutline, informationCircleOutline } from 'ionicons/icons';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import './Landing.css';
 
 const Landing: React.FC = () => {
+    const { t } = useTranslation();
+    const [showLanguagePopover, setShowLanguagePopover] = useState(false);
+    
     // Add location state
     const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
     const [locationError, setLocationError] = useState<string | null>(null);
@@ -367,7 +373,13 @@ const Landing: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>Punjab Seva — Help Needed & Available</IonTitle>
+                    <IonTitle>{t('app.title')}</IonTitle>
+                    <IonButtons slot="end">
+                        <LanguageSwitcher 
+                            showPopover={showLanguagePopover}
+                            setShowPopover={setShowLanguagePopover}
+                        />
+                    </IonButtons>
                 </IonToolbar>
             </IonHeader>
             <IonContent>
@@ -379,27 +391,25 @@ const Landing: React.FC = () => {
                                 <div className="landing-hero-content">
                                     <h1 className="landing-hero-title">
                                         <IonIcon icon={heartOutline} className="landing-hero-icon" />
-                                        Punjab Seva (Flood Relief)
+                                        {t('hero.title')}
                                     </h1>
                                     <p className="landing-hero-subtitle">
-                                        Real-time coordination platform connecting flood victims with resources and volunteers
+                                        {t('hero.subtitle')}
                                     </p>
                                     <div className="landing-hero-features">
                                         <div className="landing-feature-item">
                                             <IonIcon icon={mapOutline} />
-                                            <span>Map relief requests & available resources</span>
+                                            <span>{t('hero.features.map')}</span>
                                         </div>
                                         <div className="landing-feature-item">
                                             <IonIcon icon={handRightOutline} />
-                                            <span>Connect helpers with those in need</span>
+                                            <span>{t('hero.features.connect')}</span>
                                         </div>
                                     </div>
                                     <div className="landing-hero-description">
                                         <IonText color="medium">
                                             <p>
-                                                During flood emergencies, critical time is lost searching for help. 
-                                                Our platform instantly connects victims needing rescue, supplies, or shelter 
-                                                with nearby volunteers and resources.
+                                                {t('hero.description')}
                                             </p>
                                         </IonText>
                                     </div>
@@ -409,7 +419,7 @@ const Landing: React.FC = () => {
                                         <details className="landing-tutorial-details">
                                             <summary className="landing-tutorial-summary">
                                                 <IonIcon icon={informationCircleOutline} />
-                                                <span>ਐਪ ਕਿਵੇਂ ਵਰਤਣਾ ਹੈ? (How to use this app?)</span>
+                                                <span>{t('tutorial.title')}</span>
                                             </summary>
                                             <div className="landing-tutorial-content">
                                                 {/* Authentication Flow Section */}
@@ -573,7 +583,7 @@ const Landing: React.FC = () => {
                                             {isAuthenticated && user ? (
                                                 // Show user information when logged in
                                                 <>
-                                                    <h3>Welcome Back!</h3>
+                                                    <h3>{t('auth.welcome')}</h3>
                                                     <div className="landing-user-info">
                                                         <div className="landing-user-header">
                                                             <IonIcon icon={personOutline} />
@@ -599,41 +609,41 @@ const Landing: React.FC = () => {
                                                         <IonRouterLink routerLink="/tabs/home">
                                                             <IonButton expand="block" color="primary">
                                                                 <IonIcon icon={homeOutline} slot="start" />
-                                                                Dashboard
+                                                                {t('auth.dashboard')}
                                                             </IonButton>
                                                         </IonRouterLink>
                                                         <IonButton expand="block" fill="outline" color="medium" onClick={logout}>
                                                             <IonIcon icon={logOutOutline} slot="start" />
-                                                            Logout
+                                                            {t('auth.logout')}
                                                         </IonButton>
                                                     </div>
                                                     <IonText color="medium">
-                                                        <small>Manage your relief requests and resources</small>
+                                                        <small>{t('auth.manageRequests')}</small>
                                                     </IonText>
                                                 </>
                                             ) : (
                                                 // Show login/signup when not authenticated
                                                 <>
-                                                    <h3>Help Save Lives</h3>
+                                                    <h3>{t('auth.helpSaveLives')}</h3>
                                                     <IonText color="medium">
-                                                        <p>Join our emergency response network</p>
+                                                        <p>{t('auth.joinNetwork')}</p>
                                                     </IonText>
                                                     <div className="landing-auth-buttons">
                                                         <IonRouterLink routerLink="/signup">
                                                             <IonButton expand="block" color="primary">
                                                                 <IonIcon icon={personAddOutline} slot="start" />
-                                                                Sign Up to Help
+                                                                {t('auth.signUpToHelp')}
                                                             </IonButton>
                                                         </IonRouterLink>
                                                         <IonRouterLink routerLink="/login">
                                                             <IonButton expand="block" fill="outline" color="primary">
                                                                 <IonIcon icon={logInOutline} slot="start" />
-                                                                Login
+                                                                {t('auth.login')}
                                                             </IonButton>
                                                         </IonRouterLink>
                                                     </div>
                                                     <IonText color="medium">
-                                                        <small>View live updates without account</small>
+                                                        <small>{t('auth.viewWithoutAccount')}</small>
                                                     </IonText>
                                                 </>
                                             )}
@@ -661,9 +671,9 @@ const Landing: React.FC = () => {
                                                 </div>
                                                 <div className="landing-stat-label">
                                                     <IonText color="medium">
-                                                        <p>Relief Requests</p>
+                                                        <p>{t('stats.reliefRequests')}</p>
                                                     </IonText>
-                                                    <IonBadge color="danger">Help Needed</IonBadge>
+                                                    <IonBadge color="danger">{t('stats.helpNeeded')}</IonBadge>
                                                 </div>
                                             </div>
                                             <div className="landing-stat-divider"></div>
@@ -675,9 +685,9 @@ const Landing: React.FC = () => {
                                                 </div>
                                                 <div className="landing-stat-label">
                                                     <IonText color="medium">
-                                                        <p>Relief Resources</p>
+                                                        <p>{t('stats.reliefResources')}</p>
                                                     </IonText>
-                                                    <IonBadge color="success">Help Available</IonBadge>
+                                                    <IonBadge color="success">{t('stats.helpAvailable')}</IonBadge>
                                                 </div>
                                             </div>
                                         </div>
@@ -685,7 +695,7 @@ const Landing: React.FC = () => {
                                             <div className="landing-stats-loading">
                                                 <IonSpinner name="crescent" />
                                                 <IonText color="medium">
-                                                    <small>Loading latest data...</small>
+                                                    <small>{t('requests.loadingText')}</small>
                                                 </IonText>
                                             </div>
                                         )}
@@ -696,13 +706,13 @@ const Landing: React.FC = () => {
                             <div className="landing-segment-wrap">
                                 <IonSegment value={activeTab} onIonChange={e => setActiveTab(e.detail.value as 'map' | 'data' | 'table')}>
                                     <IonSegmentButton value="map">
-                                        <IonLabel>Map View</IonLabel>
+                                        <IonLabel>{t('navigation.mapView')}</IonLabel>
                                     </IonSegmentButton>
                                     <IonSegmentButton value="data">
-                                        <IonLabel>List View</IonLabel>
+                                        <IonLabel>{t('navigation.listView')}</IonLabel>
                                     </IonSegmentButton>
                                     <IonSegmentButton value="table">
-                                        <IonLabel>Table View</IonLabel>
+                                        <IonLabel>{t('navigation.tableView')}</IonLabel>
                                     </IonSegmentButton>
                                 </IonSegment>
                             </div>
@@ -713,14 +723,14 @@ const Landing: React.FC = () => {
                             <IonCard style={{ height: '90vh' }}>
                                 <IonCardHeader>
                                     <IonCardTitle>
-                                        Where help is needed 
+                                        {t('requests.title')} 
                                         <IonBadge color="danger" style={{ marginLeft: '8px' }}>
                                             {requests.length}
                                         </IonBadge>
                                     </IonCardTitle>
                                 </IonCardHeader>
                                 <IonCardContent>
-                                    <IonText color="medium"><p>Relief requests reported in the area</p></IonText>
+                                    <IonText color="medium"><p>{t('requests.subtitle')}</p></IonText>
                                     <div className="landing-map-wrapper">
                                         <RequestMap requests={requests} isVisible={activeTab === 'map'} />
                                     </div>
@@ -732,14 +742,14 @@ const Landing: React.FC = () => {
                             <IonCard style={{ height: '90vh' }}>
                                 <IonCardHeader>
                                     <IonCardTitle>
-                                        Where help is available 
+                                        {t('resources.title')} 
                                         <IonBadge color="success" style={{ marginLeft: '8px' }}>
                                             {resources.length}
                                         </IonBadge>
                                     </IonCardTitle>
                                 </IonCardHeader>
                                 <IonCardContent>
-                                    <IonText color="medium"><p>Resources and volunteers offering assistance</p></IonText>
+                                    <IonText color="medium"><p>{t('resources.subtitle')}</p></IonText>
                                     <div className="landing-map-wrapper">
                                         <ResourceMap resources={resources} isVisible={activeTab === 'map'} />
                                     </div>
@@ -752,18 +762,18 @@ const Landing: React.FC = () => {
                             <IonCard>
                                 <IonCardHeader>
                                     <IonCardTitle>
-                                        Where help is needed 
+                                        {t('requests.title')} 
                                         <IonBadge color="danger" style={{ marginLeft: '8px' }}>
                                             {requests.length}
                                         </IonBadge>
                                     </IonCardTitle>
                                 </IonCardHeader>
                                 <IonCardContent>
-                                    <IonText color="medium"><p>Relief requests</p></IonText>
+                                    <IonText color="medium"><p>{t('requests.subtitle')}</p></IonText>
                                     {loading ? (
                                         <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
                                     ) : requests.length === 0 ? (
-                                        <div className="landing-no-results"><IonText color="medium"><p>No relief requests in your area</p></IonText></div>
+                                        <div className="landing-no-results"><IonText color="medium"><p>{t('requests.noRequests')}</p></IonText></div>
                                     ) : (
                                         <IonList>
                                             {requests.map((r: any) => (
@@ -794,9 +804,9 @@ const Landing: React.FC = () => {
                                                         {r.contact && <div><small><strong>Contact:</strong> {r.contact}</small></div>}
 
                                                         <div className="landing-request-footer">
-                                                            <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedRequest(r); setShowRequestModal(true); }}>View</IonButton>
+                                                            <IonButton size="small" fill="outline" onClick={(e) => { e.stopPropagation(); setSelectedRequest(r); setShowRequestModal(true); }}>{t('requests.view')}</IonButton>
                                                             {r.lat && r.lng && (
-                                                                <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${r.lat},${r.lng}`, '_blank'); }}>Directions</IonButton>
+                                                                <IonButton size="small" onClick={(e) => { e.stopPropagation(); window.open(`https://www.google.com/maps/dir//${r.lat},${r.lng}`, '_blank'); }}>{t('requests.directions')}</IonButton>
                                                             )}
                                                         </div>
                                                     </IonCardContent>
@@ -886,7 +896,7 @@ const Landing: React.FC = () => {
                                     <IonCard>
                                         <IonCardHeader>
                                             <IonCardTitle>
-                                                Relief Requests 
+                                                {t('stats.reliefRequests')} 
                                                 <IonBadge color="danger" style={{ marginLeft: '8px' }}>
                                                     {requests.length}
                                                 </IonBadge>
@@ -901,7 +911,7 @@ const Landing: React.FC = () => {
                                                     setSelectedRequest(request);
                                                     setShowRequestModal(true);
                                                 }}
-                                                emptyMessage="No relief requests found in your area"
+                                                emptyMessage={t('requests.noRequests')}
                                             />
                                         </IonCardContent>
                                     </IonCard>
@@ -911,7 +921,7 @@ const Landing: React.FC = () => {
                                     <IonCard>
                                         <IonCardHeader>
                                             <IonCardTitle>
-                                                Relief Resources 
+                                                {t('stats.reliefResources')} 
                                                 <IonBadge color="success" style={{ marginLeft: '8px' }}>
                                                     {resources.length}
                                                 </IonBadge>
@@ -926,7 +936,7 @@ const Landing: React.FC = () => {
                                                     setSelectedResource(resource);
                                                     setShowResourceModal(true);
                                                 }}
-                                                emptyMessage="No resources found in your area"
+                                                emptyMessage={t('resources.noResources')}
                                             />
                                         </IonCardContent>
                                     </IonCard>

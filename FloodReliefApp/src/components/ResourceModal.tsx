@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   IonModal,
   IonHeader,
@@ -54,6 +55,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
   onClose,
   onAvailabilityUpdate,
 }) => {
+  const { t } = useTranslation();
   if (!resource) return null;
 
   const handleAvailabilityUpdate = (newAvailability: string) => {
@@ -65,9 +67,9 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
     <IonModal isOpen={isOpen} onDidDismiss={onClose}>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Resource Details</IonTitle>
+          <IonTitle>{t('resource.title')}</IonTitle>
           <IonButton slot="end" fill="clear" onClick={onClose}>
-            Close
+            {t('common.close')}
           </IonButton>
         </IonToolbar>
       </IonHeader>
@@ -111,7 +113,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
                 onClick={() => window.open(`https://www.google.com/maps/dir//${resource.lat},${resource.lng}`, '_blank')}
               >
                 <IonIcon icon={map} slot="start" />
-                Get Directions
+                {t('resource.getDirections')}
               </IonButton>
 
               {resource.resource_type && (
@@ -155,7 +157,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               )}
 
               <p>
-                <strong>Coordinates:</strong> 
+                <strong>{t('resource.coordinates')}:</strong> 
                 <IonIcon icon={map} style={{ marginRight: '4px', fontSize: '16px' }} />
                 <a 
                   href={`https://www.google.com/maps?q=${resource.lat},${resource.lng}`} 
@@ -166,12 +168,12 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
                 </a>
               </p>
 
-              <p><strong>Submitted:</strong> {resource.timestamp.toLocaleString()}</p>
+              <p><strong>{t('resource.submitted')}:</strong> {resource.timestamp.toLocaleString()}</p>
 
               {/* Photos Section */}
               {resource.photos && resource.photos.length > 0 && (
                 <div className="request-modal-photos">
-                  <h3>📸 Photos ({resource.photos.length})</h3>
+                  <h3>📸 {t('resource.photosCount', { count: resource.photos.length })}</h3>
                   <div className="photos-grid">
                     {resource.photos.map((photo, index) => (
                       <div key={index} className="photo-item">
@@ -189,7 +191,7 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
               {/* Videos Section */}
               {resource.videos && resource.videos.length > 0 && (
                 <div className="request-modal-videos">
-                  <h3>🎥 Videos ({resource.videos.length})</h3>
+                  <h3>🎥 {t('resource.videosCount', { count: resource.videos.length })}</h3>
                   <div className="videos-container">
                     {resource.videos.map((video, index) => (
                       <div key={index} className="video-item">
@@ -221,28 +223,28 @@ const ResourceModal: React.FC<ResourceModalProps> = ({
                     onClick={() => handleAvailabilityUpdate('available')}
                   >
                     <IonIcon icon={checkmark} slot="start" />
-                    Mark Available
+                    {t('resource.markAvailable')}
                   </IonButton>
                   <IonButton
                     color="warning"
                     onClick={() => handleAvailabilityUpdate('limited')}
                   >
                     <IonIcon icon={warning} slot="start" />
-                    Mark Limited
+                    {t('resource.markLimited')}
                   </IonButton>
                   <IonButton
                     color="danger"
                     onClick={() => handleAvailabilityUpdate('unavailable')}
                   >
                     <IonIcon icon={trash} slot="start" />
-                    Mark Unavailable
+                    {t('resource.markUnavailable')}
                   </IonButton>
                 </div>
               )}
               {!isUserResource && (
                 <div className="request-modal-actions">
                   <IonText color="medium">
-                    <p>You can only update your own resources</p>
+                    <p>{t('resource.updateOwnOnly')}</p>
                   </IonText>
                 </div>
               )}

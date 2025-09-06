@@ -32,8 +32,10 @@ import { useHistory } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
 import './Profile.css';
+import { useTranslation } from 'react-i18next';
 
 const Profile: React.FC = () => {
+  const { t } = useTranslation();
   const auth = useAuth() as any;
   const user = auth?.user;
   const isAuthenticated = auth?.isAuthenticated;
@@ -123,17 +125,17 @@ console.log(user);
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Profile</IonTitle>
+            <IonTitle>{t('profile.pageTitle')}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
           <div className="profile-not-auth">
             <IonIcon icon={person} size="large" color="medium" />
             <IonText color="medium">
-              <h2>Please log in to view your profile</h2>
+              <h2>{t('profile.loginPrompt')}</h2>
             </IonText>
             <IonButton routerLink="/login">
-              Go to Login
+              {t('auth.goToLogin')}
             </IonButton>
           </div>
         </IonContent>
@@ -149,7 +151,7 @@ console.log(user);
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div className="profile-header">
+  <div className="profile-header">
           <IonIcon icon={person} size="large" color="primary" />
           <IonText color="primary">
             <h1>{profile.name}</h1>
@@ -160,21 +162,21 @@ console.log(user);
         </div>
 
         <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Personal Information</IonCardTitle>
+            <IonCardHeader>
+            <IonCardTitle>{t('profile.personalInfo')}</IonCardTitle>
             <IonButton
               fill="clear"
               size="small"
               onClick={() => setEditMode(!editMode)}
             >
-              {editMode ? 'Cancel' : 'Edit'}
+              {editMode ? t('common.cancel') : t('common.edit')}
             </IonButton>
           </IonCardHeader>
           <IonCardContent>
             <IonList>
               <IonItem>
                 <IonIcon icon={person} slot="start" />
-                <IonLabel position="stacked">Full Name</IonLabel>
+                <IonLabel position="stacked">{t('profile.fullName')}</IonLabel>
                 <IonInput
                   value={profile.name}
                   onIonChange={(e) => setProfile({...profile, name: e.detail.value!})}
@@ -184,7 +186,7 @@ console.log(user);
 
               <IonItem>
                 <IonIcon icon={mail} slot="start" />
-                <IonLabel position="stacked">Email</IonLabel>
+                <IonLabel position="stacked">{t('profile.email')}</IonLabel>
                 <IonInput
                   value={profile.email}
                   onIonChange={(e) => setProfile({...profile, email: e.detail.value!})}
@@ -194,7 +196,7 @@ console.log(user);
 
               <IonItem>
                 <IonIcon icon={call} slot="start" />
-                <IonLabel position="stacked">Phone</IonLabel>
+                <IonLabel position="stacked">{t('profile.phone')}</IonLabel>
                 <IonInput
                   value={profile.phone}
                   onIonChange={(e) => setProfile({...profile, phone: e.detail.value!})}
@@ -218,14 +220,14 @@ console.log(user);
         </IonCard>
 
         <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Emergency Information</IonCardTitle>
+            <IonCardHeader>
+            <IonCardTitle>{t('profile.emergencyInfo')}</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
             <IonList>
               <IonItem>
                 <IonIcon icon={call} slot="start" color="danger" />
-                <IonLabel position="stacked">Emergency Contact</IonLabel>
+                <IonLabel position="stacked">{t('profile.emergencyContact')}</IonLabel>
                 <IonInput
                   value={profile.emergencyContact}
                   onIonChange={(e) => setProfile({...profile, emergencyContact: e.detail.value!})}
@@ -235,7 +237,7 @@ console.log(user);
 
               <IonItem>
                 <IonIcon icon={person} slot="start" color="warning" />
-                <IonLabel position="stacked">Medical Information</IonLabel>
+                <IonLabel position="stacked">{t('profile.medicalInfo')}</IonLabel>
                 <IonTextarea
                   value={profile.medicalInfo}
                   onIonChange={(e) => setProfile({...profile, medicalInfo: e.detail.value!})}
@@ -253,9 +255,9 @@ console.log(user);
                   disabled={saving}
                 >
                   <IonIcon icon={save} slot="start" />
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  {saving ? t('common.saving') : t('profile.saveChanges')}
                 </IonButton>
-                <IonLoading isOpen={saving} message="Saving profile..." />
+                <IonLoading isOpen={saving} message={t('profile.savingMessage')} />
               </>
             )}
           </IonCardContent>
@@ -268,7 +270,7 @@ console.log(user);
             onClick={() => setShowLogoutAlert(true)}
           >
             <IonIcon icon={logOut} slot="start" />
-            Logout
+            {t('auth.logout')}
           </IonButton>
         </div>
 
@@ -279,7 +281,7 @@ console.log(user);
           message="Are you sure you want to logout?"
           buttons={[
             {
-              text: 'Cancel',
+                text: t('common.cancel'),
               role: 'cancel'
             },
             {
