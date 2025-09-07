@@ -578,3 +578,15 @@ ion-segment-button ion-icon {
   background: var(--ion-color-light-shade);
   border-radius: 8px;
 }
+
+/* Expiry toggle and expire-at display */
+.expired-toggle {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.expire-at {
+  margin-top: 6px;
+  color: var(--ion-color-medium);
+  font-size: 0.85rem;
+}

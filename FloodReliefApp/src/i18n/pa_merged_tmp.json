@@ -1,6 +1,5 @@
-{
-  "app": {
-    "title": "ਪੰਜਾਬ ਸੇਵਾ — ਮਦਦ ਚਾਹੀਦੀ ਅਤੇ ਉਪਲੱਬਧ",
+merged to /tmp/pa.merged.json
+ੰਜਾਬ ਸੇਵਾ — ਮਦਦ ਚਾਹੀਦੀ ਅਤੇ ਉਪਲੱਬਧ",
     "subtitle": "ਰੀਅਲ-ਟਾਈਮ ਸਮਰਥਨ ਪਲੇਟਫਾਰਮ ਜੋ ਹੜ੍ਹ ਪੀੜਤਾਂ ਨੂੰ ਸਰੋਤਾਂ ਅਤੇ ਸਵਯੰਸੇਵਕਾਂ ਨਾਲ ਜੋੜਦਾ ਹੈ"
   },
   "hero": {
@@ -48,7 +47,7 @@
     "address": "ਪਤਾ (ਐਮਰਜੈਂਸੀ ਲਈ)",
     "step3": "ਕਦਮ 3: \"ਖਾਤਾ ਬਣਾਓ\" ਦਬਾਓ",
     "loginProcess": "ਲਾਗਇਨ ਕਰਨਾ",
-    "firstTime": "ਪਹਿਲੀ ਵਾਰ: ਖਾਤਾ ਬਣਨ ਤੋਂ ਬਾਅਦ ਆਪਣੇ ਆਪ ਲਾਗਇਨ ਹੋ ਜਾਓਗੇ",
+    "firstTime": "ਪਹਿਲੀ ਵਾਰ: ਖਾਤਾ ਬਣਾਉਣ ਤੋਂ ਬਾਅਦ ਆਪਣੇ ਆਪ ਲਾਗਇਨ ਹੋ ਜਾਓਗੇ",
     "nextTime": "ਅਗਲੀ ਵਾਰ: \"ਲਾਗਇਨ\" ਬਟਨ ਦਬਾ ਕੇ:",
     "enterEmail": "ਈਮੇਲ ਪਾਓ",
     "enterPassword": "ਪਾਸਵਰਡ ਪਾਓ",
@@ -63,7 +62,7 @@
     "afterLogin": "ਲਾਗਇਨ ਹੋਣ ਤੋਂ ਬਾਅਦ \"ਰਾਹਤ ਬੇਨਤੀ ਭੇਜੋ\" ਦਬਾਓ",
     "provideAddress": "ਆਪਣਾ ਪਤਾ ਅਤੇ ਮੋਬਾਈਲ ਨੰਬਰ ਦਿਓ",
     "selectHelpType": "ਮਦਦ ਦੀ ਕਿਸਮ ਚੁਣੋ: ਖਾਣਾ, ਪਾਣੀ, ਦਵਾਈ, ਬਚਾਅ, ਰਹਿਣ ਦੀ ਜਗ੍ਹਾ",
-    "selectPriority": "ਤਰਜੀਹ ਚੁਣੋ: ਉੱਚ (ਜ਼ਰੂਰੀ), ਮੱਧਮ, ਘੱਟ",
+    "selectPriority": "ਤਰਜੀਹ ਚੁਣੋ: ਉੱਚ (ਜ਼ਰੂਰੀ), ਮੱਧ, ਘੱਟ",
     "addPhotos": "ਤਸਵੀਰਾਂ ਜੋੜੋ ਅਤੇ \"ਬੇਨਤੀ ਭੇਜੋ\" ਦਬਾਓ",
     "providingResources": "ਸਹਾਇਤਾ ਪ੍ਰਦਾਨ ਕਰਨਾ - ਲਾਗਇਨ ਚਾਹੀਦਾ",
     "helpingOthers": "ਮਦਦ ਕਰਨ ਲਈ:",
@@ -78,7 +77,7 @@
     "noLoginRequired": "ਨਕਸ਼ਾ ਦੇਖਣ ਲਈ ਲਾਗਇਨ ਦੀ ਲੋੜ ਨਹੀਂ",
     "commentsAndUpdates": "ਟਿੱਪਣੀਆਂ ਅਤੇ ਅਪਡੇਟ - ਲਾਗਇਨ ਚਾਹੀਦਾ",
     "toComment": "ਟਿੱਪਣੀ ਕਰਨ ਲਈ:",
-    "loginRequired": "ਲਾਗਇਨ ਹੋਣਾ ਜ਼ਰੂਰੀ",
+    "loginRequired": "ਲਾਗਇਨ ਹੋਣਾ ਜ਼রੂਰੀ",
     "clickRequest": "ਕਿਸੇ ਬੇਨਤੀ ਤੇ ਕਲਿੱਕ ਕਰੋ",
     "writeComment": "\"ਟਿੱਪਣੀ ਜੋੜੋ\" ਬਕਸੇ ਵਿੱਚ ਲਿਖੋ",
     "submitComment": "\"ਭੇਜੋ\" ਬਟਨ ਦਬਾਓ",
@@ -116,29 +115,6 @@
     "resources": "ਸਰੋਤ",
     "profile": "ਪ੍ਰੋਫਾਈਲ"
   },
-  "requests": {
-    "title": "ਕਿੱਥੇ ਮਦਦ ਦੀ ਲੋੜ ਹੈ",
-    "subtitle": "ਖੇਤਰ ਵਿੱਚ ਰਿਪੋਰਟ ਕੀਤੀਆਂ ਰਾਹਤ ਬੇਨਤੀਆਂ",
-    "noRequests": "ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਕੋਈ ਰਾਹਤ ਬੇਨਤੀ ਨਹੀਂ",
-    "loadingText": "ਨਵੀਨਤਮ ਡੇਟਾ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
-    "view": "ਦੇਖੋ",
-    "directions": "ਦਿਸ਼ਾਵਾਂ",
-    "updateOwnOnly": "ਤੁਸੀਂ ਸਿਰਫ ਆਪਣੇ ਬੇਨਤੀਆਂ ਨੂੰ ਅਪਡੇਟ ਕਰ ਸਕਦੇ ਹੋ",
-    "priorityLabel": "{{priority}} Priority",
-    "typeLabel": "Type",
-    "reportedBy": "Reported by",
-    "coordinates": "Coordinates",
-    "photos": "Photos ({{count}})",
-    "videos": "Videos ({{count}})",
-    "status": {
-      "pending": "Pending",
-      "in-progress": "In Progress",
-      "completed": "Completed",
-      "cancelled": "Cancelled"
-    },
-    "markInProgress": "Mark In Progress",
-    "markCompleted": "Mark Completed"
-  },
   "stats": {
     "reliefRequests": "ਰਾਹਤ ਬੇਨਤੀਆਂ",
     "reliefResources": "ਰਾਹਤ ਸਰੋਤ",
@@ -155,7 +131,8 @@
     "details": "ਵੇਰਵੇ",
     "availability": "ਉਪਲੱਬਧਤਾ",
     "capacity": "ਸਮਰੱਥਾ",
-    "address": "ਪਤਾ"
+    "address": "ਪਤਾ",
+    "expires": "ਮਿਆਦ"
   },
   "common": {
     "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
@@ -168,10 +145,12 @@
     "close": "ਬੰਦ ਕਰੋ",
     "search": "ਖੋਜੋ",
     "filter": "ਫਿਲਟਰ",
-    "sort": "ਕ੍ਰਮਬੱਧ ਕਰੋ",
+    "clearAll": "Clear All",
+    "apply": "Apply Filters",
+    "radius": "Radius: {{value}} km",
     "km": "ਕਿ.ਮੀ.",
     "distance": "ਦੂਰੀ",
-    "providedBy": "ਦੁਆਰਾ ਪ੍ਰਦਾਨ ਕੀਤਾ ਗਿਆ",
+    "providedBy": "ਦੁਆਰਾ ਪ੍ਰਦਾਨ ਕੀਤਾ गया",
     "reportedAt": "ਰਿਪੋਰਟ ਸਮਾਂ",
     "contact": "ਸੰਪਰਕ",
     "address": "ਪਤਾ",
@@ -186,16 +165,29 @@
     "signUp": "ਸਾਈਨ ਅੱਪ",
     "alreadyHaveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
     "dontHaveAccount": "ਖਾਤਾ ਨਹੀਂ ਹੈ?",
-    "forgotPassword": "ਪਾਸਵਰਡ ਭੁੱਲ ਗਏ?",
-    "required": "ਜ਼ਰੂਰੀ",
+    "forgotPassword": "ਪਾਸवਰਡ ਭੁੱਲ ਗਏ?",
+    "required": "ਜ਼रੂਰੀ",
     "optional": "ਵਿਕਲਪਿਕ",
     "map": "ਨਕਸ਼ਾ",
     "list": "ਸੂਚੀ",
-    "clearAll": "Clear All",
-    "apply": "Apply Filters",
-    "radius": "Radius: {{value}} km"
+    "sort": "ਕ੍ਰਮਬੱਧ ਕਰੋ",
+    "select": "ਚੁਣੋ",
+    "away": "ਦੂਰ",
+    "back": "ਪਿਛੇ",
+    "call": "ਕਾਲ",
+    "confirm": "ਪੱਕਾ",
+    "directions": "ਦਿਸ਼ਾਵਾਂ",
+    "general": "ਸাধਾਰਣ",
+    "gettingLocation": "ਲੋਕੇਸ਼ਨ ਲੱਭਿਆ ਜਾ ਰਿਹਾ ਹੈ",
+    "getCurrentLocation": "ਮੌਜੂਦਾ ਸਥਾਨ ਲਓ",
+    "locationFailed": "ਲੋਕੇਸ਼ਨ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ",
+    "locationPermissionDenied": "ਲੋਕੇਸ਼ਨ ਆਗਿਆ ਮਨਾਹੀ ਕੀਤੀ ਗਈ",
+    "locationTimeout": "ਲੋਕੇਸ਼ਨ ਲਈ ਸਮਾਂ ਖਤਮ ਹੋ ਗਿਆ",
+    "locationUnavailable": "ਲੋਕੇਸ਼ਨ ਉਪਲਬਧ ਨਹੀਂ",
+    "locationUpdated": "ਲੋਕੇਸ਼ਨ ਅਪਡੇਟ ਹੋ ਗਈ",
+    "priority": "ਤਰਜੀਹ"
   },
-  "away": "ਦੂਰ",
+  "away": "away",
   "forms": {
     "login": {
       "title": "ਲਾਗਇਨ",
@@ -219,126 +211,38 @@
       "createAccountButton": "ਖਾਤਾ ਬਣਾਓ",
       "haveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
       "loginLink": "ਇੱਥੇ ਲਾਗਇਨ ਕਰੋ"
-    }
-  },
-  "signup": {
-    "title": "ਖਾਤਾ ਬਣਾਓ",
-    "loading": "ਖਾਤਾ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
-    "joinFloodRelief": "ਪੰਜਾਬ ਸੇਵਾ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ - ਹੜ੍ਹ ਦੌਰਾਨ ਮਦਦ ਕਰੋ",
-    "placeholders": {
-      "fullName": "ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
-      "email": "ਈਮੇਲ ਦਰਜ ਕਰੋ",
-      "password": "ਪਾਸਵਰਡ ਬਣਾਓ",
-      "confirmPassword": "ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
-      "phone": "ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ",
-      "address": "ਪਤਾ ਦਰਜ ਕਰੋ",
-      "emergencyContact": "ਐਮਰਜੈਂਸੀ ਸੰਪਰਕ ਦਰਜ ਕਰੋ"
     },
-    "fullName": "ਪੂਰਾ ਨਾਮ",
-    "email": "ਈਮੇਲ",
-    "password": "ਪਾਸਵਰਡ",
-    "comments": {
-      "title": "ਟਿੱਪਣੀਆਂ ({{count}})",
-      "noComments": "ਅਜੇ ਤੱਕ ਕੋਈ ਟਿੱਪਣੀ ਨਹੀਂ। ਪਹਿਲਾਂ ਟਿੱਪਣੀ ਕਰੋ!",
-      "addTitle": "ਟਿੱਪਣੀ ਜੋੜੋ",
-      "placeholder": "ਆਪਣੀ ਟਿੱਪਣੀ ਇੱਥੇ ਲਿਖੋ...",
-      "post": "ਟਿੱਪਣੀ ਭੇਜੋ",
-      "posting": "ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
-      "loginPrompt": "ਟਿੱਪਣੀਆਂ ਜੋੜਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਲਾਗਇਨ ਕਰੋ"
+    "location": "ਸਥਾਨ",
+    "locationPlaceholder": "ਲੋਕੇਸ਼ਨ ਦਰਜ ਕਰੋ ਜਾਂ ਨਕਸ਼ੇ 'ਤੇ ਟੈਪ ਕਰੋ",
+    "addressOptional": "ਪਤਾ (ਵਿਕਲਪਿਕ)",
+    "addressPlaceholder": "ਆਪਣਾ ਪਤਾ ਦਰਜ ਕਰੋ",
+    "contactInfo": "ਸੰਪਰਕ ਜਾਣਕਾਰੀ",
+    "contactPlaceholder": "ਸੰਪਰਕ ਦਾ ਵੇਰਵਾ ਦਰਜ ਕਰੋ",
+    "contactPhonePlaceholder": "ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ",
+    "contactPhone": "ਫੋਨ",
+    "typeOfRelief": "ਮਦਦ ਦੀ ਕਿਸਮ",
+    "details": "ਵੇਰਵੇ",
+    "detailsPlaceholder": "ਵੇਰਵਾ ਦਰਜ ਕਰੋ...",
+    "submitRequest": "ਰਾਹਤ ਬੇਨਤੀ ਭੇਜੋ",
+    "fillAllFields": "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਜਰੂਰੀ ਖੇਤਰ ਭਰੋ",
+    "fillRequired": "ਕਿਰਪਾ ਕਰਕੇ ਜਰੂਰੀ ਖੇਤਰ ਭਰੋ",
+    "locationRequired": "ਸਥਾਨ ਲਾਜ਼ਮੀ ਹੈ",
+    "detailsRequired": "ਵੇਰਵੇ ਲਾਜ਼ਮੀ ਹਨ",
+    "typeOfResource": "ਸਰੋਤ ਦੀ ਕਿਸਮ",
+    "types": {
+      "food": "ਖਾਣਾ ਅਤੇ ਪਾਣੀ",
+      "water": "ਪਾਣੀ",
+      "shelter": "ਆਵਾਸ",
+      "medical": "ਚਿਕਿਤਸਾ",
+      "animal": "ਪਸ਼ੂ ਸਹਾਇਤਾ",
+      "other": "ਹੋਰ"
     },
-    "filters": {
-      "title": "ਫਿਲਟਰ",
-      "searchLocation": " ਖੋਜ ਅਤੇ ਸਥਾਨ",
-      "searchPlaceholder": "ਸਰੋਤ ਖੋਜੋ...",
-      "radius": "ਰੇਡੀਅਸ: {{value}} ਕਿਮੀ",
-      "types": {
-        "all": "ਸਭ ਕਿਸਮਾਂ",
-        "food": "ਖਾਣਾ ਅਤੇ ਪਾਣੀ",
-        "shelter": "ਆਵਾਸ",
-        "medical": "ਚਿਕਿਤਸਾ",
-        "transportation": "ਯਾਤਰਾ",
-        "clothing": "ਕਪੜੇ",
-        "other": "ਹੋਰ"
-      },
-      "availability": {
-        "all": "ਸਾਰੇ ਸਰੋਤ",
-        "available": "ਉਪਲੱਬਧ",
-        "limited": "ਸੀਮਿਤ",
-        "unavailable": "ਉਪਲਬਧ ਨਹੀਂ",
-        "label": "ਉਪਲੱਬਧਤਾ"
-      },
-      "myResourcesOnly": "ਸਿਰਫ ਮੇਰੇ ਸਰੋਤ",
-      "typeLabel": "ਕਿਸਮ",
-      "search": "ਖੋਜ",
-      "clearAll": "ਸਾਰੇ ਸਾਫ਼ ਕਰੋ",
-      "apply": "ਫਿਲਟਰ ਲਾਗੂ ਕਰੋ",
-      "sorting": {
-        "distance": "ਦੂਰੀ",
-        "capacity": "ਸਮਰੱਥਾ",
-        "availability": "ਉਪਲੱਬਧਤਾ",
-        "date": "ਮਿਤੀ"
-      },
-      "order": {
-        "asc": "ਆਰੋਹੀ",
-        "desc": "ਉਤਾਰੋਹੀ"
-      },
-      "sortingLabel": "ਕ੍ਰਮ"
+    "priorities": {
+      "low": "ਘੱਟ",
+      "medium": "ਮੱਧ",
+      "high": "ਉੱਚ"
     },
-    "requestFilters": {
-      "statusLabel": "ਸਥਿਤੀ",
-      "status": {
-        "all": "ਸਭ ਸਥਿਤੀਆਂ",
-        "pending": "ਬਕਾਇਆ",
-        "inProgress": "ਚਲ ਰਹੀ",
-        "in-progress": "ਚਲ ਰਹੀ",
-        "completed": "ਪੂਰੀ",
-        "cancelled": "ਰੱਦ ਕੀਤਾ"
-      },
-      "priorityLabel": "ਤਰਜੀਹ",
-      "priority": {
-        "all": "ਸਭ ਤਰਜੀਹਾਂ",
-        "high": "ਉੱਚ",
-        "medium": "ਮੱਧਮ",
-        "low": "ਨਿਮ্ন"
-      },
-      "typeLabel": "ਕਿਸਮ",
-      "myRequestsOnly": "ਸਿਰਫ ਮੇਰੀਆਂ ਬੇਨਤੀਆਂ",
-      "type": {
-        "food": "ਖਾਣਾ ਅਤੇ ਪਾਣੀ",
-        "shelter": "ਆਵਾਸ",
-        "medical": "ਚਿਕਿਤਸਾ",
-        "transportation": "ਯਾਤਰਾ",
-        "clothing": "ਕਪੜੇ",
-        "other": "ਹੋਰ"
-      }
-    },
-    "confirmPassword": "ਪਾਸਵਰਡ ਦੁਹਰਾਓ",
-    "phone": "ਫੋਨ",
-    "address": "ਪਤਾ",
-    "emergencyContact": "ਐਮਰਜੈਂਸੀ ਸੰਪਰਕ",
-    "optional": "ਵਿਕਲਪਿਕ",
-    "creating": "ਬਣਾ ਰਿਹਾ ਹੈ",
-    "signUp": "ਸਾਈਨ ਅੱਪ",
-    "alreadyHaveAccount": "ਪਹਿਲਾਂ ਤੋਂ ਖਾਤਾ ਹੈ?",
-    "login": "ਲਾਗਇਨ",
-    "success": {
-      "accountCreated": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ!"
-    },
-    "errors": {
-      "enterFullName": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
-      "enterEmail": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ",
-      "enterPassword": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ",
-      "confirmPassword": "ਕਿਰਪਾ ਕਰਕੇ ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
-      "validPhone": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਰਵਰ ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ",
-      "validEmail": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ ਈਮੇਲ ਦਰਜ ਕਰੋ",
-      "passwordLength": "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
-      "passwordsDoNotMatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ",
-      "checkInfo": "ਕਿਰਪਾ ਕਰਕੇ ਦਰਜ ਕੀਤੀ ਜਾਣਕਾਰੀ ਚੈੱਕ ਕਰੋ",
-      "accountExists": "ਇਸ ਈਮੇਲ ਨਾਲ ਇੱਕ ਖਾਤਾ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ",
-      "registrationFailed": "ਰਜਿਸਟਰੇਸ਼ਨ ਅਸਫਲ, ਕਿਰਪਾ ਕਰਕੇ ਫੇਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
-      "networkError": "ਨੈਟਵਰਕ ਦੀ ਤਰੁੱਟੀ — ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਕਨੈਕਸ਼ਨ ਨੂੰ ਚੈੱਕ ਕਰੋ",
-      "unexpectedError": "ਇਕ ਅਣਚਾਹੀ ਗਲਤੀ ਹੋ ਗਈ"
-    }
+    "priority": "ਤਰਜੀਹ"
   },
   "home": {
     "title": "ਰਾਹਤ ਹੱਬ",
@@ -351,7 +255,7 @@
       },
       "availableResources": {
         "title": "ਉਪਲੱਬਧ ਸਰੋਤ",
-        "desc": "ਆਪਣੇ ਖੇਤਰ ਵਿੱਚ ਉਪਲੱਬਧ ਰਾਹਤ ਸਰੋਤ ਵੇਖੋ ਅਤੇ ਐਕਸੈਸ ਕਰੋ."
+        "desc": "ਆपਣੇ ਖੇਤਰ ਵਿੱਚ ਉਪਲੱਬਧ ਰਾਹਤ ਸਰੋਤ ਵੇਖੋ ਅਤੇ ਐਕਸੈਸ ਕਰੋ."
       },
       "maps": {
         "title": "ਨਕਸ਼ੇ — ਮਦਦ ਲੋੜ ਅਤੇ ਉਪਲੱਬਧ",
@@ -359,7 +263,7 @@
       },
       "myProfile": {
         "title": "ਮੇਰਾ ਪ੍ਰੋਫਾਈਲ",
-        "desc": "ਆਪਣੇ ਅਕਾਊਂਟ ਸੈਟਿੰਗ ਅਤੇ ਐਮਰਜੈਂਸੀ ਸੰਪਰਕ ਜਾਣਕਾਰੀ ਪ੍ਰਬੰਧਿਤ ਕਰੋ."
+        "desc": "ਆपਣੇ ਅਕਾਊਂਟ ਸੈਟਿੰਗ ਅਤੇ ਐਮਰਜੈਂਸੀ ਸੰਪਰਕ ਜਾਣਕਾਰੀ ਪ੍ਰਬੰਧਿਤ ਕਰੋ."
       }
     },
     "emergency": {
@@ -415,40 +319,6 @@
     "mapRefreshNote": "ਜੇ ਨਕਸ਼ੇ ਠੀਕ ਨਹੀਂ ਦਿਖ ਰਹੇ ਤਾਂ ਰਿਫ੍ਰੈਸ਼ ਕਰੋ",
     "submitted": "ਰਾਹਤ ਬੇਨਤੀ ਭੇਜੀ ਗਈ"
   },
-  "resourceForm": {
-    "title": "ਰਾਹਤ ਸਰੋਤ ਜੋੜੋ",
-    "mapNote": "ਲੋਕੇਸ਼ਨ ਸੈਟ ਕਰਨ ਲਈ ਨਕਸ਼ੇ 'ਤੇ ਟੈਪ/ਕਲਿਕ ਕਰੋ (lat, lng ਭਰ ਜਾਵੇਗਾ)",
-    "detailsPlaceholder": "ਸਰੋਤ ਦਾ ਵੇਰਵਾ, ਖੁਲ੍ਹਣ ਦੇ ਘੰਟੇ, ਆਦਿ ਦਿਓ",
-    "added": "ਰਾਹਤ ਸਰੋਤ ਸਫਲਤਾਪੂਰਵਕ ਜੋੜਿਆ ਗਿਆ",
-    "types": {
-      "food": "ਖਾਣਾ ਵੰਡ",
-      "water": "ਪਾਣੀ ਪਹੁੰਚ",
-      "shelter": "ਰਿਹਾਇਸ਼",
-      "medical": "ਚਿਕਿਤਸਾ ਸਾਮੱਗਰੀ",
-      "supplies": "ਜਨਰਲ ਸਪਲਾਈ"
-    },
-    "capacity": "ਸਮਰੱਥਾ (ਲੋਕਾਂ ਦੀ ਗਿਣਤੀ)",
-    "currentAvailability": "ਮੌਜੂਦਾ ਉਪਲੱਬਧਤਾ",
-    "availability": {
-      "available": "ਉਪਲੱਬਧ",
-      "limited": "ਸੀਮਿਤ",
-      "unavailable": "ਉਪਲਬਧ ਨਹੀਂ"
-    },
-    "addResource": "ਸਰੋਤ ਜੋੜੋ"
-  },
-  "dashboard": {
-    "title": "ਮੇਰਾ ਡੈਸ਼ਬੋਰਡ",
-    "header": "ਤੁਹਾਡੀਆਂ ਰਾਹਤ ਬੇਨਤੀਆਂ",
-    "totalRequests": "ਕੁੱਲ ਬੇਨਤੀਆਂ",
-    "completed": "ਪੂਰੀਆਂ",
-    "inProgress": "ਚਲ ਰਹੀਆਂ",
-    "pending": "ਬਾਕੀ",
-    "loadingRequests": "ਤੁਹਾਡੀਆਂ ਬੇਨਤੀਆਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ...",
-    "noRequestsTitle": "ਕੋਈ ਬੇਨਤੀ ਨਹੀਂ",
-    "noRequestsMsg": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣੀ ਪਹਿਲੀ ਰਾਹਤ ਬੇਨਤੀ ਭੇਜੋ!",
-    "loginRequired": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਡੈਸ਼ਬੋਰਡ ਦੇਖਣ ਲਈ ਲਾਗਇਨ ਕਰੋ",
-    "loadFailed": "ਤੁਹਾਡੀਆਂ ਬੇਨਤੀਆਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
-  },
   "map": {
     "yourLocation": "ਤੁਹਾਡੀ ਲੋਕੇਸ਼ਨ",
     "priorityLabel": "ਤਰਜੀਹ:",
@@ -473,14 +343,15 @@
     "layer": {
       "satellite": "ਸੈਟੇਲਾਈਟ",
       "streets": "ਸੜਕਾਂ",
-      "terrain": "ਭੂਮਾਕෘਤੀ",
+      "terrain": "ਭੂਮਾਕ੍ਰਤੀ",
       "topo": "ਟੋਪੋਗ੍ਰਾਫਿਕ"
     },
     "locating": "ਤੁਹਾਡੀ ਲੋਕੇਸ਼ਨ ਲੱਭ ਸਕਦਾ ਹੈ...",
     "permissionMessage": "ਜਦੋਂ ਸਥਾਨ ਦੀ ਆਗਿਆ ਦਿੱਤੀ ਜਾਵੇਗੀ ਤਾਂ ਨਕਸ਼ਾ ਇੱਥੇ ਦਿਖੇਗਾ।",
+    "expires": "Expires",
     "enableLocation": "ਸਥਾਨ ਚਾਲੂ ਕਰੋ",
     "permissionHelp": "ਆਪਣੇ ਬਰਾਊਜ਼ਰ ਵਿੱਚ ਸਥਾਨ ਦੀ ਆਗਿਆ ਦੇਣ ਲਈ ਟੈਪ ਕਰੋ; iOS ‘ਤੇ ਪਹਿਲਾਂ ਮਨਾਹੀ ਹੋਈ ਹੋਵੇ ਤਾਂ Settings → Safari → Location ਵਿੱਚ ਜਾਓ।",
-    "refreshNote": "ਜੇ ਨਕਸ਼ੇ ਠੀਕ ਨਹੀਂ ਦਿੱਸ ਰਹੇ, ਤਾਂ ਰਿਫ੍ਰੈਸ਼ ਬਟਨ ਦਬਾਓ"
+    "refreshNote": "ਜੇ ਨਕਸ਼ੇ ਠੀਕ ਨਹੀ ਦਿੱਸ ਰਹੇ, ਤਾਂ ਰਿਫ੍ਰੈਸ਼ ਬਟਨ ਦਬਾਓ"
   },
   "resource": {
     "title": "ਸਰੋਤ ਵੇਰਵੇ",
@@ -492,81 +363,213 @@
     "updateOwnOnly": "ਤੁਸੀਂ ਸਿਰਫ ਆਪਣੇ ਸਰੋਤ ਨੂੰ ਅਪਡੇਟ ਕਰ ਸਕਦੇ ਹੋ",
     "markAvailable": "ਉਪਲੱਬਧ ਮਾਰਕ ਕਰੋ",
     "markLimited": "ਸੀਮਿਤ ਮਾਰਕ ਕਰੋ",
-    "markUnavailable": "ਅਣਉਪਲੱਬਧ ਮਾਰਕ ਕਰੋ"
+    "markUnavailable": "ਅਣਉपਲੱਬਧ ਮਾਰਕ ਕਰੋ"
+  },
+  "resourceForm": {
+    "title": "ਰਾਹਤ ਸਰੋਤ ਜੋੜੋ",
+    "mapNote": "ਲੋਕੇਸ਼ਨ ਸੈਟ ਕਰਨ ਲਈ ਨਕਸ਼ੇ 'ਤੇ ਟੈਪ/ਕਲਿਕ ਕਰੋ (lat, lng ਭਰ ਜਾਵੇਗਾ)",
+    "detailsPlaceholder": "ਸਰੋਤ ਦਾ ਵੇਰਵਾ, ਖੁਲ੍ਹਣ ਦੇ ਘੰਟੇ, ਆਦਿ ਦਿਓ",
+    "added": "ਰਾਹਤ ਸਰੋਤ ਸਫਲਤਾਪੂਰਵਕ ਜੋੜਿਆ ਗਿਆ",
+    "types": {
+      "food": "ਖਾਣਾ ਵੰਡ",
+      "water": "ਪਾਣੀ ਪਹੁੰਚ",
+      "shelter": "ਰਿਹਾਇਸ਼",
+      "medical": "ਚਿਕਿਤਸਾ ਸਾਮੱਗਰੀ",
+      "supplies": "ਜਨਰਲ ਸਪਲਾਈ"
+    },
+    "capacity": "ਸਮਰੱਥਾ (ਲੋਕਾਂ ਦੀ ਗਿਣਤੀ)",
+    "currentAvailability": "ਮੌਜੂਦਾ ਉਪਲੱਬਧਤਾ",
+    "availability": {
+      "available": "ਉਪਲੱਬਧ",
+      "limited": "ਸੀਮਿਤ",
+      "unavailable": "ਉਪਲਬਧ ਨਹੀਂ"
+    },
+    "addResource": "ਸਰোਤ ਜੋੜੋ"
+  },
+  "dashboard": {
+    "title": "ਮੇਰਾ ਡੈਸ਼ਬੋਰਡ",
+    "header": "ਤੁਹਾਡੀਆਂ ਰਾਹਤ ਬੇਨਤੀਆਂ",
+    "totalRequests": "ਕੁੱਲ ਬੇਨਤੀਆਂ",
+    "completed": "ਪੂਰੀਆਂ",
+    "inProgress": "ਚਲ ਰਹੀਆਂ",
+    "pending": "ਬਾਕੀ",
+    "loadingRequests": "ਤੁਹਾਡੀਆਂ ਬੇਨਤੀਆਂ ਲੋਡ ਕੀਤੀਆਂ ਜਾ ਰਹੀਆਂ ਹਨ...",
+    "noRequestsTitle": "ਕੋਈ ਬੇਨਤੀ ਨਹੀਂ",
+    "noRequestsMsg": "ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਆਪਣੀ ਪਹਿਲੀ ਰਾਹਤ ਬੇਨਤੀ ਭੇਜੋ!",
+    "loginRequired": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਡੈਸ਼ਬੋਰਡ ਦੇਖਣ ਲਈ ਲਾਗਇਨ ਕਰੋ",
+    "loadFailed": "ਤੁਹਾਡੀਆਂ ਬੇਨਤੀਆਂ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ"
   },
   "comments": {
-    "title": "Comments ({{count}})",
-    "noComments": "No comments yet. Be the first to comment!",
-    "addTitle": "Add a Comment",
-    "placeholder": "Write your comment here...",
-    "post": "Post Comment",
-    "posting": "Posting...",
-    "loginPrompt": "Please log in to add comments"
+    "title": "ਟਿੱਪਣੀਆਂ ({{count}})",
+    "noComments": "ਅਜੇ ਤੱਕ ਕੋਈ ਟਿੱਪਣੀ ਨਹੀਂ। ਪਹਿਲਾਂ ਟਿੱਪਣੀ ਕਰੋ!",
+    "addTitle": "ਟਿੱਪਣੀ ਜੋੜੋ",
+    "placeholder": "ਆਪਣੀ ਟਿੱਪਣੀ ਇੱਥੇ ਲਿਖੋ...",
+    "post": "ਟਿੱਪਣੀ ਭੇਜੋ",
+    "posting": "ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
+    "loginPrompt": "ਕਿਰਪਾ ਕਰਕੇ ਲਾਗਇਨ ਕਰੋ"
   },
   "filters": {
-    "title": "Filters",
-    "searchLocation": "Search & Location",
-    "searchPlaceholder": "Search resources...",
-    "radius": "Radius: {{value}} km",
+    "title": "ਫਿਲਟਰ",
+    "searchLocation": " ਖੋਜ ਅਤੇ ਸਥਾਨ",
+    "searchPlaceholder": "ਸਰੋਤ ਖੋਜੋ...",
+    "radius": "ਰੇਡੀਅਸ: {{value}} ਕਿਮੀ",
     "types": {
-      "all": "All types",
-      "food": "Food & Water",
-      "shelter": "Shelter",
-      "medical": "Medical",
-      "transportation": "Transport",
-      "clothing": "Clothing",
-      "other": "Other"
+      "all": "ਸਭ ਕਿਸਮਾਂ",
+      "food": "ਖਾਣਾ ਅਤੇ ਪਾਣੀ",
+      "shelter": "ਆਵਾਸ",
+      "medical": "ਚਿਕਿਤਸਾ",
+      "transportation": "ਯਾਤਰਾ",
+      "clothing": "ਕਪੜੇ",
+      "other": "ਹੋਰ"
     },
     "availability": {
-      "all": "All resources",
-      "available": "Available",
-      "limited": "Limited",
-      "unavailable": "Unavailable",
-      "label": "Availability"
+      "all": "ਸਾਰੇ ਸਰੋਤ",
+      "available": "ਉਪਲੱਬਧ",
+      "limited": "ਸੀਮਿਤ",
+      "unavailable": "ਉਪਲਬਧ ਨਹੀਂ",
+      "label": "ਉਪਲੱਬਧਤਾ"
     },
-    "myResourcesOnly": "My resources only",
-    "typeLabel": "Type",
-    "search": "Search",
-    "clearAll": "Clear All",
-    "apply": "Apply Filters",
+    "myResourcesOnly": "ਸਿਰਫ ਮੇਰੇ ਸਰੋਤ",
+    "typeLabel": "ਕਿਸਮ",
+    "search": "ਖੋਜ",
+    "clearAll": "ਸਾਰੇ ਸਾਫ਼ ਕਰੋ",
+    "apply": "ਫਿਲਟਰ ਲਾਗੂ ਕਰੋ",
     "sorting": {
-      "distance": "Distance",
-      "capacity": "Capacity",
-      "availability": "Availability",
-      "date": "Date"
+      "distance": "ਦੂਰੀ",
+      "capacity": "ਸਮਰੱਥਾ",
+      "availability": "ਉਪਲੱਬਧਤਾ",
+      "date": "ਮਿਤੀ"
     },
     "order": {
       "asc": "Ascending",
       "desc": "Descending"
     },
-    "sortingLabel": "Sort"
+    "sortingLabel": "ਕ੍ਰਮ",
+    "orderAsc": "ਵੱਧਦਾ ਕ੍ਰਮ",
+    "orderDesc": "ਘਟਦਾ ਕ੍ਰਮ"
   },
   "requestFilters": {
-    "statusLabel": "Status",
+    "statusLabel": "ਸਥਿਤੀ",
     "status": {
-      "all": "All Status",
+      "all": "ਸਭ ਸਥਿਤੀਆਂ",
+      "pending": "ਬਕਾਇਆ",
+      "inProgress": "ਚਲ ਰਹੀ",
+      "in-progress": "ਚਲ ਰਹੀ",
+      "completed": "ਪੂਰੀ",
+      "cancelled": "ਰੱਦ ਕੀਤਾ"
+    },
+    "priorityLabel": "ਤਰਜੀਹ",
+    "priority": {
+      "all": "ਸਭ ਤਰਜੀਹਾਂ",
+      "high": "ਉੱਚ",
+      "medium": "ਮੱਧ",
+      "low": "ਘੱਟ"
+    },
+    "typeLabel": "ਕਿਸਮ",
+    "myRequestsOnly": "ਸਿਰਫ ਮੇਰੀਆਂ ਬੇਨਤੀਆਂ",
+    "type": {
+      "food": "ਖਾਣਾ ਅਤੇ ਪਾਣੀ",
+      "shelter": "ਆਵਾਸ",
+      "medical": "ਚਿਕਿਤਸਾ",
+      "transportation": "ਯਾਤਰਾ",
+      "clothing": "ਕਪੜੇ",
+      "other": "ਹੋਰ"
+    }
+  },
+  "requests": {
+    "title": "ਕਿੱਥੇ ਮਦਦ ਦੀ ਲੋੜ ਹੈ",
+    "subtitle": "ਖੇਤਰ ਵਿੱਚ ਰਿਪੋਰਟ ਕੀਤੀਆਂ ਰਾਹਤ ਬੇਨਤੀਆਂ",
+    "noRequests": "ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਕੋਈ ਰਾਹਤ ਬੇਨਤੀ ਨਹੀਂ",
+    "loadingText": "ਨਵੀਨਤਮ ਡੇਟਾ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "view": "ਦੇਖੋ",
+    "directions": "ਦਿਸ਼ਾਵਾਂ",
+    "priorityLabel": "{{priority}} Priority",
+    "typeLabel": "Type",
+    "reportedBy": "Reported by",
+    "coordinates": "Coordinates",
+    "photos": "Photos ({{count}})",
+    "videos": "Videos ({{count}})",
+    "status": {
       "pending": "Pending",
-      "inProgress": "In Progress",
       "in-progress": "In Progress",
       "completed": "Completed",
       "cancelled": "Cancelled"
     },
-    "priorityLabel": "Priority",
-    "priority": {
-      "all": "All Priorities",
-      "high": "High",
-      "medium": "Medium",
-      "low": "Low"
+    "markInProgress": "Mark In Progress",
+    "markCompleted": "Mark Completed",
+    "updateOwnOnly": "ਤੁਸੀਂ ਸਿਰਫ ਆਪਣੇ ਬੇनਤੀਆਂ ਨੂੰ ਅਪਡੇਟ ਕਰ ਸਕਦੇ ਹੋ"
+  },
+  "signup": {
+    "title": "ਖਾਤਾ ਬਣਾਓ",
+    "loading": "ਖਾਤਾ ਬਣਾਇਆ ਜਾ ਰਿਹਾ ਹੈ...",
+    "joinFloodRelief": "ਪੰਜਾਬ ਸੇਵਾ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ - ਹੜ੍ਹ ਦੌਰਾਨ ਮਦਦ ਕਰੋ",
+    "placeholders": {
+      "fullName": "ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+      "email": "ਈਮੇਲ ਦਰਜ ਕਰੋ",
+      "password": "ਪਾਸਵਰਡ ਬਣਾਓ",
+      "confirmPassword": "ਪਾਸवਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+      "phone": "ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ",
+      "address": "ਪਤਾ ਦਰਜ ਕਰੋ",
+      "emergencyContact": "ਐਮਰਜੈਂਸੀ ਸੰਪਰਕ ਦਰਜ ਕਰੋ"
     },
-    "typeLabel": "Type",
-    "myRequestsOnly": "My requests only",
-    "type": {
-      "food": "Food & Water",
-      "shelter": "Shelter",
-      "medical": "Medical",
-      "transportation": "Transport",
-      "clothing": "Clothing",
-      "other": "Other"
+    "fullName": "ਪੂਰਾ ਨਾਮ",
+    "email": "ਈਮੇਲ",
+    "password": "ਪਾਸਵਰਡ",
+    "confirmPassword": "Confirm Password",
+    "phone": "Phone",
+    "address": "Address",
+    "emergencyContact": "Emergency contact",
+    "optional": "Optional",
+    "creating": "Creating",
+    "signUp": "Sign Up",
+    "alreadyHaveAccount": "Already have an account?",
+    "login": "Login",
+    "success": {
+      "accountCreated": "Account created successfully!"
+    },
+    "errors": {
+      "enterFullName": "Please enter your full name",
+      "enterEmail": "Please enter your email",
+      "enterPassword": "Please enter a password",
+      "confirmPassword": "Please confirm your password",
+      "validPhone": "Please enter a valid phone number",
+      "validEmail": "Please enter a valid email address",
+      "passwordLength": "Password must be at least 6 characters",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "checkInfo": "Please check the entered information",
+      "accountExists": "An account with this email already exists",
+      "registrationFailed": "Registration failed, please try again",
+      "networkError": "Network error — please check your connection",
+      "unexpectedError": "An unexpected error occurred"
+    },
+    "comments": {
+      "title": "ਟਿੱਪਣੀਆਂ ({{count}})",
+      "noComments": "ਅਜੇ ਤੱਕ ਕੋਈ ਟਿੱਪਣੀ ਨਹੀਂ। ਪਹਿਲਾਂ ਟਿੱਪਣੀ ਕਰੋ!",
+      "addTitle": "ਟਿੱਪਣੀ ਜੋੜੋ",
+      "placeholder": "ਆਪਣੀ ਟਿੱਪਣੀ ਇੱਥੇ ਲਿਖੋ...",
+      "post": "ਟਿੱਪਣੀ ਭੇਜੋ",
+      "posting": "ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ...",
+      "loginPrompt": "ਟਿੱਪਣੀਆਂ ਜੋੜਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਲਾਗਇਨ ਕਰੋ"
     }
+  },
+  "success": {
+    "accountCreated": "ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣ ਗਿਆ!",
+    "Request deleted successfully": "Request deleted successfully",
+    "Comment added successfully": "Comment added successfully"
+  },
+  "errors": {
+    "enterFullName": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+    "enterEmail": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ",
+    "enterPassword": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਪਾਸਵਰਡ ਦਰਜ ਕਰੋ",
+    "confirmPassword": "ਕਿਰਪਾ ਕਰਕੇ পਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ",
+    "validPhone": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਸਹੀ ਫੋਨ ਨੰਬਰ ਦਰਜ ਕਰੋ",
+    "validEmail": "ਕਿਰਪਾ ਕਰਕੇ ਇੱਕ ਵੈਧ ਈਮੇਲ ਦਰਜ ਕਰੋ",
+    "passwordLength": "ਪਾਸਵਰਡ ਘੱਟੋ-ਘੱਟ 6 ਅੱਖਰ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ",
+    "passwordsDoNotMatch": "ਪਾਸਵਰਡ ਮੇਲ ਨਹੀਂ ਖਾਂਦੇ",
+    "checkInfo": "ਕਿਰਪਾ ਕਰਕੇ ਦਰਜ ਕੀਤੀ ਜਾਣਕਾਰੀ ਚੈੱਕ ਕਰੋ",
+    "accountExists": "ਇਸ ਈਮੇਲ ਨਾਲ ਇੱਕ ਖਾਤਾ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ",
+    "registrationFailed": "ਰਜਿਸਟਰੇਸ਼ਨ ਅਸਫਲ, ਕਿਰਪਾ ਕਰਕੇ ਫੇਰ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "networkError": "ਨੈਟਵਰਕ ਦੀ ਤਰੁੱਟੀ — ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਕਨੈਕਸ਼ਨ ਨੂੰ ਚੈੱਕ ਕਰੋ",
+    "unexpectedError": "ਇਕ ਅਣਚਾਹੀ ਗਲਤੀ ਹੋ ਗਈ"
   }
 }

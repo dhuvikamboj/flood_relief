@@ -54,6 +54,7 @@ export interface ReliefRequest {
   reporter_email?: string;
   reporter_phone?: string;
   comments?: Comment[];
+  expire_at?: string | null;
 }
 
 interface RequestCardProps {
@@ -166,6 +167,12 @@ const RequestCard: React.FC<RequestCardProps> = ({
             <p><strong>{t('comments.title', { count: request.comments.length })}</strong></p>
           )}
           <small>{request.timestamp.toLocaleString()}</small>
+          {request.expire_at && (
+            <p className="expire-at">
+              <strong>{t('common.expires')}:</strong>{' '}
+              {new Date(request.expire_at).toLocaleString()}
+            </p>
+          )}
         </IonLabel>
       </IonItem>
       <IonItemOptions side="end">

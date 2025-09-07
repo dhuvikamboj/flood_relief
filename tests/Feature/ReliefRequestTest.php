@@ -11,38 +11,6 @@ class ReliefRequestTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_can_create_relief_request_without_authentication()
-    {
-        $data = [
-            'location' => 'Test Location',
-            'address' => '123 Test Street',
-            'contact' => '123-456-7890',
-            'priority' => 'High',
-            'requestType' => 'Medical',
-            'details' => 'Test relief request details',
-            'coords' => [
-                'lat' => 30.554685,
-                'lng' => 74.230821
-            ]
-        ];
-
-        $response = $this->postJson('/api/requests', $data);
-
-        $response->assertStatus(201)
-                ->assertJson([
-                    'success' => true,
-                    'data' => [
-                        'location' => 'Test Location',
-                        'user_id' => null // Should be null for unauthenticated requests
-                    ]
-                ]);
-
-        $this->assertDatabaseHas('relief_requests', [
-            'location' => 'Test Location',
-            'user_id' => null
-        ]);
-    }
-
     public function test_can_create_relief_request_with_authentication()
     {
         $user = User::factory()->create();

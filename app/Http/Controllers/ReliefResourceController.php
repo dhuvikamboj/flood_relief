@@ -17,6 +17,8 @@ class ReliefResourceController extends Controller
             'contact_phone' => 'nullable|string|max:255',
             'resource_type' => 'nullable|string|max:255',
             'details' => 'nullable|string',
+            'expire_at' => 'nullable|date',
+            'expireAt' => 'nullable|date',
             'capacity' => 'nullable|integer|min:0',
             'availability' => 'nullable|string|in:available,limited,unavailable',
             'coords.lat' => 'nullable|numeric|between:-90,90',
@@ -66,6 +68,7 @@ class ReliefResourceController extends Controller
             'contact_phone' => $data['contact_phone'] ?? null,
             'resource_type' => $data['resource_type'] ?? null,
             'details' => $data['details'] ?? null,
+            'expire_at' => $data['expire_at'] ?? $data['expireAt'] ?? null,
             'capacity' => $data['capacity'] ?? null,
             'availability' => $data['availability'] ?? 'available',
             'lat' => $lat,
@@ -106,7 +109,7 @@ class ReliefResourceController extends Controller
         }
 
         // Use subquery to calculate distance and filter, compatible with SQLite
-        $subQuery = "SELECT rr.*, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_resources rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
+    $subQuery = "SELECT rr.*, rr.expire_at, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_resources rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
 
         $query = \DB::table(\DB::raw("($subQuery) as sub"))
             ->setBindings([$lat, $lng, $lat]);
@@ -133,10 +136,18 @@ class ReliefResourceController extends Controller
             $query->where('availability', $availability);
         }
 
+        $includeExpired = filter_var($request->query('include_expired', false), FILTER_VALIDATE_BOOLEAN);
+
         $resources = $query
             ->where('distance_km', '<=', $radius)
             ->orderBy('distance_km')
             ->get();
+
+        if (! $includeExpired) {
+            $resources = $resources->reject(function ($r) {
+                return isset($r->expire_at) && $r->expire_at && (new \Carbon\Carbon($r->expire_at))->isPast();
+            })->values();
+        }
 
         // Add comments to each resource
         $resourcesWithComments = $resources->map(function ($resource) {

@@ -30,6 +30,7 @@ export interface ReliefResource {
   reporter_email?: string;
   reporter_phone?: string;
   comments?: Comment[];
+  expire_at?: string | null;
 }
 
 export type AvailabilityStatus = 'available' | 'limited' | 'unavailable';

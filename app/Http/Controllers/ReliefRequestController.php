@@ -59,6 +59,7 @@ class ReliefRequestController extends Controller
             'lng' => $lng,
             'photos' => $photos ?: null,
             'videos' => $videos ?: null,
+            'expire_at' => $data['expire_at'] ?? $data['expireAt'] ?? null,
             'user_id' => $req->user()?->id, // Set user_id if authenticated, null otherwise
         ]);
 
@@ -95,7 +96,7 @@ class ReliefRequestController extends Controller
 
   
         // Use subquery to calculate distance and filter, compatible with SQLite
-        $subQuery = "SELECT rr.*, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_requests rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
+    $subQuery = "SELECT rr.*, rr.expire_at, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_requests rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
 
         $query = \DB::table(\DB::raw("($subQuery) as sub"))
             ->setBindings([$lat, $lng, $lat]);
@@ -125,10 +126,23 @@ class ReliefRequestController extends Controller
             $query->where('request_type', $requestType);
         }
 
+        $includeExpired = filter_var($request->query('include_expired', false), FILTER_VALIDATE_BOOLEAN);
+
         $requests = $query
             ->where('distance_km', '<=', $radius)
             ->orderBy('distance_km')
-            ->get();
+            ->get()
+            ->map(function ($r) {
+                // convert to object with expire_at as-is; leave further filtering to PHP
+                return $r;
+            });
+
+        // When include_expired is false (default), filter out expired items server-side
+        if (! $includeExpired) {
+            $requests = $requests->reject(function ($r) {
+                return isset($r->expire_at) && $r->expire_at && (new \Carbon\Carbon($r->expire_at))->isPast();
+            })->values();
+        }
 
         // Add comments to each request
         $requestsWithComments = $requests->map(function ($request) {

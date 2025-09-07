@@ -88,6 +88,11 @@ const ResourceCard: React.FC<ResourceCardProps> = ({
             <p><strong>Comments:</strong> {resource.comments.length}</p>
           )}
           <small>{resource.timestamp.toLocaleString()}</small>
+          {resource.expire_at && (
+            <p className="expire-at">
+              <strong>Expires:</strong> {new Date(resource.expire_at).toLocaleString()}
+            </p>
+          )}
         </IonLabel>
       </IonItem>
       <IonItemOptions side="end">

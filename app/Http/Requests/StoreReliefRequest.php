@@ -21,6 +21,9 @@ class StoreReliefRequest extends FormRequest
             'priority' => 'required|string|in:Low,Medium,High',
             'requestType' => 'required|string|in:Food,Water,Shelter,Medical,Animal,Other',
             'details' => 'required|string',
+            // optional expiration timestamp in ISO 8601 (frontend may send expireAt or expire_at)
+            'expire_at' => 'nullable|date',
+            'expireAt' => 'nullable|date',
             'coords.lat' => 'nullable|numeric',
             'coords.lng' => 'nullable|numeric',
             'photos.*' => 'nullable|file|mimes:jpg,jpeg,png,gif,webp|max:5120',

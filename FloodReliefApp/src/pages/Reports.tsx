@@ -109,10 +109,12 @@ const Reports: React.FC = () => {
   const [requests, setRequests] = useState<ReliefRequest[]>([]);
   const [loadingRequests, setLoadingRequests] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const [showExpired, setShowExpired] = useState<boolean>(false);
 
   // Sorted requests based on filters
   const sortedRequests = useMemo(() => {
-    return [...requests].sort((a, b) => {
+    const active = showExpired ? requests : requests.filter(r => !r.expire_at || new Date(r.expire_at) > new Date());
+    return [...active].sort((a, b) => {
       let aVal: any, bVal: any;
       switch (filters.sortBy) {
         case 'distance_km':
@@ -198,6 +200,8 @@ const Reports: React.FC = () => {
             reporter_email: it.reporter_email,
             reporter_phone: it.reporter_phone,
             comments: it.comments || []
+          ,
+            expire_at: it.expire_at || null,
           }));
           setRequests(items);
         } else {
@@ -392,6 +396,13 @@ const Reports: React.FC = () => {
             </IonText>
           </div>
         )}
+
+        {/* Expired toggle */}
+  <div className="expired-toggle">
+          <IonButton size="small" color={showExpired ? 'primary' : 'medium'} onClick={() => setShowExpired(prev => !prev)}>
+            {showExpired ? t('reports.showingExpired') : t('reports.hideExpired')}
+          </IonButton>
+        </div>
 
         {loadingRequests ? (
           <div className="loading-state">

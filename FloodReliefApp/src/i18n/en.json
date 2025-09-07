@@ -285,6 +285,7 @@
     "layer": { "satellite": "Satellite", "streets": "Streets", "terrain": "Terrain", "topo": "Topographic" },
     "locating": "Locating you...",
     "permissionMessage": "Map will appear here when location permission is granted.",
+    "expires": "Expires",
     "enableLocation": "Enable location",
     "permissionHelp": "Tap to allow location in your browser; on iOS use Settings → Safari → Location if previously denied.",
     "refreshNote": "if maps are not visible properly, hit refresh button"

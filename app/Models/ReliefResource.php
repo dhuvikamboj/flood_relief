@@ -21,6 +21,7 @@ class ReliefResource extends Model
         'lng',
         'photos',
         'videos',
+    'expire_at',
         'user_id',
     ];
 
@@ -30,6 +31,7 @@ class ReliefResource extends Model
         'lat' => 'float',
         'lng' => 'float',
         'capacity' => 'integer',
+    'expire_at' => 'datetime',
     ];
 
     public function user()
@@ -40,5 +42,32 @@ class ReliefResource extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'relief_request_id'); // reusing comments table
+    }
+
+    public function getIsExpiredAttribute()
+    {
+        if (! $this->expire_at) {
+            return false;
+        }
+        return $this->expire_at->isPast();
+    }
+
+    /**
+     * Scope to only include not-expired items (expire_at null or in the future).
+     */
+    public function scopeNotExpired($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('expire_at')
+              ->orWhere('expire_at', '>', now());
+        });
+    }
+
+    /**
+     * Scope to only include expired items.
+     */
+    public function scopeExpired($query)
+    {
+        return $query->whereNotNull('expire_at')->where('expire_at', '<=', now());
     }
 }
