@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { getApiBaseUrl } from '../config/api';
-// marker icons for Vite
-
 import './RequestForm.css';
 import axios from 'axios';
 import { useLocation } from '../hooks/useLocation';
 import { useFormMap } from '../hooks/useFormMap';
 import ReactGA4 from 'react-ga4';
+import { MapLayerKey } from '../providers/map/mapTypes';
 import {
   IonPage,
   IonHeader,
@@ -44,12 +43,12 @@ const RequestForm: React.FC<Props> = () => {
   // Use the location hook without auto-watching
   const {
     userCoords,
-    mapError,
+    mapError: locationError,
     mapLoading,
-  getCurrentLocation,
-  setUserCoords,
-  stopWatching,
-  startWatching
+    getCurrentLocation,
+    setUserCoords,
+    stopWatching,
+    startWatching
   } = useLocation();
 
   const [location, setLocation] = useState('');
@@ -68,10 +67,13 @@ const RequestForm: React.FC<Props> = () => {
   // Use the new form map hook for interactive location selection
   const {
     mapRef,
+    isReady,
+    error: mapFormError,
     currentLayer,
     setCurrentLayer,
     markerPosition,
     updateMarkerPosition,
+    centerOnMarker,
   } = useFormMap(true, {
     initialMarkerCoords: userCoords || undefined,
     onLocationChange: (location) => {
@@ -89,110 +91,7 @@ const RequestForm: React.FC<Props> = () => {
   
   useEffect(() => {
     getCurrentLocation();
-  }, []);
-  // initialize Leaflet map using imported library
-  useEffect(() => {
-    if (!mapRef.current) return;
-
-    // Ensure default icon URLs are correct for bundlers
-    try {
-    //   L.Icon.Default.mergeOptions({
-    //     iconRetinaUrl: '/images/marker-icon-2x.png',
-    //     iconUrl: '/images/marker-icon.png',
-    //     shadowUrl: '/images/marker-shadow.png',
-    //   });
-    } catch (err) {
-      // ignore
-    }
-
-    // avoid recreating
-    if (leafletMapRef.current) {
-      if (userCoords) {
-        try {
-          const currentZoom = typeof leafletMapRef.current.getZoom === 'function'
-            ? leafletMapRef.current.getZoom()
-            : 16;
-          leafletMapRef.current.setView([userCoords.lat, userCoords.lng], currentZoom);
-        } catch (e) {
-          try { leafletMapRef.current.setView([userCoords.lat, userCoords.lng]); } catch {}
-        }
-      }
-      return;
-    }
-
-    const map = L.map(mapRef.current as HTMLElement).setView(userCoords ? [userCoords.lat, userCoords.lng] : [0,0], userCoords ?( mapZoomRef.current ? mapZoomRef.current : 16):17);
-    // Add the current layer to the map
-    MAP_LAYERS[currentLayer].addTo(map);
-    leafletMapRef.current = map;
-
-    if (userCoords) {
-      const marker = L.marker([userCoords.lat, userCoords.lng], { draggable: true,  }).addTo(map);
-      leafletMarkerRef.current = marker;
-      // update on dragend
-      marker.on('dragend', () => {
-        const latlng = marker.getLatLng();
-        const pos = { lat: latlng.lat, lng: latlng.lng };
-        setUserCoords(pos);
-        setLocation(`${pos.lat.toFixed(6)}, ${pos.lng.toFixed(6)}`);
-        stopWatching(); // Stop auto-updating location from GPS
-      });
-
-
-    }
-    map.on('zoomlevelschange', () => {
-      const zoom = map.getZoom();
-      console.log(zoom);
-      
-      mapZoomRef.current = zoom;
-    });
-    map.on('click', (e: any) => {
-      const { lat, lng } = e.latlng;
-      const pos = { lat, lng };
-      setUserCoords(pos);
-      setLocation(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
-      stopWatching(); // Stop auto-updating location from GPS
-      // move or create marker
-      if (leafletMarkerRef.current) {
-        leafletMarkerRef.current.setLatLng([lat, lng]);
-      } else {
-        leafletMarkerRef.current = L.marker([lat, lng], { draggable: true }).addTo(map);
-        leafletMarkerRef.current.on('dragend', () => {
-          const latlng = (leafletMarkerRef.current as L.Marker).getLatLng();
-          const p = { lat: latlng.lat, lng: latlng.lng };
-          setUserCoords(p);
-          setLocation(`${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`);
-          stopWatching(); // Stop auto-updating location from GPS
-        });
-      }
-      // re-center but preserve zoom
-      try {
-        const z = typeof map.getZoom === 'function' ? map.getZoom() : undefined;
-        if (typeof z === 'number') map.setView([lat, lng], z);
-        else map.setView([lat, lng]);
-      } catch (e) { try { map.setView([lat, lng]); } catch {} }
-    });
-
-    return () => {
-      try { map.remove(); } catch {}
-      leafletMapRef.current = null;
-      leafletMarkerRef.current = null;
-    };
-  }, [userCoords]);
-
-  // Handle layer changes
-  useEffect(() => {
-    if (!leafletMapRef.current) return;
-
-    // Remove all existing tile layers
-    Object.values(MAP_LAYERS).forEach(layer => {
-      if (leafletMapRef.current?.hasLayer(layer)) {
-        leafletMapRef.current.removeLayer(layer);
-      }
-    });
-
-    // Add the new layer
-    MAP_LAYERS[currentLayer].addTo(leafletMapRef.current);
-  }, [currentLayer]);
+  }, [getCurrentLocation]);
 
   const handleSubmit = () => {
     if (!location || !priority || !details || !requestType) {
@@ -333,43 +232,28 @@ const RequestForm: React.FC<Props> = () => {
     });
 
     try {
-  setToastMessage(t('common.gettingLocation'));
+      setToastMessage(t('common.gettingLocation'));
       setShowToast(true);
 
-  const coords = await getCurrentLocation();
-  startWatching(); // Ensure watching resumes after manual stop
+      const coords = await getCurrentLocation();
+      startWatching(); // Ensure watching resumes after manual stop
 
-  // Track successful location
-  ReactGA4.event('location_success', {
-    method: 'gps'
-  });
+      // Track successful location
+      ReactGA4.event('location_success', {
+        method: 'gps'
+      });
 
-  setToastMessage(t('common.locationUpdated'));
+      setToastMessage(t('common.locationUpdated'));
       setShowToast(true);
 
-      // Update map and marker if initialized
-      try {
-        if (leafletMapRef.current) {
-          const z = typeof leafletMapRef.current.getZoom === 'function' ? leafletMapRef.current.getZoom() : undefined;
-          if (typeof z === 'number') leafletMapRef.current.setView([coords.lat, coords.lng], z);
-          else leafletMapRef.current.setView([coords.lat, coords.lng]);
-        }
-        if (leafletMarkerRef.current) {
-          try { leafletMarkerRef.current.setLatLng([coords.lat, coords.lng]); } catch (e) {}
-        } else if (leafletMapRef.current) {
-          try {
-            leafletMarkerRef.current = L.marker([coords.lat, coords.lng], { draggable: true }).addTo(leafletMapRef.current);
-            leafletMarkerRef.current.on('dragend', () => {
-              const latlng = (leafletMarkerRef.current as L.Marker).getLatLng();
-              const p = { lat: latlng.lat, lng: latlng.lng };
-              setUserCoords(p);
-              setLocation(`${p.lat.toFixed(6)}, ${p.lng.toFixed(6)}`);
-              stopWatching(); // Stop auto-updating location from GPS
-            });
-          } catch (e) {}
-        }
-      } catch (e) {
-        // ignore map errors
+      // Update marker position using abstracted map
+      if (updateMarkerPosition) {
+        updateMarkerPosition(coords);
+      }
+      
+      // Center on the marker
+      if (centerOnMarker) {
+        centerOnMarker();
       }
     } catch (error: any) {
       console.error('Location error:', error);
@@ -382,13 +266,13 @@ const RequestForm: React.FC<Props> = () => {
       });
 
       // Provide more helpful error messages
-  let errorMessage = t('common.locationFailed');
+      let errorMessage = t('common.locationFailed');
       if (error.message?.includes('permission')) {
-  errorMessage = t('common.locationPermissionDenied');
+        errorMessage = t('common.locationPermissionDenied');
       } else if (error.message?.includes('timeout')) {
-  errorMessage = t('common.locationTimeout');
+        errorMessage = t('common.locationTimeout');
       } else if (error.message?.includes('unavailable')) {
-  errorMessage = t('common.locationUnavailable');
+        errorMessage = t('common.locationUnavailable');
       } else if (error.message) {
         errorMessage = error.message;
       }
@@ -452,9 +336,9 @@ const RequestForm: React.FC<Props> = () => {
                   {mapLoading ? t('common.gettingLocation') : t('common.getCurrentLocation')}
                 </IonButton>
               </div>
-              {mapError && (
+              {(locationError || mapFormError) && (
                 <div className="location-error">
-                  {mapError}
+                  {locationError || mapFormError}
                 </div>
               )}
             </IonItem>
