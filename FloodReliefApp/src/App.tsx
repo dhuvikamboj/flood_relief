@@ -33,6 +33,7 @@ import './i18n';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LocationProvider } from './contexts/LocationContext';
+import { ExploreLocationProvider } from './hooks/useExploreLocation';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
@@ -137,7 +138,9 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <LocationProvider>
-        <AppContent />
+        <ExploreLocationProvider>
+          <AppContent />
+        </ExploreLocationProvider>
       </LocationProvider>
     </AuthProvider>
   );

@@ -249,7 +249,7 @@ export function useMap(
   const clearDataMarkers = useCallback((): void => {
     if (!mapInstanceRef.current) return;
     
-    console.log('🧹 Clearing data markers, preserving user location...');
+    console.log('🧹 Clearing data markers, preserving user location and explore marker...');
     
     // Get all current markers and remove only non-user-location markers
     // Note: This is a workaround since we don't have direct access to marker IDs
@@ -286,7 +286,38 @@ export function useMap(
         console.warn('❌ Failed to re-add user location marker:', error);
       }
     }
-  }, [userCoords, isReady, lastUpdated, addMarker]);
+
+    // Re-add explore marker if coordinates are available
+    if (exploreCoords && isReady) {
+      console.log('🔄 Re-adding explore marker after clearing data markers');
+      
+      const exploreMarker: MapMarker = {
+        id: 'explore-location',
+        coordinates: exploreCoords,
+        popupContent: `<div style="text-align: center;">
+          <strong>📍 Exploration Point</strong><br/>
+          <small>${exploreCoords.lat.toFixed(6)}, ${exploreCoords.lng.toFixed(6)}</small><br/>
+          <small>Tap anywhere to add a new exploration point</small><br/>
+          <a href="https://www.google.com/maps?q=${exploreCoords.lat},${exploreCoords.lng}" target="_blank" rel="noopener noreferrer" style="color: #3880ff; text-decoration: none;">View on Google Maps</a>
+        </div>`,
+        options: {
+          icon: {
+            url: generateExploreLocationIconDataUrl(),
+            size: [32, 32],
+            anchor: [16, 32],
+            popupAnchor: [0, -32]
+          }
+        }
+      };
+
+      try {
+        addMarker(exploreMarker);
+        console.log('✅ Explore marker re-added successfully');
+      } catch (error) {
+        console.warn('❌ Failed to re-add explore marker:', error);
+      }
+    }
+  }, [userCoords, exploreCoords, isReady, lastUpdated, addMarker]);
 
   const setView = useCallback((center: MapCoordinates, zoom?: number): void => {
     if (mapInstanceRef.current) {

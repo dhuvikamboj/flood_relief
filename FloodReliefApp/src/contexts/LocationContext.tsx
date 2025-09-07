@@ -5,6 +5,12 @@ export interface LocationCoords {
   lng: number;
 }
 
+// Default fallback location (can be configured based on region)
+const DEFAULT_LOCATION: LocationCoords = {
+  lat: 40.7128, // New York City as a reasonable default
+  lng: -74.0060
+};
+
 export interface LocationContextType {
   userCoords: LocationCoords | null;
   accuracy: number | null;
@@ -18,6 +24,7 @@ export interface LocationContextType {
   setUserCoords: (coords: LocationCoords | null) => void;
   startWatching: () => void;
   stopWatching: () => void;
+  setFallbackLocation: () => void;
 }
 
 const LocationContext = createContext<LocationContextType | undefined>(undefined);
@@ -74,8 +81,8 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
         },
         { 
           enableHighAccuracy: false, // Use network location for faster response
-          maximumAge: 30000, // Accept positions up to 30 seconds old
-          timeout: 45000 // 45 second timeout for watch
+          maximumAge: 300000, // Accept positions up to 5 minutes old
+          timeout: 60000 // Increase timeout to 60 seconds for better reliability
         }
       );
       // @ts-ignore
@@ -128,8 +135,8 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
           },
           { 
             enableHighAccuracy: false, // Try without high accuracy first
-            maximumAge: 60000, // Accept cached positions up to 1 minute old
-            timeout: 30000 // Increase timeout to 30 seconds
+            maximumAge: 300000, // Accept cached positions up to 5 minutes old
+            timeout: 45000 // Increase timeout to 45 seconds
           }
         )
       );
@@ -171,8 +178,10 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
           return;
           
         } catch (fallbackErr: any) {
-          setMapError('Location timeout. Please try again or check your GPS signal.');
+          setMapError('Location timeout. Using default location, or try again for your actual location.');
           setMapLoading(false);
+          // Set fallback location on complete failure
+          setTimeout(() => setFallbackLocation(), 1000);
           return;
         }
       }
@@ -180,8 +189,14 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
       // If permission was denied, show actionable guidance
       if (err && err.code === 1) {
         setMapError('Location permission denied. Enable it in your browser settings (iOS: Settings → Safari → Location).');
+      } else if (err && err.code === 2) {
+        setMapError('Location unavailable. Please check your internet connection and GPS signal.');
+      } else if (err && err.code === 3) {
+        setMapError('Location request timed out. Try again or check your GPS signal.');
       } else {
-        setMapError(err?.message || 'Unable to get location');
+        setMapError(err?.message || 'Unable to get location. You can still view the map and data without location access.');
+        // Provide fallback location after a delay to keep app functional
+        setTimeout(() => setFallbackLocation(), 2000);
       }
       setMapLoading(false);
     }
@@ -259,8 +274,8 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
         },
         { 
           enableHighAccuracy: false, // Start with network location for speed
-          maximumAge: 60000, // 1 minute max age
-          timeout: 30000 // 30 second timeout
+          maximumAge: 300000, // Accept positions up to 5 minutes old
+          timeout: 45000 // Increase timeout to 45 seconds
         }
       );
     });
@@ -268,6 +283,15 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
 
   const setUserCoordsExternal = (coords: LocationCoords | null) => {
     setUserCoords(coords);
+  };
+
+  const setFallbackLocation = () => {
+    console.log('🗺️ Setting fallback location:', DEFAULT_LOCATION);
+    setUserCoords(DEFAULT_LOCATION);
+    setAccuracy(null);
+    setLastUpdated(new Date());
+    setMapError('Using default location. You can still explore the map and data.');
+    setMapLoading(false);
   };
 
   useEffect(() => {
@@ -286,7 +310,16 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
         if (mounted) setMapError('Location permission denied. Enable it in your browser settings.');
       } else {
         // 'prompt' or unsupported: do not auto-request to avoid suppressed prompts on iOS.
-        if (mounted) setMapError('Tap the location button to enable location access');
+        // Instead, provide a fallback location so the app is still usable
+        if (mounted) {
+          setMapError('Tap the location button to enable location access, or continue with default location');
+          // Set a fallback location after a short delay if user doesn't interact
+          setTimeout(() => {
+            if (mounted && !userCoords) {
+              setFallbackLocation();
+            }
+          }, 3000);
+        }
       }
     };
 
@@ -308,8 +341,9 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
     getCurrentLocation,
     clearLocation,
     setUserCoords: setUserCoordsExternal,
-  startWatching: requestPermissionAndWatch,
-  stopWatching: clearLocation,
+    startWatching: requestPermissionAndWatch,
+    stopWatching: clearLocation,
+    setFallbackLocation,
   };
 
   return (

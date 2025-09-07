@@ -536,7 +536,7 @@ const Reports: React.FC = () => {
         />
 
         {/* Floating Current Location button (use IonFab) */}
-        <IonFab slot="fixed" vertical="bottom" horizontal="start" className="location-fab location-fab-fixed">
+        {/* <IonFab slot="fixed" vertical="bottom" horizontal="start" className="location-fab location-fab-fixed">
           <IonFabButton
             className="location-fab-button"
             onClick={async () => { try { await startWatching(); } catch {} }}
@@ -544,7 +544,7 @@ const Reports: React.FC = () => {
           >
             <IonIcon icon={locate} />
           </IonFabButton>
-        </IonFab>
+        </IonFab> */}
 
         {/* Floating Tab Segment */}
         <div className="floating-tab-segment">

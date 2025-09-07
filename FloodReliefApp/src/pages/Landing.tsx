@@ -38,6 +38,7 @@ import ResourceModal from '../components/ResourceModal';
 import DataTable, { DataTableColumn } from '../components/DataTable';
 import { ReliefResource } from '../types/resource';
 import { useLocation } from '../hooks/useLocation';
+import { useExploreLocation } from '../hooks/useExploreLocation';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../../services/api';
 import { logInOutline, personAddOutline, heartOutline, mapOutline, handRightOutline, personOutline, logOutOutline, homeOutline, informationCircleOutline } from 'ionicons/icons';
@@ -48,15 +49,24 @@ const Landing: React.FC = () => {
     const { t } = useTranslation();
     const [showLanguagePopover, setShowLanguagePopover] = useState(false);
     
-    // Add location state
-    const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
-    const [locationError, setLocationError] = useState<string | null>(null);
-    const [fetchingLocation, setFetchingLocation] = useState(false);
+    // Remove duplicate location state - use the hook instead
+    // const [currentLocation, setCurrentLocation] = useState<{lat: number, lng: number} | null>(null);
+    // const [locationError, setLocationError] = useState<string | null>(null);
+    // const [fetchingLocation, setFetchingLocation] = useState(false);
     
     // Add authentication state
     const { isAuthenticated, user, logout } = useAuth();
     
-    const { userCoords } = useLocation();
+    const { userCoords, mapError, mapLoading } = useLocation();
+    const { getActiveCoords } = useExploreLocation();
+    
+    // Get active coordinates (explore coords if set, otherwise user coords)
+    const activeCoords = getActiveCoords(userCoords);
+    
+    // Debug logging for coordinate changes
+    useEffect(() => {
+        console.log('🗺️ Landing: Active coords changed to:', activeCoords);
+    }, [activeCoords]);
     const [requests, setRequests] = useState<any[]>([]);
     const [resources, setResources] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -113,12 +123,12 @@ const Landing: React.FC = () => {
     const [showResourceModal, setShowResourceModal] = useState(false);
     const [selectedResource, setSelectedResource] = useState<ReliefResource | null>(null);
     const fetchResourceData = async () => {
-        if(!userCoords) return;
+        if(!activeCoords) return;
         
         try {
             const base = getApiBaseUrl();
 
-            let resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
+            let resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${activeCoords.lat}&lng=${activeCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
             
             // Add filter parameters
             if (resourceFilters.availabilityFilter !== 'all') resUrl += `&availability=${resourceFilters.availabilityFilter}`;
@@ -151,7 +161,7 @@ const Landing: React.FC = () => {
     
     // Debounced fetch for requests
     useEffect(() => {
-        if (!userCoords) return;
+        if (!activeCoords) return;
 
         if (debounceRequestsRef.current) {
             clearTimeout(debounceRequestsRef.current);
@@ -161,13 +171,15 @@ const Landing: React.FC = () => {
             setLoading(true);
             try {
                 const base = getApiBaseUrl();
-                let reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${filters.searchRadius}`;
+                let reqUrl = `${base.replace(/\/$/, '')}/api/requests?lat=${activeCoords.lat}&lng=${activeCoords.lng}&radius_km=${filters.searchRadius}`;
 
                 // Add filter parameters for nearby search
                 if (filters.statusFilter !== 'all') reqUrl += `&status=${filters.statusFilter}`;
                 if (filters.priorityFilter !== 'all') reqUrl += `&priority=${filters.priorityFilter}`;
                 if (filters.typeFilter !== 'all') reqUrl += `&request_type=${filters.typeFilter}`;
                 if (filters.searchTerm.trim()) reqUrl += `&search=${encodeURIComponent(filters.searchTerm.trim())}`;
+
+                console.log('🗺️ Landing: Fetching requests for coords:', activeCoords, 'URL:', reqUrl);
 
                 const resReq = await api.get(reqUrl, { headers: { Accept: 'application/json' } });
                 const reqItems = (resReq.data && resReq.data.success) ? resReq.data.data.map((it: any) => ({
@@ -187,6 +199,7 @@ const Landing: React.FC = () => {
                     status: it.status || 'pending',
                 })) : [];
 
+                console.log('🗺️ Landing: Found', reqItems.length, 'requests for coords:', activeCoords);
                 setRequests(reqItems);
             } catch (e) {
                 console.error('Landing requests fetch failed', e);
@@ -201,18 +214,53 @@ const Landing: React.FC = () => {
                 clearTimeout(debounceRequestsRef.current);
             }
         };
-    }, [userCoords, filters]);
+    }, [activeCoords, filters]);
     
     // Debounced fetch for resources
     useEffect(() => {
-        if (!userCoords) return;
+        if (!activeCoords) return;
 
         if (debounceResourcesRef.current) {
             clearTimeout(debounceResourcesRef.current);
         }
 
         debounceResourcesRef.current = setTimeout(async () => {
-            await fetchResourceData();
+            // Inline the resource fetch logic to use current activeCoords
+            try {
+                const base = getApiBaseUrl();
+
+                let resUrl = `${base.replace(/\/$/, '')}/api/resources?lat=${activeCoords.lat}&lng=${activeCoords.lng}&radius_km=${resourceFilters.searchRadius}`;
+                
+                // Add filter parameters
+                if (resourceFilters.availabilityFilter !== 'all') resUrl += `&availability=${resourceFilters.availabilityFilter}`;
+                if (resourceFilters.typeFilter !== 'all') resUrl += `&resource_type=${resourceFilters.typeFilter}`;
+                if (resourceFilters.searchTerm.trim()) resUrl += `&search=${encodeURIComponent(resourceFilters.searchTerm.trim())}`;
+
+                console.log('🗺️ Landing: Fetching resources for coords:', activeCoords, 'URL:', resUrl);
+
+                const resRes = await api.get(resUrl, { headers: { Accept: 'application/json' } });
+                const resItems = (resRes.data && resRes.data.success) ? resRes.data.data.map((it: any) => ({
+                    id: it.id,
+                    location: it.location || `${it.lat},${it.lng}`,
+                    address: it.address,
+                    contact: it.contact,
+                    resource_type: it.resource_type,
+                    details: it.details || '',
+                    capacity: it.capacity,
+                    availability: it.availability || 'available',
+                    distance_km: it.distance_km,
+                    timestamp: new Date(it.created_at || Date.now()),
+                    lat: parseFloat(it.lat),
+                    lng: parseFloat(it.lng),
+                    photos: it.photos ? (typeof it.photos === 'string' ? JSON.parse(it.photos) : it.photos) : undefined,
+                })) : [];
+
+                console.log('🗺️ Landing: Found', resItems.length, 'resources for coords:', activeCoords);
+                setResources(resItems);
+            } catch (e) {
+                console.error('Failed to fetch resource data', e);
+                // Keep existing resources on error
+            }
         }, 1000);
 
         return () => {
@@ -220,7 +268,7 @@ const Landing: React.FC = () => {
                 clearTimeout(debounceResourcesRef.current);
             }
         };
-    }, [userCoords, resourceFilters]);
+    }, [activeCoords, resourceFilters]);
     // Expose helpers for map popup buttons (RequestMap/ResourceMap use window.openRequestModal)
     useEffect(() => {
         (window as any).openRequestModal = (r: ReliefRequest) => {
@@ -237,6 +285,19 @@ const Landing: React.FC = () => {
             try { delete (window as any).openResourceModal; } catch { }
         };
     }, []);
+
+    // Handler for exploration location changes from the maps
+    const handleExploreLocationChange = (coords: { lat: number; lng: number } | null) => {
+        console.log('🗺️ Landing: Explore location changed to', coords);
+        console.log('🗺️ Landing: Will trigger data refresh with new coordinates');
+        // Track exploration activity
+        ReactGA4.event('map_exploration', {
+            content_type: 'landing_page',
+            has_explore_location: !!coords,
+            explore_lat: coords?.lat,
+            explore_lng: coords?.lng
+        });
+    };
 
     // Define columns for request table
     const requestColumns: DataTableColumn[] = [
@@ -338,55 +399,6 @@ const Landing: React.FC = () => {
             render: (value) => value ? <small>{value}</small> : ''
         }
     ];
-
-    // Fetch current location once on component mount
-    useEffect(() => {
-        const fetchCurrentLocation = () => {
-            if (!navigator.geolocation) {
-                setLocationError('Geolocation is not supported by this browser');
-                return;
-            }
-
-            setFetchingLocation(true);
-            setLocationError(null);
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const location = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    setCurrentLocation(location);
-                    setFetchingLocation(false);
-                    console.log('Current location fetched:', location);
-                },
-                (error) => {
-                    let errorMessage = 'Failed to get location';
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            errorMessage = 'Location access denied by user';
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            errorMessage = 'Location information unavailable';
-                            break;
-                        case error.TIMEOUT:
-                            errorMessage = 'Location request timed out';
-                            break;
-                    }
-                    setLocationError(errorMessage);
-                    setFetchingLocation(false);
-                    console.error('Location error:', errorMessage);
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 300000 // 5 minutes
-                }
-            );
-        };
-
-        fetchCurrentLocation();
-    }, []); // Empty dependency array ensures this runs only once
 
     return (
         <IonPage>
@@ -796,7 +808,11 @@ const Landing: React.FC = () => {
                                 <IonCardContent>
                                     <IonText color="medium"><p>{t('requests.subtitle')}</p></IonText>
                                     <div className="landing-map-wrapper">
-                                        <RequestMap requests={requests} isVisible={activeTab === 'map'} />
+                                        <RequestMap 
+                                            requests={requests} 
+                                            isVisible={activeTab === 'map'} 
+                                            onExploreLocationChange={handleExploreLocationChange}
+                                        />
                                     </div>
                                 </IonCardContent>
                             </IonCard>
@@ -815,7 +831,11 @@ const Landing: React.FC = () => {
                                 <IonCardContent>
                                     <IonText color="medium"><p>{t('resources.subtitle')}</p></IonText>
                                     <div className="landing-map-wrapper">
-                                        <ResourceMap resources={resources} isVisible={activeTab === 'map'} />
+                                        <ResourceMap 
+                                            resources={resources} 
+                                            isVisible={activeTab === 'map'} 
+                                            onExploreLocationChange={handleExploreLocationChange}
+                                        />
                                     </div>
                                 </IonCardContent>
                             </IonCard>

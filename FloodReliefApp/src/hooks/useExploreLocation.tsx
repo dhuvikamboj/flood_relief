@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, createContext, useContext, ReactNode } from 'react';
 import { LocationCoords } from './useLocation';
 import { useLocation } from './useLocation';
 
@@ -10,12 +10,15 @@ export interface ExploreLocationState {
   getActiveCoords: (userCoords: LocationCoords | null) => LocationCoords | null;
 }
 
-/**
- * Hook to manage exploration of different locations on the map.
- * When exploring, this location overrides user's GPS location for data fetching.
- * Also stops GPS watching to prevent interference during exploration.
- */
-export const useExploreLocation = (): ExploreLocationState => {
+// Create context for explore location state
+const ExploreLocationContext = createContext<ExploreLocationState | undefined>(undefined);
+
+export interface ExploreLocationProviderProps {
+  children: ReactNode;
+}
+
+// Provider component to share explore location state globally
+export const ExploreLocationProvider: React.FC<ExploreLocationProviderProps> = ({ children }) => {
   const [exploreCoords, setExploreCoords] = useState<LocationCoords | null>(null);
   const { stopWatching, startWatching, watching } = useLocation();
 
@@ -48,13 +51,32 @@ export const useExploreLocation = (): ExploreLocationState => {
     return exploreCoords || userCoords;
   }, [exploreCoords]);
 
-  return {
+  const value: ExploreLocationState = {
     exploreCoords,
     isExploring: !!exploreCoords,
     setExploreLocation,
     clearExploreLocation,
     getActiveCoords
   };
+
+  return (
+    <ExploreLocationContext.Provider value={value}>
+      {children}
+    </ExploreLocationContext.Provider>
+  );
+};
+
+/**
+ * Hook to manage exploration of different locations on the map.
+ * When exploring, this location overrides user's GPS location for data fetching.
+ * Also stops GPS watching to prevent interference during exploration.
+ */
+export const useExploreLocation = (): ExploreLocationState => {
+  const context = useContext(ExploreLocationContext);
+  if (context === undefined) {
+    throw new Error('useExploreLocation must be used within an ExploreLocationProvider');
+  }
+  return context;
 };
 
 export default useExploreLocation;
