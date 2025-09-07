@@ -109,7 +109,7 @@ class ReliefResourceController extends Controller
         }
 
         // Use subquery to calculate distance and filter, compatible with SQLite
-    $subQuery = "SELECT rr.*, rr.expire_at, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_resources rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
+    $subQuery = "SELECT rr.*, u.name as reporter_name, u.email as reporter_email, u.phone as reporter_phone, (6371 * acos(cos(radians(?)) * cos(radians(rr.lat)) * cos(radians(rr.lng) - radians(?)) + sin(radians(?)) * sin(radians(rr.lat)))) as distance_km FROM relief_resources rr LEFT JOIN users u ON rr.user_id = u.id WHERE rr.lat IS NOT NULL AND rr.lng IS NOT NULL";
 
         $query = \DB::table(\DB::raw("($subQuery) as sub"))
             ->setBindings([$lat, $lng, $lat]);
