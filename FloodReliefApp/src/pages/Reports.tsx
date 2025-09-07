@@ -24,11 +24,10 @@ import {
 import { add, warning, person, map, list, locate } from 'ionicons/icons';
 import axios from 'axios';
 import api from '../../services/api';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import './Reports.css';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '../hooks/useLocation';
+import { useExploreLocation } from '../hooks/useExploreLocation';
 import { useAuth } from '../contexts/AuthContext';
 import { ReliefRequest, Comment } from '../components/RequestCard';
 import RequestFilters, { RequestFilters as RequestFiltersType } from '../components/RequestFilters';
@@ -36,14 +35,6 @@ import RequestMap from '../components/RequestMap';
 import RequestCard from '../components/RequestCard';
 import RequestModal from '../components/RequestModal';
 import ReactGA4 from 'react-ga4';
-
-// Fix for default markers in leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
 
 const Reports: React.FC = () => {
   const { t } = useTranslation();
@@ -65,7 +56,11 @@ const Reports: React.FC = () => {
 
   // Get user coordinates and auth (also expose controls to center on user)
   const { userCoords, getCurrentLocation, startWatching, refreshLocation } = useLocation();
+  const { exploreCoords, getActiveCoords } = useExploreLocation();
   const { user, isAuthenticated } = useAuth();
+
+  // Get the active coordinates (exploration coords if exploring, otherwise user coords)
+  const activeCoords = getActiveCoords(userCoords);
 
   // Ensure page is ready before map initialization
   useEffect(() => {
@@ -199,7 +194,7 @@ const Reports: React.FC = () => {
 
   // Fetch nearby requests when coords or filters change
   useEffect(() => {
-    if (!userCoords) return;
+    if (!activeCoords) return;
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -215,8 +210,8 @@ const Reports: React.FC = () => {
           // Use user's requests endpoint when "My Reports" is selected
           url = `${base.replace(/\/$/, '')}/api/user/requests`;
         } else {
-          // Use regular nearby requests endpoint
-          url = `${base.replace(/\/$/, '')}/api/requests?lat=${userCoords.lat}&lng=${userCoords.lng}&radius_km=${filters.searchRadius}`;
+          // Use regular nearby requests endpoint with active coordinates
+          url = `${base.replace(/\/$/, '')}/api/requests?lat=${activeCoords.lat}&lng=${activeCoords.lng}&radius_km=${filters.searchRadius}`;
 
           // Add filter parameters for nearby search
           if (filters.statusFilter !== 'all') url += `&status=${filters.statusFilter}`;
@@ -267,7 +262,7 @@ const Reports: React.FC = () => {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [userCoords, filters, isAuthenticated, user]);
+  }, [activeCoords, filters, isAuthenticated, user]);
 
   const updateFilters = (newFilters: Partial<RequestFiltersType>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -437,11 +432,19 @@ const Reports: React.FC = () => {
     return t(`requestFilters.status.${status}`) || status || 'Unknown';
   };
 
+  // Handler for exploration location changes from the map
+  const handleExploreLocationChange = (coords: { lat: number; lng: number } | null) => {
+    // The exploration state is managed by the map component itself
+    // This handler can be used for additional side effects if needed
+    console.log('Reports: Exploration location changed to', coords);
+  };
+
   const renderMapView = () => (
     <div className={`map-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
       <RequestMap 
         requests={sortedRequests} 
-        isVisible={activeTab === 'map' && isPageReady && isPageVisible} 
+        isVisible={activeTab === 'map' && isPageReady && isPageVisible}
+        onExploreLocationChange={handleExploreLocationChange}
       />
     </div>
   );

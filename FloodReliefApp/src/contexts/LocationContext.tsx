@@ -54,6 +54,7 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
     try {
       const id = navigator.geolocation.watchPosition(
         (pos) => {
+          console.log('📍 Location updated:', pos.coords);
           setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
           setAccuracy(pos.coords.accuracy ?? null);
           setLastUpdated(new Date());
@@ -62,11 +63,20 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
           setWatching(true);
         },
         (err) => {
-          setMapError(err.message || 'Unable to get location');
+          console.log('❌ Watch error:', err);
+          if (err.code === 3) {
+            setMapError('Location timeout. GPS signal may be weak.');
+          } else {
+            setMapError(err.message || 'Unable to get location');
+          }
           setMapLoading(false);
           setWatching(false);
         },
-        { enableHighAccuracy: true, maximumAge: 0, timeout: 20000 }
+        { 
+          enableHighAccuracy: false, // Use network location for faster response
+          maximumAge: 30000, // Accept positions up to 30 seconds old
+          timeout: 45000 // 45 second timeout for watch
+        }
       );
       // @ts-ignore
       watchIdRef.current = id as number;
@@ -91,27 +101,82 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
 
   // Try to prompt for permission in a user-initiated way and then start watching if granted
   const requestPermissionAndWatch = async () => {
+    console.log('🔍 requestPermissionAndWatch called');
+    
     if (!('geolocation' in navigator)) {
+      console.log('❌ Geolocation not available');
       setMapError('Geolocation not available in this browser');
       return;
     }
 
     setMapLoading(true);
     setMapError(null);
+    console.log('⏳ Starting location request...');
 
     try {
       // Calling getCurrentPosition will trigger the permission prompt in most browsers
+      console.log('📍 Requesting current position...');
       await new Promise((resolve, reject) =>
         navigator.geolocation.getCurrentPosition(
-          (pos) => resolve(pos),
-          (err) => reject(err),
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
+          (pos) => {
+            console.log('✅ Position obtained:', pos.coords);
+            resolve(pos);
+          },
+          (err) => {
+            console.log('❌ Position error:', err);
+            reject(err);
+          },
+          { 
+            enableHighAccuracy: false, // Try without high accuracy first
+            maximumAge: 60000, // Accept cached positions up to 1 minute old
+            timeout: 30000 // Increase timeout to 30 seconds
+          }
         )
       );
 
       // If successful, start the watch to keep updating
+      console.log('🎯 Starting location watch...');
       startLocationWatch();
     } catch (err: any) {
+      console.log('❌ Permission error:', err);
+      
+      // If timeout, try again with lower accuracy
+      if (err && err.code === 3) {
+        console.log('🔄 Timeout occurred, trying with lower accuracy...');
+        try {
+          await new Promise((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                console.log('✅ Position obtained (fallback):', pos.coords);
+                setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                setAccuracy(pos.coords.accuracy ?? null);
+                setLastUpdated(new Date());
+                setMapLoading(false);
+                setMapError(null);
+                resolve(pos);
+              },
+              (fallbackErr) => {
+                console.log('❌ Fallback error:', fallbackErr);
+                reject(fallbackErr);
+              },
+              { 
+                enableHighAccuracy: false,
+                maximumAge: 300000, // Accept positions up to 5 minutes old
+                timeout: 60000 // Very long timeout for fallback
+              }
+            )
+          );
+          
+          // Don't start watching if fallback worked, just use the single position
+          return;
+          
+        } catch (fallbackErr: any) {
+          setMapError('Location timeout. Please try again or check your GPS signal.');
+          setMapLoading(false);
+          return;
+        }
+      }
+      
       // If permission was denied, show actionable guidance
       if (err && err.code === 1) {
         setMapError('Location permission denied. Enable it in your browser settings (iOS: Settings → Safari → Location).');
@@ -160,12 +225,43 @@ export const LocationProvider: React.FC<LocationProviderProps> = ({
           resolve(coords);
         },
         (err) => {
-          const errorMessage = err.message || 'Unable to get location';
-          setMapError(errorMessage);
-          setMapLoading(false);
-          reject(new Error(errorMessage));
+          console.log('❌ getCurrentLocation error:', err);
+          // Try fallback with less strict options
+          if (err.code === 3) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                setUserCoords(coords);
+                setAccuracy(pos.coords.accuracy ?? null);
+                setLastUpdated(new Date());
+                setMapLoading(false);
+                setMapError(null);
+                resolve(coords);
+              },
+              (fallbackErr) => {
+                const errorMessage = 'Location timeout. Please try again or check your GPS signal.';
+                setMapError(errorMessage);
+                setMapLoading(false);
+                reject(new Error(errorMessage));
+              },
+              { 
+                enableHighAccuracy: false, 
+                maximumAge: 300000, // 5 minutes
+                timeout: 60000 // 1 minute timeout
+              }
+            );
+          } else {
+            const errorMessage = err.message || 'Unable to get location';
+            setMapError(errorMessage);
+            setMapLoading(false);
+            reject(new Error(errorMessage));
+          }
         },
-        { enableHighAccuracy: true, maximumAge: 30000, timeout: 15000 } // 15 second timeout, 30 second max age
+        { 
+          enableHighAccuracy: false, // Start with network location for speed
+          maximumAge: 60000, // 1 minute max age
+          timeout: 30000 // 30 second timeout
+        }
       );
     });
   };

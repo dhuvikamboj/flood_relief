@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   IonButton,
   IonCard,
@@ -11,17 +11,23 @@ import {
   IonFabButton,
   IonIcon,
 } from '@ionic/react';
-import { locate } from 'ionicons/icons';
+import { locate, pin } from 'ionicons/icons';
 import { useLocation } from '../hooks/useLocation';
-import { useResourceMap } from '../hooks/useResourceMap';
+import { useResourceMap } from '../hooks/useResourceMap.new';
+import { useExploreLocation } from '../hooks/useExploreLocation';
 import { ReliefResource } from '../types/resource';
 
 interface ResourceMapProps {
   resources: ReliefResource[];
   isVisible?: boolean;
+  onExploreLocationChange?: (coords: { lat: number; lng: number } | null) => void;
 }
 
-const ResourceMap: React.FC<ResourceMapProps> = ({ resources, isVisible = true }) => {
+const ResourceMap: React.FC<ResourceMapProps> = ({ 
+  resources, 
+  isVisible = true,
+  onExploreLocationChange 
+}) => {
   const {
     accuracy,
     lastUpdated,
@@ -32,7 +38,60 @@ const ResourceMap: React.FC<ResourceMapProps> = ({ resources, isVisible = true }
     startWatching,
   } = useLocation();
 
-  const { mapRef, currentLayer, setCurrentLayer } = useResourceMap(resources, isVisible);
+  const { exploreCoords, setExploreLocation, clearExploreLocation } = useExploreLocation();
+
+  // Track if we should pan to user location after getting GPS coordinates
+  const shouldPanToUserRef = useRef(false);
+
+  // Custom event handlers for exploration
+  const customEventHandlers = {
+    onMapClick: (coords: { lat: number; lng: number }) => {
+      console.log('ResourceMap: Map clicked at', coords.lat, coords.lng);
+      setExploreLocation(coords);
+      // Notify parent component of explore location change
+      if (onExploreLocationChange) {
+        onExploreLocationChange(coords);
+      }
+    }
+  };
+
+  const { mapRef, currentLayer, setCurrentLayer, setView } = useResourceMap(
+    resources, 
+    isVisible, 
+    {
+      eventHandlers: customEventHandlers,
+      exploreCoords
+    }
+  );
+
+  const handleLocationButtonClick = async () => {
+    console.log('🎯 Location button clicked');
+    try {
+      // Clear exploration location first
+      clearExploreLocation();
+      if (onExploreLocationChange) {
+        onExploreLocationChange(null);
+      }
+      
+      // Set flag to pan to user location once coordinates are available
+      shouldPanToUserRef.current = true;
+      
+      // Then get current location
+      await startWatching();
+      console.log('✅ startWatching completed');
+    } catch (error) {
+      console.log('❌ startWatching error:', error);
+    }
+  };
+
+  // Pan to user location when coordinates become available after location button click
+  useEffect(() => {
+    if (shouldPanToUserRef.current && userCoords && setView) {
+      console.log('🗺️ Panning map to current location:', userCoords);
+      setView(userCoords, 14); // Zoom level 14 for good detail
+      shouldPanToUserRef.current = false; // Reset flag
+    }
+  }, [userCoords, setView]);
 
   return (
     <>
@@ -95,7 +154,7 @@ const ResourceMap: React.FC<ResourceMapProps> = ({ resources, isVisible = true }
      <IonFab slot="fixed" vertical="bottom" horizontal="start" className="location-fab">
         <IonFabButton 
           className="location-fab-button"
-          onClick={async () => { try { await startWatching(); } catch {} }}
+          onClick={handleLocationButtonClick}
         >
           <IonIcon icon={locate} />
         </IonFabButton>

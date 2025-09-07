@@ -1,48 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
-  IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
+  IonHeader,
   IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButton,
   IonCard,
   IonCardContent,
-  IonSpinner,
-  IonButton,
-  IonIcon,
-  IonToast,
-  IonText,
-  IonList,
-  IonAlert,
+  IonCardHeader,
+  IonCardTitle,
   IonSegment,
   IonSegmentButton,
-  IonLabel
+  IonLabel,
+  IonItem,
+  IonSelectOption,
+  IonSelect,
+  IonSearchbar,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButtons,
+  IonBackButton,
+  IonText,
+  IonBadge,
+  IonRefresher,
+  IonRefresherContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonList,
+  IonAvatar,
+  IonThumbnail,
+  IonProgressBar,
+  IonSpinner,
+  IonToast,
+  IonAlert,
 } from '@ionic/react';
-import { add, warning, person, map, list } from 'ionicons/icons';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import './Reports.css';
-import { useTranslation } from 'react-i18next';
+import { filter, list, map, search, addOutline, warning, add } from 'ionicons/icons';
+import { ReliefResource } from '../types/resource';
+import ResourceCard from '../components/ResourceCard';
 import { useLocation } from '../hooks/useLocation';
-import { useLocation as useRouterLocation } from 'react-router-dom';
+import { getApiBaseUrl } from '../config/api';
+import ResourceMap from '../components/ResourceMap';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useResources } from '../hooks/useResources';
 import { useComments } from '../hooks/useComments';
-import { ReliefResource } from '../types/resource';
-import FloatingFilters from '../components/FloatingFilters';
-import ResourceMap from '../components/ResourceMap';
-import ResourceCard from '../components/ResourceCard';
-import ResourceModal from '../components/ResourceModal';
-import { getAvailabilityText } from '../utils/resourceUtils';
+import { useExploreLocation } from '../hooks/useExploreLocation';
 import ReactGA4 from 'react-ga4';
-
-// Fix for default markers in leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+import FloatingFilters from '../components/FloatingFilters';
+import ResourceModal from '../components/ResourceModal';
 
 const ReliefResources: React.FC = () => {
   const { t } = useTranslation();
@@ -68,13 +76,16 @@ const ReliefResources: React.FC = () => {
   // Get user coordinates
   const { userCoords } = useLocation();
 
-  // Router location (page URL) — used to conditionally show UI based on current path
-  const routerLocation = useRouterLocation();
+  // Exploration location hook
+  const { getActiveCoords } = useExploreLocation();
 
   // Get user authentication
   const { user, isAuthenticated } = useAuth();
 
-  // Use custom hooks
+  // Get active coordinates (exploration or user location)
+  const activeCoords = getActiveCoords(userCoords);
+
+  // Use custom hooks with active coordinates
   const {
     sortedResources,
     loadingResources,
@@ -82,7 +93,7 @@ const ReliefResources: React.FC = () => {
     updateFilters,
     updateResourceAvailability,
     isUserResource,
-  } = useResources(userCoords);
+  } = useResources(activeCoords);
 
   const {
     comments,
@@ -194,10 +205,26 @@ const ReliefResources: React.FC = () => {
     setShowToast(true);
   };
 
+  const handleExploreLocationChange = (coords: { lat: number; lng: number } | null) => {
+    console.log('ReliefResources: Explore location changed to', coords);
+    // The useResources hook will automatically update when activeCoords changes
+    // Track exploration activity
+    ReactGA4.event('map_exploration', {
+      content_type: 'relief_resources',
+      has_explore_location: !!coords,
+      explore_lat: coords?.lat,
+      explore_lng: coords?.lng
+    });
+  };
+
   const renderMapView = () => (
     <div className={`map-tab-content ${activeTab !== 'map' ? 'hidden' : ''}`}>
       {/* Map Component */}
-      <ResourceMap resources={sortedResources} isVisible={activeTab === 'map' && isPageReady} />
+      <ResourceMap 
+        resources={sortedResources} 
+        isVisible={activeTab === 'map' && isPageReady}
+        onExploreLocationChange={handleExploreLocationChange}
+      />
     </div>
   );
 
@@ -262,7 +289,7 @@ const ReliefResources: React.FC = () => {
         {renderDataView()}
 
         {/* Floating Filters FAB - show only when on the resources page URL (uses pathname) */}
-        {routerLocation.pathname.startsWith('/tabs/resources') && (
+        {true && (
           <FloatingFilters
             filters={filters}
             onFiltersChange={updateFilters}
@@ -299,7 +326,7 @@ const ReliefResources: React.FC = () => {
           isOpen={showAvailabilityAlert}
           onDidDismiss={handleAvailabilityUpdateCancel}
       header={t('resources.confirmAvailabilityHeader')}
-      message={t('resources.confirmAvailabilityMessage', { availability: getAvailabilityText(pendingAvailabilityUpdate?.newAvailability || '') })}
+      message={t('resources.confirmAvailabilityMessage', { availability: pendingAvailabilityUpdate?.newAvailability || '' })}
           buttons={[
             {
         text: t('common.cancel'),

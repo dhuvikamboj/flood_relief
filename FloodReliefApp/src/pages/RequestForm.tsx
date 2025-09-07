@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { getApiBaseUrl } from '../config/api';
 // marker icons for Vite
 
 import './RequestForm.css';
 import axios from 'axios';
 import { useLocation } from '../hooks/useLocation';
-import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
+import { useFormMap } from '../hooks/useFormMap';
 import ReactGA4 from 'react-ga4';
 import {
   IonPage,
@@ -60,35 +58,38 @@ const RequestForm: React.FC<Props> = () => {
   const [priority, setPriority] = useState('');
   const [requestType, setRequestType] = useState('');
   const [details, setDetails] = useState('');
-  const mapRef = useRef<HTMLDivElement | null>(null);
-  const leafletMapRef = useRef<any>(null);
-  const leafletMarkerRef = useRef<any>(null);
   const [photoFiles, setPhotoFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const mapZoomRef = useRef<number | null>(16);
-  const [currentLayer, setCurrentLayer] = useState<MapLayerKey>(() => {
-    return getMapLayerPreference();
-  });
-  // Manual override now handled by stopping the geolocation watcher
 
-  // Save layer preference to localStorage whenever it changes
-  useEffect(() => {
-    saveMapLayerPreference(currentLayer);
-  }, [currentLayer]);
+  // Use the new form map hook for interactive location selection
+  const {
+    mapRef,
+    currentLayer,
+    setCurrentLayer,
+    markerPosition,
+    updateMarkerPosition,
+  } = useFormMap(true, {
+    initialMarkerCoords: userCoords || undefined,
+    onLocationChange: (location) => {
+      setLocation(`${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`);
+    },
+  });
 
   // Auto-populate the location input when coordinates become available
   useEffect(() => {
     if (userCoords) {
       setLocation(`${userCoords.lat.toFixed(6)}, ${userCoords.lng.toFixed(6)}`);
+      updateMarkerPosition && updateMarkerPosition(userCoords);
     }
-  }, [userCoords]);
-  useEffect(()=>{
+  }, [userCoords, updateMarkerPosition]);
+  
+  useEffect(() => {
     getCurrentLocation();
-  },[])
+  }, []);
   // initialize Leaflet map using imported library
   useEffect(() => {
     if (!mapRef.current) return;

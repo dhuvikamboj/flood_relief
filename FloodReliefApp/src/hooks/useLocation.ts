@@ -1,25 +1,12 @@
 import { useContext } from 'react';
-import { LocationContext } from '../contexts/LocationContext';
+import { LocationContext, LocationContextType } from '../contexts/LocationContext';
 
 export interface LocationCoords {
   lat: number;
   lng: number;
 }
 
-export interface UseLocationReturn {
-  userCoords: LocationCoords | null;
-  accuracy: number | null;
-  lastUpdated: Date | null;
-  mapLoading: boolean;
-  mapError: string | null;
-  watching: boolean;
-  refreshLocation: () => void;
-  getCurrentLocation: () => Promise<LocationCoords>;
-  clearLocation: () => void;
-  setUserCoords: (coords: LocationCoords | null) => void;
-  startWatching: () => void;
-  stopWatching: () => void;
-}
+export interface UseLocationReturn extends LocationContextType {}
 
 export interface UseLocationOptions {
   autoWatch?: boolean;
