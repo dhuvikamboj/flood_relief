@@ -4,6 +4,9 @@ import { IonReactRouter } from '@ionic/react-router';
 import { home, documentText, person, briefcase } from 'ionicons/icons';
 import { setupIonicReact } from '@ionic/react';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import ReactGA4 from 'react-ga4';
 import LanguageSelector from './components/LanguageSelector';
 
 /* Core CSS required for Ionic components to work properly */
@@ -41,6 +44,10 @@ import ResourceForm from './pages/ResourceForm';
 import Landing from './pages/Landing';
 
 setupIonicReact();
+
+// Initialize Google Analytics 4
+// Replace 'G-XXXXXXXXXX' with your actual GA4 Measurement ID
+ReactGA4.initialize('G-VM0KXNRQZB');
 
 const AppTabs: React.FC = () => {
   const { t } = useTranslation();
@@ -84,6 +91,7 @@ const AppTabs: React.FC = () => {
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
+
 console.log(isAuthenticated);
 
   if (loading) {
@@ -99,19 +107,30 @@ console.log(isAuthenticated);
   return (
     <IonApp>
       <IonReactRouter>
-       
-          <IonRouterOutlet>
-              <Route path="/tabs" component={AppTabs} />
-            <Route exact path="/" render={() => <Redirect to="/tabs/home" />} />
-       
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/" render={() => <Landing />} />
-          </IonRouterOutlet>
-  
+        <LocationTracker />
+        <IonRouterOutlet>
+            <Route path="/tabs" component={AppTabs} />
+          <Route exact path="/" render={() => <Redirect to="/tabs/home" />} />
+     
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/signup" component={Signup} />
+          <Route exact path="/" render={() => <Landing />} />
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );
+};
+
+// Component to track page views - must be inside Router context
+const LocationTracker: React.FC = () => {
+  const location = useLocation();
+
+  // Track page views
+  useEffect(() => {
+    ReactGA4.send({ hitType: 'pageview', page: location.pathname });
+  }, [location]);
+
+  return null; // This component doesn't render anything
 };
 
 const App: React.FC = () => {

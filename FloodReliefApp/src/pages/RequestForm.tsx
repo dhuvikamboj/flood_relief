@@ -9,6 +9,7 @@ import './RequestForm.css';
 import axios from 'axios';
 import { useLocation } from '../hooks/useLocation';
 import { MAP_LAYERS, MapLayerKey, getMapLayerPreference, saveMapLayerPreference } from '../utils/mapLayers';
+import ReactGA4 from 'react-ga4';
 import {
   IonPage,
   IonHeader,
@@ -198,6 +199,14 @@ const RequestForm: React.FC<Props> = () => {
       setShowToast(true);
       return;
     }
+
+    // Track form submission attempt
+    ReactGA4.event('form_submit_attempt', {
+      form_name: 'relief_request',
+      request_type: requestType,
+      priority: priority
+    });
+
     // Build FormData and POST with progress
     const form = new FormData();
     form.append('location', location);
@@ -237,6 +246,14 @@ const RequestForm: React.FC<Props> = () => {
   }).then((res) => {
       setUploading(false);
       setUploadProgress(null);
+      // Track successful submission
+      ReactGA4.event('form_submit_success', {
+        form_name: 'relief_request',
+        request_type: requestType,
+        priority: priority,
+        photo_count: photoFiles.length,
+        video_count: videoFiles.length
+      });
   setToastMessage(t('requestForm.submitted'));
       setShowToast(true);
   setLocation('');
@@ -255,6 +272,13 @@ const RequestForm: React.FC<Props> = () => {
     }).catch((err) => {
       setUploading(false);
       setUploadProgress(null);
+      // Track submission failure
+      ReactGA4.event('form_submit_failure', {
+        form_name: 'relief_request',
+        request_type: requestType,
+        priority: priority,
+        error_type: err.response?.status?.toString() || 'unknown'
+      });
       // Prefer structured validation errors from Laravel
       let msg = 'Upload failed';
       try {
@@ -287,7 +311,13 @@ const RequestForm: React.FC<Props> = () => {
 
   const onPhotosSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    setPhotoFiles(Array.from(e.target.files));
+    const files = Array.from(e.target.files);
+    setPhotoFiles(files);
+    // Track photo upload
+    ReactGA4.event('file_upload', {
+      file_type: 'photo',
+      file_count: files.length
+    });
   };
 
   const onVideosSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -296,12 +326,22 @@ const RequestForm: React.FC<Props> = () => {
   };
 
   const handleGetCurrentLocation = async () => {
+    // Track location request
+    ReactGA4.event('location_request', {
+      method: 'gps'
+    });
+
     try {
   setToastMessage(t('common.gettingLocation'));
       setShowToast(true);
 
   const coords = await getCurrentLocation();
   startWatching(); // Ensure watching resumes after manual stop
+
+  // Track successful location
+  ReactGA4.event('location_success', {
+    method: 'gps'
+  });
 
   setToastMessage(t('common.locationUpdated'));
       setShowToast(true);
@@ -332,6 +372,13 @@ const RequestForm: React.FC<Props> = () => {
       }
     } catch (error: any) {
       console.error('Location error:', error);
+      // Track location failure
+      ReactGA4.event('location_failure', {
+        method: 'gps',
+        error_type: error.message?.includes('permission') ? 'permission_denied' :
+                   error.message?.includes('timeout') ? 'timeout' :
+                   error.message?.includes('unavailable') ? 'unavailable' : 'unknown'
+      });
 
       // Provide more helpful error messages
   let errorMessage = t('common.locationFailed');

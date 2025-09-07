@@ -35,6 +35,7 @@ import RequestFilters, { RequestFilters as RequestFiltersType } from '../compone
 import RequestMap from '../components/RequestMap';
 import RequestCard from '../components/RequestCard';
 import RequestModal from '../components/RequestModal';
+import ReactGA4 from 'react-ga4';
 
 // Fix for default markers in leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -110,6 +111,52 @@ const Reports: React.FC = () => {
   const [loadingRequests, setLoadingRequests] = useState(false);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const [showExpired, setShowExpired] = useState<boolean>(false);
+
+  // Track page view on component mount
+  useEffect(() => {
+    ReactGA4.event('page_view', {
+      page_title: 'Reports',
+      page_location: window.location.href,
+      content_type: 'relief_requests'
+    });
+  }, []);
+
+  // Track tab switches
+  useEffect(() => {
+    ReactGA4.event('view_change', {
+      view_type: activeTab,
+      content_type: 'relief_requests'
+    });
+  }, [activeTab]);
+
+  // Track filter changes
+  useEffect(() => {
+    const activeFilters = Object.entries(filters).filter(([key, value]) => {
+      if (key === 'searchRadius') return value !== 5;
+      if (key === 'myRequestsFilter') return value === true;
+      if (key === 'searchTerm') return value.trim() !== '';
+      return value !== 'all';
+    });
+
+    if (activeFilters.length > 0) {
+      ReactGA4.event('filter_applied', {
+        filter_count: activeFilters.length,
+        filters: activeFilters.map(([key, value]) => `${key}:${value}`).join(','),
+        content_type: 'relief_requests'
+      });
+    }
+  }, [filters]);
+
+  // Track data loading
+  useEffect(() => {
+    if (requests.length > 0) {
+      ReactGA4.event('data_loaded', {
+        item_count: requests.length,
+        content_type: 'relief_requests',
+        has_user_location: !!userCoords
+      });
+    }
+  }, [requests.length, userCoords]);
 
   // Sorted requests based on filters
   const sortedRequests = useMemo(() => {
@@ -268,6 +315,14 @@ const Reports: React.FC = () => {
         r.id === id ? { ...r, status: newStatus } : r
       ));
 
+      // Track status update
+      ReactGA4.event('status_update', {
+        content_type: 'relief_request',
+        item_id: id,
+        old_status: requests.find(r => r.id === id)?.status,
+        new_status: newStatus
+      });
+
       setToastMessageContent(`Status updated to ${newStatus}`);
       setToastMessage(true);
     } catch (error: any) {
@@ -307,6 +362,15 @@ const Reports: React.FC = () => {
     setSelectedRequest(request);
     setShowRequestModal(true);
     fetchComments(request.id);
+
+    // Track individual request access
+    ReactGA4.event('item_view', {
+      content_type: 'relief_request',
+      item_id: request.id,
+      priority: request.priority,
+      request_type: request.request_type,
+      status: request.status
+    });
   };
 
   const closeRequestModal = () => {
@@ -348,6 +412,14 @@ const Reports: React.FC = () => {
       if (res.data && res.data.success) {
         setComments(prev => [...prev, res.data.data]);
         setNewComment('');
+
+        // Track comment submission
+        ReactGA4.event('comment_added', {
+          content_type: 'relief_request',
+          item_id: selectedRequest.id,
+          comment_length: newComment.trim().length
+        });
+
         setToastMessageContent('Comment added successfully');
         setToastMessage(true);
       }

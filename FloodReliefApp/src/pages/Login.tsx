@@ -18,6 +18,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
+import ReactGA4 from 'react-ga4';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -76,9 +77,18 @@ const Login: React.FC = () => {
       return;
     }
 
+    // Track login attempt
+    ReactGA4.event('login_attempt', {
+      method: 'email'
+    });
+
     setLocalLoading(true);
     try {
       await login(email.trim(), password);
+      // Track successful login
+      ReactGA4.event('login', {
+        method: 'email'
+      });
       presentToast({
         message: 'Login successful! Welcome back.',
         duration: 2000,
@@ -92,6 +102,11 @@ const Login: React.FC = () => {
       }, 1000);
     } catch (error: any) {
       console.error('Login error:', error);
+      // Track login failure
+      ReactGA4.event('login_failure', {
+        method: 'email',
+        error_type: error.response?.status?.toString() || 'unknown'
+      });
 
       if (error.response) {
         // Server responded with error

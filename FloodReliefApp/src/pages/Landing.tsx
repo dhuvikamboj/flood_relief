@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactGA4 from 'react-ga4';
 import { getApiBaseUrl } from '../config/api';
 import {
     IonPage,
@@ -60,6 +61,24 @@ const Landing: React.FC = () => {
     const [resources, setResources] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<'map' | 'data' | 'table'>('map');
+
+    // Track landing page view
+    useEffect(() => {
+        ReactGA4.send({
+            hitType: 'pageview',
+            page: '/landing',
+            title: 'Landing Page'
+        });
+    }, []);
+
+    // Track tab switches
+    useEffect(() => {
+        ReactGA4.event({
+            category: 'User Interaction',
+            action: 'Tab Switched',
+            label: `Switched to ${activeTab} view`
+        });
+    }, [activeTab]);
     
     // Debounce refs for API calls
     const debounceRequestsRef = useRef<NodeJS.Timeout | null>(null);
@@ -416,7 +435,14 @@ const Landing: React.FC = () => {
                                     
                                     {/* Tutorial Section */}
                                     <div className="landing-tutorial-section">
-                                        <details className="landing-tutorial-details">
+                                        <details className="landing-tutorial-details" onToggle={(e) => {
+                                            if ((e.target as HTMLDetailsElement).open) {
+                                                ReactGA4.event('tutorial_interaction', {
+                                                    tutorial_section: 'main_tutorial',
+                                                    action: 'opened'
+                                                });
+                                            }
+                                        }}>
                                             <summary className="landing-tutorial-summary">
                                                 <IonIcon icon={informationCircleOutline} />
                                                 <span>{t('tutorial.title')}</span>
@@ -473,6 +499,19 @@ const Landing: React.FC = () => {
                                                     <h4>🚨 ਐਮਰਜੈਂਸੀ ਨੰਬਰ (Emergency Numbers)</h4>
                                                     <p><strong>112</strong> - ਯੂਰਪੀਅਨ ਐਮਰਜੈਂਸੀ | <strong>108</strong> - ਮੈਡੀਕਲ ਐਮਰਜੈਂਸੀ</p>
                                                     <p><em>ਇਹ ਨੰਬਰ ਬਿਨਾ ਲਾਗਇਨ ਵੀ ਕੰਮ ਕਰਦੇ ਹਨ!</em></p>
+                                                    <IonButton 
+                                                        fill="outline" 
+                                                        size="small" 
+                                                        color="danger"
+                                                        onClick={() => {
+                                                            ReactGA4.event('emergency_contact', {
+                                                                contact_type: 'emergency_numbers',
+                                                                action: 'emergency_numbers_viewed'
+                                                            });
+                                                        }}
+                                                    >
+                                                        📞 Emergency Contacts
+                                                    </IonButton>
                                                 </div>
                                                 
                                                 <div className="tutorial-step">
@@ -607,12 +646,25 @@ const Landing: React.FC = () => {
                                                     </div>
                                                     <div className="landing-auth-buttons">
                                                         <IonRouterLink routerLink="/tabs/home">
-                                                            <IonButton expand="block" color="primary">
+                                                            <IonButton expand="block" color="primary" onClick={() => {
+                                                                ReactGA4.event({
+                                                                    category: 'User Interaction',
+                                                                    action: 'Dashboard Button Clicked',
+                                                                    label: 'Authenticated user clicked dashboard'
+                                                                });
+                                                            }}>
                                                                 <IonIcon icon={homeOutline} slot="start" />
                                                                 {t('auth.dashboard')}
                                                             </IonButton>
                                                         </IonRouterLink>
-                                                        <IonButton expand="block" fill="outline" color="medium" onClick={logout}>
+                                                        <IonButton expand="block" fill="outline" color="medium" onClick={() => {
+                                                            ReactGA4.event({
+                                                                category: 'User Interaction',
+                                                                action: 'Logout Button Clicked',
+                                                                label: 'User initiated logout from landing page'
+                                                            });
+                                                            logout();
+                                                        }}>
                                                             <IonIcon icon={logOutOutline} slot="start" />
                                                             {t('auth.logout')}
                                                         </IonButton>
@@ -630,13 +682,25 @@ const Landing: React.FC = () => {
                                                     </IonText>
                                                     <div className="landing-auth-buttons">
                                                         <IonRouterLink routerLink="/signup">
-                                                            <IonButton expand="block" color="primary">
+                                                            <IonButton expand="block" color="primary" onClick={() => {
+                                                                ReactGA4.event({
+                                                                    category: 'User Interaction',
+                                                                    action: 'Signup Button Clicked',
+                                                                    label: 'User clicked signup from landing page'
+                                                                });
+                                                            }}>
                                                                 <IonIcon icon={personAddOutline} slot="start" />
                                                                 {t('auth.signUpToHelp')}
                                                             </IonButton>
                                                         </IonRouterLink>
                                                         <IonRouterLink routerLink="/login">
-                                                            <IonButton expand="block" fill="outline" color="primary">
+                                                            <IonButton expand="block" fill="outline" color="primary" onClick={() => {
+                                                                ReactGA4.event({
+                                                                    category: 'User Interaction',
+                                                                    action: 'Login Button Clicked',
+                                                                    label: 'User clicked login from landing page'
+                                                                });
+                                                            }}>
                                                                 <IonIcon icon={logInOutline} slot="start" />
                                                                 {t('auth.login')}
                                                             </IonButton>
@@ -777,7 +841,17 @@ const Landing: React.FC = () => {
                                     ) : (
                                         <IonList>
                                             {requests.map((r: any) => (
-                                                <IonCard key={r.id} button onClick={() => { setSelectedRequest(r); setShowRequestModal(true); }}>
+                                                <IonCard key={r.id} button onClick={() => { 
+                                                    ReactGA4.event('select_content', {
+                                                        content_type: 'relief_request',
+                                                        item_id: r.id.toString(),
+                                                        request_type: r.request_type,
+                                                        priority: r.priority,
+                                                        status: r.status
+                                                    });
+                                                    setSelectedRequest(r); 
+                                                    setShowRequestModal(true); 
+                                                }}>
                                                     <IonCardContent>
                                                         <div className="landing-request-row">
                                                             <div>
@@ -837,7 +911,17 @@ const Landing: React.FC = () => {
                                     ) : (
                                         <IonList>
                                             {resources.map((res: any) => (
-                                                <IonCard key={res.id} className="landing-resource-card" button onClick={() => { setSelectedResource(res); setShowResourceModal(true); }}>
+                                                <IonCard key={res.id} className="landing-resource-card" button onClick={() => { 
+                                                    ReactGA4.event('select_content', {
+                                                        content_type: 'relief_resource',
+                                                        item_id: res.id.toString(),
+                                                        resource_type: res.resource_type,
+                                                        availability: res.availability,
+                                                        capacity: res.capacity
+                                                    });
+                                                    setSelectedResource(res); 
+                                                    setShowResourceModal(true); 
+                                                }}>
                                                     <IonCardContent>
                                                         <div className="landing-resource-row">
                                                             <h3 className="landing-resource-title">
@@ -908,6 +992,13 @@ const Landing: React.FC = () => {
                                                 columns={requestColumns}
                                                 loading={loading}
                                                 onRowClick={(request) => {
+                                                    ReactGA4.event('select_content', {
+                                                        content_type: 'relief_request',
+                                                        item_id: request.id.toString(),
+                                                        request_type: request.request_type,
+                                                        priority: request.priority,
+                                                        status: request.status
+                                                    });
                                                     setSelectedRequest(request);
                                                     setShowRequestModal(true);
                                                 }}
@@ -933,6 +1024,13 @@ const Landing: React.FC = () => {
                                                 columns={resourceColumns}
                                                 loading={loading}
                                                 onRowClick={(resource) => {
+                                                    ReactGA4.event('select_content', {
+                                                        content_type: 'relief_resource',
+                                                        item_id: resource.id.toString(),
+                                                        resource_type: resource.resource_type,
+                                                        availability: resource.availability,
+                                                        capacity: resource.capacity
+                                                    });
                                                     setSelectedResource(resource);
                                                     setShowResourceModal(true);
                                                 }}
@@ -945,8 +1043,27 @@ const Landing: React.FC = () => {
                 </IonGrid>
                 {/* Mount floating FAB filter controls directly under IonContent so they can use slot="fixed" and popovers work */}
                 <>
-                    <RequestFilters landing={true} filters={filters} onFiltersChange={(f) => setFilters(prev => ({ ...prev, ...f }))} />
-                    <FloatingFilters filters={resourceFilters} onFiltersChange={(f) => setResourceFilters(prev => ({ ...prev, ...f }))} />
+                    <RequestFilters landing={true} filters={filters} onFiltersChange={(f) => {
+                        ReactGA4.event('search', {
+                            search_term: f.searchTerm || '',
+                            filter_type: 'request_filters',
+                            status_filter: f.statusFilter,
+                            priority_filter: f.priorityFilter,
+                            type_filter: f.typeFilter,
+                            search_radius: f.searchRadius
+                        });
+                        setFilters(prev => ({ ...prev, ...f }));
+                    }} />
+                    <FloatingFilters filters={resourceFilters} onFiltersChange={(f) => {
+                        ReactGA4.event('search', {
+                            search_term: f.searchTerm || '',
+                            filter_type: 'resource_filters',
+                            availability_filter: f.availabilityFilter,
+                            type_filter: f.typeFilter,
+                            search_radius: f.searchRadius
+                        });
+                        setResourceFilters(prev => ({ ...prev, ...f }));
+                    }} />
                 </>
 
                 {/* Detail modals for requests and resources */}

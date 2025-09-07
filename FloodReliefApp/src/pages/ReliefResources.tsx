@@ -34,6 +34,7 @@ import ResourceMap from '../components/ResourceMap';
 import ResourceCard from '../components/ResourceCard';
 import ResourceModal from '../components/ResourceModal';
 import { getAvailabilityText } from '../utils/resourceUtils';
+import ReactGA4 from 'react-ga4';
 
 // Fix for default markers in leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -94,6 +95,34 @@ const ReliefResources: React.FC = () => {
     resetComments,
   } = useComments();
 
+  // Track page view on component mount
+  useEffect(() => {
+    ReactGA4.event('page_view', {
+      page_title: 'Resources',
+      page_location: window.location.href,
+      content_type: 'relief_resources'
+    });
+  }, []);
+
+  // Track tab switches
+  useEffect(() => {
+    ReactGA4.event('view_change', {
+      view_type: activeTab,
+      content_type: 'relief_resources'
+    });
+  }, [activeTab]);
+
+  // Track data loading
+  useEffect(() => {
+    if (sortedResources.length > 0) {
+      ReactGA4.event('data_loaded', {
+        item_count: sortedResources.length,
+        content_type: 'relief_resources',
+        has_user_location: !!userCoords
+      });
+    }
+  }, [sortedResources.length, userCoords]);
+
   // Set up global modal opener function
   useEffect(() => {
     (window as any).openResourceModal = openResourceModal;
@@ -112,6 +141,14 @@ const ReliefResources: React.FC = () => {
     setPendingAvailabilityUpdate(null);
 
     const result = await updateResourceAvailability(resourceId, newAvailability);
+
+    // Track availability update
+    ReactGA4.event('availability_update', {
+      content_type: 'relief_resource',
+      item_id: resourceId,
+      new_availability: newAvailability
+    });
+
     setToastMessage(result.message);
     setShowToast(true);
   };
@@ -125,6 +162,14 @@ const ReliefResources: React.FC = () => {
     setSelectedResource(resource);
     setShowResourceModal(true);
     fetchComments(resource.id);
+
+    // Track individual resource access
+    ReactGA4.event('item_view', {
+      content_type: 'relief_resource',
+      item_id: resource.id,
+      resource_type: resource.resource_type,
+      availability: resource.availability
+    });
   };
 
   const closeResourceModal = () => {
@@ -137,6 +182,14 @@ const ReliefResources: React.FC = () => {
     if (!selectedResource) return;
     
     const result = await submitComment(selectedResource.id);
+
+    // Track comment submission
+    ReactGA4.event('comment_added', {
+      content_type: 'relief_resource',
+      item_id: selectedResource.id,
+      comment_length: newComment.trim().length
+    });
+
     setToastMessage(result.message);
     setShowToast(true);
   };

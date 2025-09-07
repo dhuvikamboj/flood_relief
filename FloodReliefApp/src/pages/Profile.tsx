@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ReactGA4 from 'react-ga4';
 import {
   IonContent,
   IonHeader,
@@ -49,6 +50,26 @@ const Profile: React.FC = () => {
 console.log(auth);
 console.log(user);
 
+  // Track profile page view
+  useEffect(() => {
+    ReactGA4.send({
+      hitType: 'pageview',
+      page: '/profile',
+      title: 'Profile Page'
+    });
+  }, []);
+
+  // Track profile edit mode changes
+  useEffect(() => {
+    if (editMode) {
+      ReactGA4.event({
+        category: 'User Interaction',
+        action: 'Profile Edit Started',
+        label: 'Profile Edit Mode Enabled'
+      });
+    }
+  }, [editMode]);
+
   // Mock user profile data - in real app, this would come from API
   const [profile, setProfile] = useState({
     name: user?.name || '',
@@ -72,15 +93,41 @@ console.log(user);
   }, [user]);
 
   const handleLogout = async () => {
+    // Track logout attempt
+    ReactGA4.event({
+      category: 'User Interaction',
+      action: 'Logout Attempted',
+      label: 'User Logout Started'
+    });
+
     try {
       await logout();
+      // Track successful logout
+      ReactGA4.event({
+        category: 'User Interaction',
+        action: 'Logout Successful',
+        label: 'User Logged Out'
+      });
       history.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
+      // Track logout failure
+      ReactGA4.event({
+        category: 'User Interaction',
+        action: 'Logout Failed',
+        label: 'Logout Error'
+      });
     }
   };
 
   const handleSaveProfile = async () => {
+    // Track profile save attempt
+    ReactGA4.event({
+      category: 'User Interaction',
+      action: 'Profile Save Attempted',
+      label: 'Profile Update Started'
+    });
+
     // Call API to save profile
     const payload = {
       name: profile.name,
@@ -100,6 +147,12 @@ console.log(user);
     try {
       await updateProfile(payload);
       setEditMode(false);
+      // Track successful profile save
+      ReactGA4.event({
+        category: 'User Interaction',
+        action: 'Profile Save Successful',
+        label: 'Profile Update Completed'
+      });
       presentToast({
         message: 'Profile updated successfully',
         duration: 2000,
@@ -108,6 +161,12 @@ console.log(user);
       });
     } catch (err: any) {
       console.error('Profile update failed', err);
+      // Track failed profile save
+      ReactGA4.event({
+        category: 'User Interaction',
+        action: 'Profile Save Failed',
+        label: 'Profile Update Error'
+      });
       const msg = err?.response?.data?.message || 'Failed to update profile';
       presentToast({
         message: msg,

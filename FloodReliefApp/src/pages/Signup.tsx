@@ -17,6 +17,7 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { useIonToast } from '@ionic/react';
 import { useTranslation } from 'react-i18next';
+import ReactGA4 from 'react-ga4';
 import './Signup.css';
 
 const Signup: React.FC = () => {
@@ -147,10 +148,19 @@ const Signup: React.FC = () => {
       return;
     }
 
+    // Track signup attempt
+    ReactGA4.event('sign_up_attempt', {
+      method: 'email'
+    });
+
     try {
       setLocalLoading(true);
   // register may have an extended signature; cast to any to forward extra fields
   await (register as any)(email.trim(), password, name.trim(), confirmPassword,phone.trim(), address.trim(), emergencyContact.trim());
+      // Track successful signup
+      ReactGA4.event('sign_up', {
+        method: 'email'
+      });
       presentToast({
         message: t('signup.success.accountCreated'),
         duration: 3000,
@@ -167,6 +177,11 @@ const Signup: React.FC = () => {
       }, 1500);
     } catch (error: any) {
       console.error('Signup error:', error);
+      // Track signup failure
+      ReactGA4.event('sign_up_failure', {
+        method: 'email',
+        error_type: error.response?.status?.toString() || 'unknown'
+      });
 
       if (error.response) {
         // Server responded with error
