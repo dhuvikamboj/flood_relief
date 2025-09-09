@@ -34,6 +34,7 @@ import './i18n';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LocationProvider } from './contexts/LocationContext';
 import { ExploreLocationProvider } from './hooks/useExploreLocation';
+import LocationPermissionGuard from './components/LocationPermissionGuard';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
@@ -109,14 +110,16 @@ console.log(isAuthenticated);
     <IonApp>
       <IonReactRouter>
         <LocationTracker />
-        <IonRouterOutlet>
-            <Route path="/tabs" component={AppTabs} />
-          <Route exact path="/" render={() => <Redirect to="/tabs/home" />} />
-     
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/signup" component={Signup} />
-          <Route exact path="/" render={() => <Landing />} />
-        </IonRouterOutlet>
+        <LocationPermissionGuard>
+          <IonRouterOutlet>
+              <Route path="/tabs" component={AppTabs} />
+            <Route exact path="/" render={() => <Redirect to="/tabs/home" />} />
+       
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/" render={() => <Landing />} />
+          </IonRouterOutlet>
+        </LocationPermissionGuard>
       </IonReactRouter>
     </IonApp>
   );

@@ -854,9 +854,7 @@ const Landing: React.FC = () => {
                                 </IonCardHeader>
                                 <IonCardContent>
                                     <IonText color="medium"><p>{t('requests.subtitle')}</p></IonText>
-                                    {loading ? (
-                                        <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
-                                    ) : requests.length === 0 ? (
+                                    { requests.length === 0 ? (
                                         <div className="landing-no-results"><IonText color="medium"><p>{t('requests.noRequests')}</p></IonText></div>
                                     ) : (
                                         <IonList>
@@ -924,9 +922,7 @@ const Landing: React.FC = () => {
                                 </IonCardHeader>
                                 <IonCardContent>
                                     <IonText color="medium"><p>Resources</p></IonText>
-                                    {loading ? (
-                                        <div className="landing-spinner-wrap"><IonSpinner name="crescent" /></div>
-                                    ) : resources.length === 0 ? (
+                                    { resources.length === 0 ? (
                                         <div className="landing-no-results"><IonText color="medium"><p>No resources found nearby</p></IonText></div>
                                     ) : (
                                         <IonList>
@@ -1010,7 +1006,7 @@ const Landing: React.FC = () => {
                                             <DataTable
                                                 data={requests}
                                                 columns={requestColumns}
-                                                loading={loading}
+                                                loading={false}
                                                 onRowClick={(request) => {
                                                     ReactGA4.event('select_content', {
                                                         content_type: 'relief_request',
@@ -1042,7 +1038,7 @@ const Landing: React.FC = () => {
                                             <DataTable
                                                 data={resources}
                                                 columns={resourceColumns}
-                                                loading={loading}
+                                                loading={false}
                                                 onRowClick={(resource) => {
                                                     ReactGA4.event('select_content', {
                                                         content_type: 'relief_resource',

@@ -1,0 +1,40 @@
+.location-permission-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.location-permission-card {
+  max-width: 400px;
+  width: 100%;
+}
+
+.location-permission-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.location-permission-icon {
+  font-size: 2rem;
+  color: var(--ion-color-primary);
+}
+
+.location-permission-privacy {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+}
+
+.location-permission-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
